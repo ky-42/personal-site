@@ -55,9 +55,6 @@ pub struct ContentInfo {
     content_slug: Option<String>
 }
 
-
-
-
 #[derive(Deserialize, Debug)]
 pub struct PageInfo {
     page: Option<i32>,
