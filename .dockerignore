@@ -3,3 +3,4 @@ target
 Dockerfile
 .git
 .env
+test_data

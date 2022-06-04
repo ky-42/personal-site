@@ -41,15 +41,6 @@ enum ContentTags {
 // ######################################################################################################
 
 #[derive(Deserialize, Debug)]
-pub struct ContentToAdd {
-    title: String,
-    desc: Option<String>,
-    body: String,
-    project_status: Option<ProjectStatus>,
-    tags: Option<ContentTags> 
-}
-
-#[derive(Deserialize, Debug)]
 pub struct ContentInfo {
     content_type: ContentType,
     content_slug: Option<String>
