@@ -122,11 +122,13 @@ struct NewContent {
 #[derive(Insertable, AsChangeset, Debug)]
 #[table_name = "project" ]
 struct NewProject {
+    content_id: i32,
     current_status: String
 }
 
 #[derive(Insertable, AsChangeset, Debug)]
 #[table_name = "blog" ]
 struct NewBlog {
+    content_id: i32,
     tags: Option<Vec<String>>
 }
