@@ -1,6 +1,7 @@
 table! {
     blog (id) {
         id -> Int4,
+        content_id -> Int4,
         tags -> Nullable<Array<Text>>,
     }
 }
@@ -8,27 +9,26 @@ table! {
 table! {
     content (id) {
         id -> Int4,
-        content_type -> Contenttype,
+        content_type -> Text,
         slug -> Text,
         title -> Text,
         content_desc -> Nullable<Text>,
         body -> Text,
         created_at -> Timestamptz,
         updated_at -> Timestamptz,
-        project_id -> Nullable<Int4>,
-        blog_id -> Nullable<Int4>,
     }
 }
 
 table! {
     project (id) {
         id -> Int4,
-        current_status -> Projectstatus,
+        content_id -> Int4,
+        current_status -> Text,
     }
 }
 
-joinable!(content -> blog (blog_id));
-joinable!(content -> project (project_id));
+joinable!(blog -> content (content_id));
+joinable!(project -> content (content_id));
 
 allow_tables_to_appear_in_same_query!(
     blog,

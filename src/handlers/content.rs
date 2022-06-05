@@ -15,27 +15,6 @@ use serde::{
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
 
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "lowercase")]
-pub enum ContentType {
-    Blog,
-    Project
-}
-
-#[derive(Deserialize, Debug)]
-enum ProjectStatus {
-    UnderDevelopment,
-    Unfinished,
-    Finished
-}
-
-#[derive(Deserialize, Debug)]
-enum ContentTags {
-    WebDev,
-    Rust,
-    Python,
-    TypeScript
-}
 // ######################################################################################################
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
@@ -81,8 +60,8 @@ pub async fn delete_content(
     HttpResponse::Ok().finish()
 }
 
-pub async fn add_content(
-    add_info: Json<ContentToAdd>
-) -> HttpResponse{
-    HttpResponse::Ok().finish()   
-}
+// pub async fn add_content(
+//     add_info: Json<ContentToAdd>
+// ) -> HttpResponse{
+//     HttpResponse::Ok().finish()   
+// }
