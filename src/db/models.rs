@@ -18,11 +18,17 @@ use crate::schema::{
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ContentType {
     Blog,
     Project
+}
+
+#[derive(Serialize, Debug)]
+pub enum ExtraContent {
+    Blog(Blog),
+    Project(Project)
 }
 
 impl From<String> for ContentType {
@@ -31,6 +37,7 @@ impl From<String> for ContentType {
         match content_type {
             "blog" => ContentType::Blog,
             "project" => ContentType::Project,
+            _ => ContentType::Blog
         }
     }
 }
@@ -44,7 +51,7 @@ impl From<ContentType> for String {
     }   
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 enum ProjectStatus {
     UnderDevelopment,
     Unfinished,
@@ -57,7 +64,8 @@ impl From<String> for ProjectStatus {
         match project_status {
             "Unfinished" => ProjectStatus::Unfinished,
             "Under Development" => ProjectStatus::UnderDevelopment,
-            "Finished" => ProjectStatus::Finished
+            "Finished" => ProjectStatus::Finished,
+            _ => ProjectStatus::Unfinished
         }
     }
 }
@@ -76,12 +84,12 @@ impl From<ProjectStatus> for String {
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
 
-#[derive(Queryable, Identifiable, Debug)]
+#[derive(Queryable, Identifiable, Serialize, Debug)]
 #[table_name = "content" ]
-struct Content {
+pub struct Content {
     id: i32,
-    #[diesel(deserialize_as = String)]
-    content_type: ContentType,
+    #[diesel(deserialize_as = "String")]
+    pub content_type: ContentType,
     slug: String,
     title: String,
     content_desc: Option<String>,
@@ -90,20 +98,20 @@ struct Content {
     updated_at: DateTime<Utc>,
 }
 
-#[derive(Queryable, Identifiable, Debug)]
+#[derive(Queryable, Identifiable, Associations, Serialize, Debug)]
+#[belongs_to(Content)]
 #[table_name = "project" ]
-#[diesel(belongs_to(Content))]
-struct Project {
+pub struct Project {
     id: i32,
     content_id: i32,
-    #[diesel(deserialize_as = String)]
+    #[diesel(deserialize_as = "String")]
     current_status: ProjectStatus
 }
 
-#[derive(Queryable, Identifiable, Debug)]
+#[derive(Queryable, Identifiable, Associations, Serialize, Debug)]
+#[belongs_to(Content)]
 #[table_name = "blog" ]
-#[diesel(belongs_to(Content))]
-struct Blog {
+pub struct Blog {
     id: i32,
     content_id: i32,
     tags: Option<Vec<String>>
@@ -132,3 +140,10 @@ struct NewBlog {
     content_id: i32,
     tags: Option<Vec<String>>
 }
+
+#[derive(Serialize, Debug)]
+pub struct FullContent {
+    pub base_content: Content,
+    pub extra_content: ExtraContent
+}
+

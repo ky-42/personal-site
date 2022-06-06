@@ -6,9 +6,15 @@ use actix_web::{
     },
     HttpResponse,
 };
-
 use serde::{
     Deserialize
+};
+
+use crate::db::{
+    models::{
+        ContentType
+    },
+    ops::content_ops,
 };
 
 // ######################################################################################################
@@ -29,6 +35,17 @@ pub struct ContentInfo {
 pub struct PageInfo {
     page: Option<i32>,
     content_per_page: Option<i32>
+}
+
+#[derive(Deserialize, Debug)]
+pub struct ContentAddInfo {
+    content_type: ContentType,
+    slug: String,
+    title: String,
+    content_desc: Option<String>,
+    body: String,
+    current_status: Option<String>,
+    tags: Option<Vec<String>>
 }
 
 // ######################################################################################################
@@ -60,8 +77,8 @@ pub async fn delete_content(
     HttpResponse::Ok().finish()
 }
 
-// pub async fn add_content(
-//     add_info: Json<ContentToAdd>
-// ) -> HttpResponse{
-//     HttpResponse::Ok().finish()   
-// }
+pub async fn add_content(
+    add_info: Json<ContentAddInfo>
+) -> HttpResponse{
+    HttpResponse::Ok().finish()   
+}
