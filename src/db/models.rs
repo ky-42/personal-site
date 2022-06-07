@@ -25,7 +25,7 @@ pub enum ContentType {
     Project
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Debug, Serialize)]
 pub enum ExtraContent {
     Blog(Blog),
     Project(Project)

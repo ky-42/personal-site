@@ -28,7 +28,7 @@ use crate::db::{
 #[derive(Deserialize, Debug)]
 pub struct ContentInfo {
     content_type: ContentType,
-    content_slug: Option<String>
+    pub content_slug: Option<String>
 }
 
 #[derive(Deserialize, Debug)]
