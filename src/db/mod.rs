@@ -4,7 +4,7 @@ pub mod models;
 use diesel::{pg::PgConnection, r2d2::{self, ConnectionManager}};
 use std::env;
 
-type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
+pub type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
 pub fn create_db_pool() -> DbPool {
     let database_url = env::var("DATABASE_URL")

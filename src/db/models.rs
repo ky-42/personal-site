@@ -117,30 +117,6 @@ pub struct Blog {
     tags: Option<Vec<String>>
 }
 
-#[derive(Insertable, AsChangeset, Debug)]
-#[table_name = "content" ]
-struct NewContent {
-    content_type: String,
-    slug: String,
-    title: String,
-    content_desc: Option<String>,
-    body: String
-}
-
-#[derive(Insertable, AsChangeset, Debug)]
-#[table_name = "project" ]
-struct NewProject {
-    content_id: i32,
-    current_status: String
-}
-
-#[derive(Insertable, AsChangeset, Debug)]
-#[table_name = "blog" ]
-struct NewBlog {
-    content_id: i32,
-    tags: Option<Vec<String>>
-}
-
 #[derive(Serialize, Debug)]
 pub struct FullContent {
     pub base_content: Content,
