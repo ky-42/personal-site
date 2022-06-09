@@ -59,15 +59,8 @@ pub struct ContentAddInfo {
 pub async fn view_content(
     db_pool: web::Data<DbPool>, 
     content_info: web::Path<ContentInfo>
-) -> Result<HttpResponse<web::Json<FullContent>>, ContentError> {
-
-    let mut recived_content_slug: String;
-    if let Some(possible_slug) = content_info.into_inner().content_slug {
-        recived_content_slug = possible_slug
-    } else {
-        return Err(ContentError::NoSlugProvided)
-    }
-
+) -> Result<web::Json<FullContent>, ContentError> {
+    let recived_content_slug = get_slug(content_info.into_inner())?;
     let fetched_content = web::block(move || {
         let conn = db_pool.get()?;
         content_ops::view_content(
@@ -75,8 +68,8 @@ pub async fn view_content(
             &recived_content_slug
         )
     })
-    .await?;
-    HttpResponse::Ok().finish()
+    .await??;
+    Ok(web::Json(fetched_content))
 }
 
 pub async fn recent_content(
@@ -107,4 +100,12 @@ pub async fn add_content(
     add_info: web::Json<ContentAddInfo>
 ) -> HttpResponse{
     HttpResponse::Ok().finish()   
+}
+
+fn get_slug(requested_content_info: ContentInfo) -> Result<String, ContentError> {
+    if let Some(possible_slug) = requested_content_info.content_slug {
+        Ok(possible_slug)
+    } else {
+        Err(ContentError::NoSlugProvided)
+    }   
 }
