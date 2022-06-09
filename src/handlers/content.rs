@@ -37,8 +37,8 @@ pub struct ContentInfo {
 
 #[derive(Deserialize, Debug)]
 pub struct PageInfo {
+    content_per_page: i64,
     page: Option<i32>,
-    content_per_page: Option<i32>
 }
 
 #[derive(Deserialize, Debug)]
@@ -76,8 +76,17 @@ pub async fn recent_content(
     db_pool: web::Data<DbPool>, 
     content_info: web::Path<ContentInfo>,
     page_info: web::Query<PageInfo>
-) -> HttpResponse {
-    HttpResponse::Ok().finish()
+) -> Result<web::Json<Vec<FullContent>>, ContentError> {
+    let recent_fetched_content = web::block(move || {
+        let conn = db_pool.get()?;
+        content_ops::view_recent_content(
+            &conn,
+            content_info.into_inner().content_type,
+            page_info.into_inner().content_per_page
+        )
+    })
+    .await??;
+    Ok(web::Json(recent_fetched_content))
 }
 
 pub async fn update_content(
