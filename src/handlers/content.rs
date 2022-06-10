@@ -30,9 +30,8 @@ use super::errors::{
 // ######################################################################################################
 
 #[derive(Deserialize, Debug)]
-pub struct ContentInfo {
-    pub content_type: ContentType,
-    pub content_slug: Option<String>
+pub struct ContentSlug {
+    slug: String
 }
 
 #[derive(Deserialize, Debug)]
@@ -58,14 +57,13 @@ pub struct ContentAddInfo {
 
 pub async fn view_content(
     db_pool: web::Data<DbPool>, 
-    content_info: web::Path<ContentInfo>
+    slug_requested: web::Path<ContentSlug>
 ) -> Result<web::Json<FullContent>, ContentError> {
-    let recived_content_slug = get_slug(content_info.into_inner())?;
     let fetched_content = web::block(move || {
         let conn = db_pool.get()?;
         content_ops::view_content(
             &conn,
-            &recived_content_slug
+            &slug_requested.into_inner().slug
         )
     })
     .await??;
@@ -74,14 +72,14 @@ pub async fn view_content(
 
 pub async fn recent_content(
     db_pool: web::Data<DbPool>, 
-    content_info: web::Path<ContentInfo>,
+    content_type_requested: web::Path<ContentType>,
     page_info: web::Query<PageInfo>
 ) -> Result<web::Json<Vec<FullContent>>, ContentError> {
     let recent_fetched_content = web::block(move || {
         let conn = db_pool.get()?;
         content_ops::view_recent_content(
             &conn,
-            content_info.into_inner().content_type,
+            content_type_requested.into_inner(),
             page_info.into_inner().content_per_page
         )
     })
@@ -109,12 +107,4 @@ pub async fn add_content(
     add_info: web::Json<ContentAddInfo>
 ) -> HttpResponse{
     HttpResponse::Ok().finish()   
-}
-
-fn get_slug(requested_content_info: ContentInfo) -> Result<String, ContentError> {
-    if let Some(possible_slug) = requested_content_info.content_slug {
-        Ok(possible_slug)
-    } else {
-        Err(ContentError::NoSlugProvided)
-    }   
 }
