@@ -10,20 +10,21 @@ pub fn route_config(cfg: &mut web::ServiceConfig){
             .service(
                 web::scope("/content")
                     .service(
-                        web::scope("/{content_type}")
+                        web::resource("/{content_slug}")
+                        .route(web::get().to(content::view_content))
+                        .route(web::put().to(content::update_content))
+                        .route(web::delete().to(content::delete_content))
+                    )
+                    .service(
+                        web::resource("/add")
+                        .route(web::post().to(content::add_content))
+                    )
+                   .service(
+                        web::scope("/recent")
+                            
                             .service(
-                                web::resource("/{content_slug}")
-                                .route(web::get().to(content::view_content))
-                                .route(web::put().to(content::update_content))
-                                .route(web::delete().to(content::delete_content))
-                            )
-                            .service(
-                                web::resource("/recent")
+                                web::resource("/{content_type}")
                                 .route(web::get().to(content::recent_content))
-                            )
-                            .service(
-                                web::resource("/add")
-                                .route(web::post().to(content::add_content))
                             )
                     )
             )
