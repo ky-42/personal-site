@@ -13,7 +13,8 @@ use serde::{
 use crate::db::{
     models::{
         ContentType,
-        FullContent
+        FullContent,
+        NewFullContent
     },
     ops::content_ops,
     DbPool,
@@ -89,7 +90,7 @@ pub async fn recent_content(
 
 pub async fn update_content(
     db_pool: web::Data<DbPool>, 
-    content_info: web::Path<ContentInfo>,
+    content_info: web::Path<ContentSlug>,
     // update_info: Json<>
 ) -> HttpResponse {
     HttpResponse::Ok().finish()
@@ -98,7 +99,7 @@ pub async fn update_content(
 pub async fn delete_content(
     db_pool: web::Data<DbPool>, 
     delete_slug: web::Path<ContentSlug>,
-) -> Result<usize, ContentError> {
+) -> Result<HttpResponse, ContentError> {
     // Returns the number of rows deleted
     let rows_deleted = web::block(move || {
         let conn = db_pool.get()?;
@@ -108,12 +109,24 @@ pub async fn delete_content(
         )
     })
     .await??;
-    Ok(rows_deleted)
+    Ok(HttpResponse::Ok().json(format!(r#"
+    {{
+        "rows_deleted": "{}"
+    }}
+    "#, rows_deleted)))
 }
 
 pub async fn add_content(
     db_pool: web::Data<DbPool>, 
-    add_info: web::Json<ContentAddInfo>
-) -> HttpResponse{
-    HttpResponse::Ok().finish()   
+    add_info: web::Json<NewFullContent>
+) -> Result<HttpResponse, ContentError> {
+    web::block(move || {
+        let conn = db_pool.get()?;
+        content_ops::add_content(
+            &conn,
+            add_info.into_inner()
+        )
+    })
+    .await??;
+    Ok(HttpResponse::Ok().finish())
 }

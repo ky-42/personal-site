@@ -1,5 +1,6 @@
 use diesel;
 use diesel::prelude::*;
+use diesel::insert_into;
 use crate::db::models;
 use crate::handlers::errors::{
     ContentError
@@ -80,5 +81,26 @@ pub fn delete_content(
 
 pub fn add_content(
     db_conn: &PgConnection,
-    add_data: 
-)
+    add_data: models::NewFullContent
+) -> Result<(), ContentError> {
+    use crate::schema::content;
+    let base_content_id: i32 = insert_into(content::table)
+        .values(add_data.new_base_content)
+        .returning(content::id)
+        .get_result(db_conn)?;
+    match add_data.new_extra_content {
+        models::NewExtraContent::Blog(extra_content) => {
+            use crate::schema::blog;
+            insert_into(blog::table)
+            .values((blog::content_id.eq(base_content_id), &extra_content))
+            .execute(db_conn)?;
+        },
+        models::NewExtraContent::Project(extra_content) => {
+            use crate::schema::project;
+             insert_into(project::table)
+            .values((project::content_id.eq(base_content_id), &extra_content))
+            .execute(db_conn)?;
+        }
+    };
+    Ok(())
+}

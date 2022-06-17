@@ -18,17 +18,23 @@ use crate::schema::{
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
 
+#[derive(Serialize, Debug)]
+pub enum ExtraContent {
+    Blog(Blog),
+    Project(Project)
+}
+
+#[derive(Deserialize, Debug)]
+pub enum NewExtraContent {
+    Blog(NewBlog),
+    Project(NewProject)
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ContentType {
     Blog,
     Project
-}
-
-#[derive(Debug, Serialize)]
-pub enum ExtraContent {
-    Blog(Blog),
-    Project(Project)
 }
 
 impl From<String> for ContentType {
@@ -145,3 +151,8 @@ pub struct NewBlog {
     tags: Option<Vec<String>>
 }
 
+#[derive(Deserialize, Debug)]
+pub struct NewFullContent {
+    pub new_base_content: NewContent,
+    pub new_extra_content: NewExtraContent
+}
