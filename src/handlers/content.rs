@@ -97,9 +97,18 @@ pub async fn update_content(
 
 pub async fn delete_content(
     db_pool: web::Data<DbPool>, 
-    content_info: web::Path<ContentInfo>,
-) -> HttpResponse {
-    HttpResponse::Ok().finish()
+    delete_slug: web::Path<ContentSlug>,
+) -> Result<usize, ContentError> {
+    // Returns the number of rows deleted
+    let rows_deleted = web::block(move || {
+        let conn = db_pool.get()?;
+        content_ops::delete_content(
+            &conn,
+            delete_slug.into_inner().slug
+        )
+    })
+    .await??;
+    Ok(rows_deleted)
 }
 
 pub async fn add_content(

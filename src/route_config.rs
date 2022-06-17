@@ -21,7 +21,6 @@ pub fn route_config(cfg: &mut web::ServiceConfig){
                     )
                    .service(
                         web::scope("/recent")
-                            
                             .service(
                                 web::resource("/{content_type}")
                                 .route(web::get().to(content::recent_content))

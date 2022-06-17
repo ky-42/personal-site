@@ -85,7 +85,7 @@ impl From<ProjectStatus> for String {
 // ######################################################################################################
 
 #[derive(Queryable, Identifiable, Serialize, Debug)]
-#[table_name = "content" ]
+#[table_name = "content"]
 pub struct Content {
     id: i32,
     #[diesel(deserialize_as = "String")]
@@ -100,7 +100,7 @@ pub struct Content {
 
 #[derive(Queryable, Identifiable, Associations, Serialize, Debug)]
 #[belongs_to(Content)]
-#[table_name = "project" ]
+#[table_name = "project"]
 pub struct Project {
     id: i32,
     content_id: i32,
@@ -110,7 +110,7 @@ pub struct Project {
 
 #[derive(Queryable, Identifiable, Associations, Serialize, Debug)]
 #[belongs_to(Content)]
-#[table_name = "blog" ]
+#[table_name = "blog"]
 pub struct Blog {
     id: i32,
     content_id: i32,
@@ -121,5 +121,27 @@ pub struct Blog {
 pub struct FullContent {
     pub base_content: Content,
     pub extra_content: ExtraContent
+}
+
+#[derive(Insertable, Deserialize, Debug)]
+#[table_name = "content"]
+pub struct NewContent {
+    content_type: String,
+    slug: String,
+    title: String,
+    content_desc: Option<String>,
+    body: String,
+}
+
+#[derive(Insertable, Deserialize, Debug)]
+#[table_name = "project"]
+pub struct NewProject {
+    current_status: String,
+}
+
+#[derive(Insertable, Deserialize, Debug)]
+#[table_name = "blog"]
+pub struct NewBlog {
+    tags: Option<Vec<String>>
 }
 

@@ -77,3 +77,8 @@ pub fn delete_content(
         content.filter(slug.eq(delete_slug))
     ).execute(db_conn)?)
 }
+
+pub fn add_content(
+    db_conn: &PgConnection,
+    add_data: 
+)
