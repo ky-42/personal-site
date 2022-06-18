@@ -48,8 +48,8 @@ fn get_extra_content(
     db_conn: &PgConnection,
     base_content: models::Content,
 ) -> Result<models::FullContent, ContentError> {
-    match base_content.content_type {
-        models::ContentType::Blog => {
+    match &base_content.content_type[..] {
+        "blog" => {
             let found_blog = models::Blog::belonging_to(&base_content)
                 .first(db_conn)?;
             Ok(models::FullContent {
@@ -57,13 +57,17 @@ fn get_extra_content(
                 extra_content: models::ExtraContent::Blog(found_blog),
             })
         },
-        models::ContentType::Project => {
+        "project" => {
             let found_project = models::Project::belonging_to(&base_content)
                 .first(db_conn)?;
             Ok(models::FullContent {
                 base_content,
                 extra_content: models::ExtraContent::Project(found_project),
             })
+        }
+        _ => {
+            // Todo add another error for this specifically
+            Err(ContentError::ContentNotFound)
         }
     }
 }

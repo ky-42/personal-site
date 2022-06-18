@@ -17,19 +17,6 @@ use crate::schema::{
 // ######################################################################################################
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
-
-#[derive(Serialize, Debug)]
-pub enum ExtraContent {
-    Blog(Blog),
-    Project(Project)
-}
-
-#[derive(Deserialize, Debug)]
-pub enum NewExtraContent {
-    Blog(NewBlog),
-    Project(NewProject)
-}
-
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ContentType {
@@ -57,45 +44,28 @@ impl From<ContentType> for String {
     }   
 }
 
-#[derive(Debug, Serialize)]
-enum ProjectStatus {
-    UnderDevelopment,
-    Unfinished,
-    Finished
+#[derive(Serialize, Debug)]
+pub enum ExtraContent {
+    Blog(Blog),
+    Project(Project)
 }
 
-impl From<String> for ProjectStatus {
-    fn from(project_status: String) -> Self {
-        let project_status: &str = &project_status;
-        match project_status {
-            "Unfinished" => ProjectStatus::Unfinished,
-            "Under Development" => ProjectStatus::UnderDevelopment,
-            "Finished" => ProjectStatus::Finished,
-            _ => ProjectStatus::Unfinished
-        }
-    }
-}
-
-impl From<ProjectStatus> for String {
-    fn from(project_status: ProjectStatus) -> Self {
-        match project_status {
-            ProjectStatus::Unfinished => "Unfinished".to_owned(),
-            ProjectStatus::UnderDevelopment => "Under Development".to_owned(),
-            ProjectStatus::Finished => "Finished".to_owned()
-        }
-    }
+#[derive(Deserialize, Debug)]
+pub enum NewExtraContent {
+    Blog(NewBlog),
+    Project(NewProject)
 }
 
 // ######################################################################################################
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
 
-#[derive(Queryable, Identifiable, Serialize, Debug)]
+#[derive(Queryable, AsChangeset, Identifiable, Serialize, Debug)]
 #[table_name = "content"]
+#[changeset_options(treat_none_as_null="true")]
 pub struct Content {
     id: i32,
-    #[diesel(deserialize_as = "String")]
-    pub content_type: ContentType,
+    pub content_type: String,
     slug: String,
     title: String,
     content_desc: Option<String>,
@@ -104,19 +74,19 @@ pub struct Content {
     updated_at: DateTime<Utc>,
 }
 
-#[derive(Queryable, Identifiable, Associations, Serialize, Debug)]
+#[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Debug)]
 #[belongs_to(Content)]
 #[table_name = "project"]
 pub struct Project {
     id: i32,
     content_id: i32,
-    #[diesel(deserialize_as = "String")]
-    current_status: ProjectStatus
+    current_status: String
 }
 
-#[derive(Queryable, Identifiable, Associations, Serialize, Debug)]
+#[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Debug)]
 #[belongs_to(Content)]
 #[table_name = "blog"]
+#[changeset_options(treat_none_as_null="true")]
 pub struct Blog {
     id: i32,
     content_id: i32,
