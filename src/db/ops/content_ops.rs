@@ -66,7 +66,7 @@ fn get_extra_content(
             })
         }
         _ => {
-            // Todo add another error for this specifically
+            // TODO add another error for this specifically
             Err(ContentError::ContentNotFound)
         }
     }
@@ -109,7 +109,21 @@ pub fn add_content(
     Ok(())
 }
 
-
+pub fn update_content(
+    db_conn: &PgConnection,
+    update_data: models::FullContent
+) -> Result<(), ContentError> {
+    let _base_update: models::Content = update_data.base_content.save_changes(db_conn)?;
+    let _extra_update = match update_data.extra_content {
+        models::ExtraContent::Blog(blog_update_data) => {
+            models::ExtraContent::Blog(blog_update_data.save_changes(db_conn)?)
+        },
+        models::ExtraContent::Project(project_update_data) => {
+            models::ExtraContent::Project(project_update_data.save_changes(db_conn)?)
+        }
+    };
+    Ok(())
+}
 
 #[cfg(test)]
 mod tests {

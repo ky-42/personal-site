@@ -41,17 +41,6 @@ pub struct PageInfo {
     page: Option<i32>,
 }
 
-#[derive(Deserialize, Debug)]
-pub struct ContentAddInfo {
-    content_type: ContentType,
-    slug: String,
-    title: String,
-    content_desc: Option<String>,
-    body: String,
-    current_status: Option<String>,
-    tags: Option<Vec<String>>
-}
-
 // ######################################################################################################
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
