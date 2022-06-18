@@ -156,3 +156,56 @@ pub struct NewFullContent {
     pub new_base_content: NewContent,
     pub new_extra_content: NewExtraContent
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    impl NewContent {
+        pub fn new_with_blog_no_desc() -> NewContent {
+            NewContent {
+                content_type: "blog".to_string(),
+                slug: "blog-test".to_string(),
+                title: "Test Blog".to_string(),
+                content_desc: None,
+                body: "Hi".to_string()
+            }
+        }
+        
+        pub fn new_with_project_desc() -> NewContent {
+            NewContent {
+                content_type: "project".to_string(),
+                slug: "project-test".to_string(),
+                title: "Test Project".to_string(),
+                content_desc: Some("this is one of the test projects".to_string()),
+                body: "Hi".to_string()
+            }
+        }
+        
+        pub fn get_slug(&self) -> &str {
+            &self.slug
+        }
+    }   
+    
+    impl NewBlog {
+        pub fn new_with_tags() -> NewBlog {
+            NewBlog {
+                tags: None
+            }
+        }
+    }
+    
+    impl NewProject {
+        pub fn new_with_status() -> NewProject {
+            NewProject {
+                current_status: "finished".to_string()
+            }
+        }
+    }
+    
+    impl FullContent {
+        pub fn get_slug<'a>(&'a self) -> &'a str {
+            &self.base_content.slug
+        }
+    }
+}
