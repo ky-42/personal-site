@@ -83,10 +83,18 @@ pub async fn recent_content(
 
 pub async fn update_content(
     db_pool: web::Data<DbPool>, 
-    content_info: web::Path<ContentSlug>,
-    // update_info: Json<>
-) -> HttpResponse {
-    HttpResponse::Ok().finish()
+    _content_info: web::Path<ContentSlug>,
+    update_info: web::Json<FullContent>
+) -> Result<HttpResponse, ContentError> {
+    web::block(move || {
+        let conn = db_pool.get()?;
+        content_ops::update_content(
+            &conn,
+            update_info.into_inner()
+        )
+    })
+    .await??;
+    Ok(HttpResponse::Ok().finish())
 }
 
 pub async fn delete_content(
