@@ -44,7 +44,7 @@ impl From<ContentType> for String {
     }   
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub enum ExtraContent {
     Blog(Blog),
     Project(Project)
@@ -60,7 +60,10 @@ pub enum NewExtraContent {
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
 
-#[derive(Queryable, AsChangeset, Identifiable, Serialize, Debug)]
+//TODO make a model that is changeable that dont have
+// times or id and are all option feilds
+
+#[derive(Queryable, AsChangeset, Identifiable, Serialize, Deserialize, Debug)]
 #[table_name = "content"]
 #[changeset_options(treat_none_as_null="true")]
 pub struct Content {
@@ -74,7 +77,7 @@ pub struct Content {
     updated_at: DateTime<Utc>,
 }
 
-#[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Debug)]
+#[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Debug)]
 #[belongs_to(Content)]
 #[table_name = "project"]
 pub struct Project {
@@ -83,7 +86,7 @@ pub struct Project {
     current_status: String
 }
 
-#[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Debug)]
+#[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Debug)]
 #[belongs_to(Content)]
 #[table_name = "blog"]
 #[changeset_options(treat_none_as_null="true")]
@@ -93,7 +96,7 @@ pub struct Blog {
     tags: Option<Vec<String>>
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct FullContent {
     pub base_content: Content,
     pub extra_content: ExtraContent
