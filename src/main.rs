@@ -14,6 +14,9 @@ mod handlers;
 mod schema;
 mod db;
 
+#[cfg(test)]
+mod test_helpers;
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // For logging

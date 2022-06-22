@@ -13,7 +13,8 @@ use serde::{
 use crate::db::{
     models::{
         ContentType,
-        FullContent
+        FullContent,
+        NewFullContent
     },
     ops::content_ops,
     DbPool,
@@ -25,10 +26,10 @@ use super::errors::{
 // ######################################################################################################
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
-// ######################################################################################################
-// ------------------------------------------------------------------------------------------------------
-// ######################################################################################################
 
+// Enums used in routes
+
+// Used to get content slug out of routes
 #[derive(Deserialize, Debug)]
 pub struct ContentSlug {
     slug: String
@@ -40,21 +41,13 @@ pub struct PageInfo {
     page: Option<i32>,
 }
 
-#[derive(Deserialize, Debug)]
-pub struct ContentAddInfo {
-    content_type: ContentType,
-    slug: String,
-    title: String,
-    content_desc: Option<String>,
-    body: String,
-    current_status: Option<String>,
-    tags: Option<Vec<String>>
-}
-
 // ######################################################################################################
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
 
+// CRUD routes for content
+
+// Returns a single peice of content
 pub async fn view_content(
     db_pool: web::Data<DbPool>, 
     slug_requested: web::Path<ContentSlug>
@@ -70,6 +63,7 @@ pub async fn view_content(
     Ok(web::Json(fetched_content))
 }
 
+// Returns a list of recent content
 pub async fn recent_content(
     db_pool: web::Data<DbPool>, 
     content_type_requested: web::Path<ContentType>,
@@ -89,7 +83,7 @@ pub async fn recent_content(
 
 pub async fn update_content(
     db_pool: web::Data<DbPool>, 
-    content_info: web::Path<ContentInfo>,
+    content_info: web::Path<ContentSlug>,
     // update_info: Json<>
 ) -> HttpResponse {
     HttpResponse::Ok().finish()
@@ -98,7 +92,7 @@ pub async fn update_content(
 pub async fn delete_content(
     db_pool: web::Data<DbPool>, 
     delete_slug: web::Path<ContentSlug>,
-) -> Result<usize, ContentError> {
+) -> Result<HttpResponse, ContentError> {
     // Returns the number of rows deleted
     let rows_deleted = web::block(move || {
         let conn = db_pool.get()?;
@@ -108,12 +102,24 @@ pub async fn delete_content(
         )
     })
     .await??;
-    Ok(rows_deleted)
+    Ok(HttpResponse::Ok().json(format!(r#"
+    {{
+        "rows_deleted": "{}"
+    }}
+    "#, rows_deleted)))
 }
 
 pub async fn add_content(
     db_pool: web::Data<DbPool>, 
-    add_info: web::Json<ContentAddInfo>
-) -> HttpResponse{
-    HttpResponse::Ok().finish()   
+    add_info: web::Json<NewFullContent>
+) -> Result<HttpResponse, ContentError> {
+    web::block(move || {
+        let conn = db_pool.get()?;
+        content_ops::add_content(
+            &conn,
+            add_info.into_inner()
+        )
+    })
+    .await??;
+    Ok(HttpResponse::Ok().finish())
 }

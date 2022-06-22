@@ -24,6 +24,7 @@ pub enum ContentError {
     WebBlockError,
 }
 
+// Makes error able to be returned by handler
 impl ResponseError for ContentError {
     fn error_response(&self) -> HttpResponse {
         HttpResponse::build(self.status_code())
@@ -39,6 +40,8 @@ impl ResponseError for ContentError {
         }
     }
 }
+
+// Implementations for converting between errors
 
 impl From<r2d2::Error> for ContentError {
     fn from(r2d2_error: r2d2::Error) -> Self {
