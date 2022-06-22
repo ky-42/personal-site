@@ -27,12 +27,14 @@ pub fn view_recent_content(
 ) -> Result<Vec<models::FullContent>, ContentError> {
     use crate::schema::content::dsl::*;
     let requested_content_type: String = requested_content_type.into();
+    // Loads list of base content info
     let base_content_list = content
         .filter(content_type.eq(requested_content_type))
         .order(created_at.desc())
         .limit(amount_to_view)
         .load::<models::Content>(db_conn)?;
     let mut full_content_list: Vec<models::FullContent> = Vec::new();
+    // Gets the extra content data for each base content peice and adds both to a vec
     for base_content in base_content_list{
         full_content_list.push(
             get_extra_content(
@@ -49,6 +51,7 @@ fn get_extra_content(
     base_content: models::Content,
 ) -> Result<models::FullContent, ContentError> {
     match &base_content.content_type[..] {
+        // Gets extra content then creates full content to return
         "blog" => {
             let found_blog = models::Blog::belonging_to(&base_content)
                 .first(db_conn)?;
@@ -88,11 +91,13 @@ pub fn add_content(
     add_data: models::NewFullContent
 ) -> Result<(), ContentError> {
     use crate::schema::content;
+    // Adds base content and gets new id
     let base_content_id: i32 = insert_into(content::table)
         .values(add_data.new_base_content)
         .returning(content::id)
         .get_result(db_conn)?;
     match add_data.new_extra_content {
+        // Adds extra content and adds id of base content
         models::NewExtraContent::Blog(extra_content) => {
             use crate::schema::blog;
             insert_into(blog::table)
@@ -134,7 +139,7 @@ mod tests {
     fn basic_content_tests() {
         let basic_content = models::NewFullContent {
             new_base_content: models::NewContent::new_with_blog_no_desc(),
-            new_extra_content: models::NewExtraContent::Blog(models::NewBlog::new_with_tags())
+            new_extra_content: models::NewExtraContent::Blog(models::NewBlog::new_without_tags())
         };
         let conn = test_helpers::db_connection();
         
