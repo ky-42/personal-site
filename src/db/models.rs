@@ -17,6 +17,7 @@ use crate::schema::{
 // ######################################################################################################
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ContentType {
@@ -24,17 +25,7 @@ pub enum ContentType {
     Project
 }
 
-impl From<String> for ContentType {
-    fn from(content_type: String) -> Self {
-        let content_type: &str = &content_type;
-        match content_type {
-            "blog" => ContentType::Blog,
-            "project" => ContentType::Project,
-            _ => ContentType::Blog
-        }
-    }
-}
-
+// Used to convert content type to a string to insert into db
 impl From<ContentType> for String {
     fn from(content_type: ContentType) -> Self {
         match content_type {
@@ -60,9 +51,10 @@ pub enum NewExtraContent {
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
 
+// Structs for getting and updating data from db
+
 //TODO make a model that is changeable that dont have
 // times or id and are all option feilds
-
 #[derive(Queryable, AsChangeset, Identifiable, Serialize, Deserialize, Debug)]
 #[table_name = "content"]
 #[changeset_options(treat_none_as_null="true")]
@@ -102,6 +94,8 @@ pub struct FullContent {
     pub extra_content: ExtraContent
 }
 
+// Structs for adding new content to db
+
 #[derive(Insertable, Deserialize, Debug)]
 #[table_name = "content"]
 pub struct NewContent {
@@ -111,6 +105,7 @@ pub struct NewContent {
     content_desc: Option<String>,
     body: String,
 }
+
 
 #[derive(Insertable, Deserialize, Debug)]
 #[table_name = "project"]
@@ -134,6 +129,7 @@ pub struct NewFullContent {
 mod tests {
     use super::*;
 
+    // creates preset models be created for testing
     impl NewContent {
         pub fn new_with_blog_no_desc() -> NewContent {
             NewContent {
@@ -161,7 +157,7 @@ mod tests {
     }   
     
     impl NewBlog {
-        pub fn new_with_tags() -> NewBlog {
+        pub fn new_without_tags() -> NewBlog {
             NewBlog {
                 tags: None
             }
