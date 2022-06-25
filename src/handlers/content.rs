@@ -36,9 +36,29 @@ pub struct ContentSlug {
 }
 
 #[derive(Deserialize, Debug)]
+enum ShowOrder {
+    newest,
+    oldest,
+    most_popular,
+    least_popular,
+    search(String),
+}
+
+#[derive(Deserialize, Debug)]
 pub struct PageInfo {
     content_per_page: i64,
-    page: Option<i32>,
+    page: i64,
+    show_order: ShowOrder
+}
+
+impl Default for PageInfo {
+    fn default() -> PageInfo {
+        PageInfo {
+            content_per_page: 4,
+            page: 1,
+            show_order: ShowOrder::newest
+        }
+    }
 }
 
 // ######################################################################################################
