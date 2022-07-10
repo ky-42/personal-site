@@ -14,7 +14,8 @@ use crate::db::{
     models::{
         ContentType,
         FullContent,
-        NewFullContent
+        NewFullContent,
+        PageInfo
     },
     ops::content_ops,
     DbPool,
@@ -35,36 +36,19 @@ pub struct ContentSlug {
     slug: String
 }
 
-#[derive(Deserialize, Debug)]
-enum ShowOrder {
-    newest,
-    oldest,
-    most_popular,
-    least_popular,
-    search(String),
-}
 
-#[derive(Deserialize, Debug)]
-pub struct PageInfo {
-    content_per_page: i64,
-    page: i64,
-    show_order: ShowOrder
-}
-
-impl Default for PageInfo {
-    fn default() -> PageInfo {
-        PageInfo {
-            content_per_page: 4,
-            page: 1,
-            show_order: ShowOrder::newest
-        }
-    }
-}
 
 // ######################################################################################################
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
 
+// Returns a list of content
+pub async fn list_content(
+    db_pool: web::Data<DbPool>, 
+    page_info: web::Json<PageInfo>
+) -> Result<web::Json<Vec<FullContent>>, ContentError> {
+    
+}
 // CRUD routes for content
 
 // Returns a single peice of content
@@ -81,24 +65,6 @@ pub async fn view_content(
     })
     .await??;
     Ok(web::Json(fetched_content))
-}
-
-// Returns a list of recent content
-pub async fn recent_content(
-    db_pool: web::Data<DbPool>, 
-    content_type_requested: web::Path<ContentType>,
-    page_info: web::Query<PageInfo>
-) -> Result<web::Json<Vec<FullContent>>, ContentError> {
-    let recent_fetched_content = web::block(move || {
-        let conn = db_pool.get()?;
-        content_ops::view_recent_content(
-            &conn,
-            content_type_requested.into_inner(),
-            page_info.into_inner().content_per_page
-        )
-    })
-    .await??;
-    Ok(web::Json(recent_fetched_content))
 }
 
 pub async fn update_content(

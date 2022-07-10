@@ -19,13 +19,13 @@ pub fn route_config(cfg: &mut web::ServiceConfig){
                         web::resource("/add")
                         .route(web::post().to(content::add_content))
                     )
-                   .service(
-                        web::scope("/recent")
-                            .service(
-                                web::resource("/{content_type}")
-                                .route(web::get().to(content::recent_content))
-                            )
-                    )
+                //    .service(
+                //         web::scope("/recent")
+                //             .service(
+                //                 web::resource("/{content_type}")
+                //                 .route(web::get().to(content::recent_content))
+                //             )
+                //     )
             )
     );
 }

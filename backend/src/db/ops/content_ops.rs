@@ -20,30 +20,33 @@ pub fn view_content(
     )
 }
 
-pub fn view_recent_content(
+pub fn view_content_list(
     db_conn: &PgConnection,
-    requested_content_type: models::ContentType,
-    amount_to_view: i64
+    view_info: models::PageInfo    
 ) -> Result<Vec<models::FullContent>, ContentError> {
-    use crate::schema::content::dsl::*;
-    let requested_content_type: String = requested_content_type.into();
-    // Loads list of base content info
-    let base_content_list = content
-        .filter(content_type.eq(requested_content_type))
-        .order(created_at.desc())
-        .limit(amount_to_view)
-        .load::<models::Content>(db_conn)?;
-    let mut full_content_list: Vec<models::FullContent> = Vec::new();
-    // Gets the extra content data for each base content peice and adds both to a vec
-    for base_content in base_content_list{
-        full_content_list.push(
-            get_extra_content(
-                db_conn,
-                base_content
-            )?
-        );
+    let mut base_results = content
+        .limit(view_info.content_per_page)
+        .offset(view_info.content_per_page * view_info.page-1);
+    if let Some(requested_content_type) = view_info.content_type {
+        base_results = base_results.filter(content_type.eq(requested_content_type));
     };
-    Ok(full_content_list)
+    match view_info.show_order {
+        models::ShowOrder::newest => {
+            base_results = base_results.order(created_at.desc());
+        },
+        models::ShowOrder::oldest => {
+            base_results = base_results.order(created_at.asc());
+        },       
+        models::ShowOrder::most_popular => {
+
+        },       
+        models::ShowOrder::least_popular => {
+
+        },       
+        models::ShowOrder::search(search_term) => {
+
+        },       
+    };
 }
 
 fn get_extra_content(

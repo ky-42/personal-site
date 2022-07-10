@@ -18,6 +18,40 @@ use crate::schema::{
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
 
+// Info for getting a list of content
+
+#[derive(Deserialize, Debug)]
+pub enum ShowOrder {
+    newest,
+    oldest,
+    most_popular,
+    least_popular,
+    search(String),
+}
+
+#[derive(Deserialize, Debug)]
+pub struct PageInfo {
+    pub content_per_page: i64,
+    pub page: i64,
+    pub show_order: ShowOrder,
+    pub content_type: Option<ContentType>
+}
+
+impl Default for PageInfo {
+    fn default() -> PageInfo {
+        PageInfo {
+            content_per_page: 4,
+            page: 1,
+            show_order: ShowOrder::newest,
+            content_type: None
+        }
+    }
+}
+
+// ######################################################################################################
+// ------------------------------------------------------------------------------------------------------
+// ######################################################################################################
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ContentType {
