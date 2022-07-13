@@ -24,29 +24,42 @@ pub fn view_content_list(
     db_conn: &PgConnection,
     view_info: models::PageInfo    
 ) -> Result<Vec<models::FullContent>, ContentError> {
-    let mut base_results = content
+    use crate::schema::content::dsl::*;
+    let mut base_query = content
         .limit(view_info.content_per_page)
-        .offset(view_info.content_per_page * view_info.page-1);
+        .offset(view_info.content_per_page * view_info.page-1)
+        .into_boxed();
     if let Some(requested_content_type) = view_info.content_type {
-        base_results = base_results.filter(content_type.eq(requested_content_type));
+        base_query = base_query.filter(content_type.eq::<String>(requested_content_type.into()))
     };
-    match view_info.show_order {
+    base_query = match view_info.show_order {
         models::ShowOrder::newest => {
-            base_results = base_results.order(created_at.desc());
+            base_query.order(created_at.desc())
         },
         models::ShowOrder::oldest => {
-            base_results = base_results.order(created_at.asc());
+            base_query.order(created_at.asc())
         },       
-        models::ShowOrder::most_popular => {
+        // models::ShowOrder::most_popular => {
 
-        },       
-        models::ShowOrder::least_popular => {
+        // },       
+        // models::ShowOrder::least_popular => {
 
-        },       
-        models::ShowOrder::search(search_term) => {
+        // },       
+        // models::ShowOrder::search(search_term) => {
 
-        },       
+        // },       
     };
+    let mut full_content_list = Vec::new();
+    let base_content_results = base_query.load::<models::Content>(db_conn)?;
+    for base_content in base_content_results {
+        full_content_list.push(
+            get_extra_content(
+                db_conn,
+                base_content
+            )?
+        );
+    };
+    Ok(full_content_list)
 }
 
 fn get_extra_content(
@@ -109,7 +122,7 @@ pub fn add_content(
         },
         models::NewExtraContent::Project(extra_content) => {
             use crate::schema::project;
-             insert_into(project::table)
+            insert_into(project::table)
             .values((project::content_id.eq(base_content_id), &extra_content))
             .execute(db_conn)?;
         }

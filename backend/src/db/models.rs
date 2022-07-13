@@ -24,9 +24,9 @@ use crate::schema::{
 pub enum ShowOrder {
     newest,
     oldest,
-    most_popular,
-    least_popular,
-    search(String),
+    // most_popular,
+    // least_popular,
+    // search(String),
 }
 
 #[derive(Deserialize, Debug)]
