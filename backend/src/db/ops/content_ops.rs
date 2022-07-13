@@ -30,16 +30,16 @@ pub fn view_content_list(
             base_content_query.filter(content_type.eq::<String>(requested_content_type.into()));
     };
     base_content_query = match view_info.show_order {
-        models::ShowOrder::newest => base_content_query.order(created_at.desc()),
-        models::ShowOrder::oldest => base_content_query.order(created_at.asc()),
-        models::ShowOrder::search(search_term) => base_content_query,
+        models::ShowOrder::Newest => base_content_query.order(created_at.desc()),
+        models::ShowOrder::Oldest => base_content_query.order(created_at.asc()),
+        models::ShowOrder::Search(search_term) => base_content_query,
         _ => base_content_query,
         // models::ShowOrder::most_popular => {}
         // models::ShowOrder::least_popular => {}
     };
     let base_content_results = base_content_query.load::<models::Content>(db_conn)?;
 
-    let full_content_list = vec![];
+    let mut full_content_list = vec![];
 
     for base_content in base_content_results {
         full_content_list.push(get_extra_content(db_conn, base_content)?);

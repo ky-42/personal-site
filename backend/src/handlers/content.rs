@@ -32,6 +32,12 @@ pub async fn list_content(
     db_pool: web::Data<DbPool>,
     page_info: web::Json<PageInfo>,
 ) -> Result<web::Json<Vec<FullContent>>, ContentError> {
+    let fetched_content_list = web::block(move || {
+        let conn = db_pool.get()?;
+        content_ops::view_content_list(&conn, page_info.into_inner())
+    })
+    .await??;
+    Ok(web::Json(fetched_content_list))
 }
 // CRUD routes for content
 
@@ -92,3 +98,5 @@ pub async fn add_content(
     .await??;
     Ok(HttpResponse::Ok().finish())
 }
+
+struct AuthUser {}
