@@ -1,18 +1,7 @@
+use crate::schema::{blog, content, project};
+use chrono::{DateTime, Utc};
 use diesel::prelude::*;
-use serde::{
-    self,
-    Deserialize,
-    Serialize
-};
-use chrono::{
-    DateTime,
-    Utc
-};
-use crate::schema::{
-    content,
-    project,
-    blog
-};
+use serde::{self, Deserialize, Serialize};
 
 // ######################################################################################################
 // ------------------------------------------------------------------------------------------------------
@@ -34,7 +23,7 @@ pub struct PageInfo {
     pub content_per_page: i64,
     pub page: i64,
     pub show_order: ShowOrder,
-    pub content_type: Option<ContentType>
+    pub content_type: Option<ContentType>,
 }
 
 impl Default for PageInfo {
@@ -43,7 +32,7 @@ impl Default for PageInfo {
             content_per_page: 4,
             page: 1,
             show_order: ShowOrder::newest,
-            content_type: None
+            content_type: None,
         }
     }
 }
@@ -56,7 +45,7 @@ impl Default for PageInfo {
 #[serde(rename_all = "lowercase")]
 pub enum ContentType {
     Blog,
-    Project
+    Project,
 }
 
 // Used to convert content type to a string to insert into db
@@ -64,21 +53,21 @@ impl From<ContentType> for String {
     fn from(content_type: ContentType) -> Self {
         match content_type {
             ContentType::Blog => "blog".to_owned(),
-            ContentType::Project => "project".to_owned()
+            ContentType::Project => "project".to_owned(),
         }
-    }   
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum ExtraContent {
     Blog(Blog),
-    Project(Project)
+    Project(Project),
 }
 
 #[derive(Deserialize, Debug)]
 pub enum NewExtraContent {
     Blog(NewBlog),
-    Project(NewProject)
+    Project(NewProject),
 }
 
 // ######################################################################################################
@@ -91,7 +80,7 @@ pub enum NewExtraContent {
 // times or id and are all option feilds
 #[derive(Queryable, AsChangeset, Identifiable, Serialize, Deserialize, Debug)]
 #[table_name = "content"]
-#[changeset_options(treat_none_as_null="true")]
+#[changeset_options(treat_none_as_null = "true")]
 pub struct Content {
     id: i32,
     pub content_type: String,
@@ -109,23 +98,23 @@ pub struct Content {
 pub struct Project {
     id: i32,
     content_id: i32,
-    current_status: String
+    current_status: String,
 }
 
 #[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Debug)]
 #[belongs_to(Content)]
 #[table_name = "blog"]
-#[changeset_options(treat_none_as_null="true")]
+#[changeset_options(treat_none_as_null = "true")]
 pub struct Blog {
     id: i32,
     content_id: i32,
-    tags: Option<Vec<String>>
+    tags: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FullContent {
     pub base_content: Content,
-    pub extra_content: ExtraContent
+    pub extra_content: ExtraContent,
 }
 
 // Structs for adding new content to db
@@ -140,7 +129,6 @@ pub struct NewContent {
     body: String,
 }
 
-
 #[derive(Insertable, Deserialize, Debug)]
 #[table_name = "project"]
 pub struct NewProject {
@@ -150,13 +138,13 @@ pub struct NewProject {
 #[derive(Insertable, Deserialize, Debug)]
 #[table_name = "blog"]
 pub struct NewBlog {
-    tags: Option<Vec<String>>
+    tags: Option<Vec<String>>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct NewFullContent {
     pub new_base_content: NewContent,
-    pub new_extra_content: NewExtraContent
+    pub new_extra_content: NewExtraContent,
 }
 
 #[cfg(test)]
@@ -171,44 +159,43 @@ mod tests {
                 slug: "blog-test".to_string(),
                 title: "Test Blog".to_string(),
                 content_desc: None,
-                body: "Hi".to_string()
+                body: "Hi".to_string(),
             }
         }
-        
+
         pub fn new_with_project_desc() -> NewContent {
             NewContent {
                 content_type: "project".to_string(),
                 slug: "project-test".to_string(),
                 title: "Test Project".to_string(),
                 content_desc: Some("this is one of the test projects".to_string()),
-                body: "Hi".to_string()
+                body: "Hi".to_string(),
             }
         }
-        
+
         pub fn get_slug(&self) -> &str {
             &self.slug
         }
-    }   
-    
+    }
+
     impl NewBlog {
         pub fn new_without_tags() -> NewBlog {
-            NewBlog {
-                tags: None
-            }
+            NewBlog { tags: None }
         }
     }
-    
+
     impl NewProject {
         pub fn new_with_status() -> NewProject {
             NewProject {
-                current_status: "finished".to_string()
+                current_status: "finished".to_string(),
             }
         }
     }
-    
+
     impl FullContent {
         pub fn get_slug<'a>(&'a self) -> &'a str {
             &self.base_content.slug
         }
     }
 }
+

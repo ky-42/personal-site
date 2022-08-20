@@ -1,18 +1,11 @@
 #[macro_use]
 extern crate diesel;
-use actix_web::{
-    HttpServer,
-    App,
-    web,
-    middleware::{
-        Logger,
-    }
-};
+use actix_web::{middleware::Logger, web, App, HttpServer};
 
-mod route_config;
-mod handlers;
-mod schema;
 mod db;
+mod handlers;
+mod route_config;
+mod schema;
 
 #[cfg(test)]
 mod test_helpers;
