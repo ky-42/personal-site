@@ -30,7 +30,14 @@ pub async fn list_content(
 ) -> Result<web::Json<Vec<FullContent>>, ContentError> {
     let fetched_content_list = web::block(move || {
         let conn = db_pool.get()?;
+<<<<<<< HEAD
         content_ops::view_content_list(&conn, page_info.into_inner())
+=======
+        content_ops::view_content_list(
+            &conn,
+            page_info.into_inner()
+        )
+>>>>>>> 42f483734701c4a51d2c75c623efb44e46f1be39
     })
     .await??;
     Ok(web::Json(fetched_content_list))
