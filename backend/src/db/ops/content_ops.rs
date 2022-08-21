@@ -32,8 +32,7 @@ pub fn view_content_list(
     base_content_query = match view_info.show_order {
         models::ShowOrder::Newest => base_content_query.order(created_at.desc()),
         models::ShowOrder::Oldest => base_content_query.order(created_at.asc()),
-        models::ShowOrder::Search(search_term) => base_content_query,
-        _ => base_content_query,
+        models::ShowOrder::Search(_search_term) => base_content_query,
         // models::ShowOrder::most_popular => {}
         // models::ShowOrder::least_popular => {}
     };

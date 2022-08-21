@@ -1,6 +1,5 @@
 use crate::schema::{blog, content, project};
 use chrono::{DateTime, Utc};
-use diesel::prelude::*;
 use serde::{self, Deserialize, Serialize};
 
 // ######################################################################################################

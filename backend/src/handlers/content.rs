@@ -1,14 +1,10 @@
-use super::errors::ContentError;
+use super::{errors::ContentError, extractors::AuthUser};
 use crate::db::{
-    models::{ContentType, FullContent, NewFullContent, PageInfo},
+    models::{FullContent, NewFullContent, PageInfo},
     ops::content_ops,
     DbPool,
 };
-use actix_web::{
-    error,
-    http::{header, StatusCode},
-    web, HttpResponse,
-};
+use actix_web::{web, HttpResponse};
 use serde::Deserialize;
 
 // ######################################################################################################
@@ -90,6 +86,7 @@ pub async fn delete_content(
 pub async fn add_content(
     db_pool: web::Data<DbPool>,
     add_info: web::Json<NewFullContent>,
+    _: AuthUser,
 ) -> Result<HttpResponse, ContentError> {
     web::block(move || {
         let conn = db_pool.get()?;
@@ -98,5 +95,3 @@ pub async fn add_content(
     .await??;
     Ok(HttpResponse::Ok().finish())
 }
-
-struct AuthUser {}
