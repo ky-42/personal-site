@@ -1,94 +1,35 @@
 import React from 'react';
+import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
+import HomeLink from '../components/HomeLink';
 
-// ------------------
-// Overall Containers
-// ------------------
+const HomeDiv = styled.div`
+  
+`;
 
-const HomeContainer = styled.div`
+const AsteroidsDiv = styled.div`
 
 `;
 
-const SpaceShipSpace = styled.div`
-    
+const LinksDiv = styled.nav`
+  
 `;
 
-const HomeMainContent = styled.div`
-
-`;
-
-// ----------------
-// About me section
-// ----------------
-
-const AboutMeSection = styled.section`
-    
-`;
-
-const AboutMeHeader = styled.h2`
-    
-`;
-
-const AboutMeBody = styled.p`
-    
-`;
-
-// ---------------
-// Content section 
-// ---------------
-
-const ContentContainer = styled.div`
-    
-`;
-
-// Project Section
-const ProjectSection = styled.section`
-    
-`;
-
-const ProjectHeader = styled.h2`
-    
-`;
-
-// Blog Section
-const  BlogSection = styled.section`
-    
-`;
-
-const BlogHeader = styled.h2`
-    
-`;
-
-const HomePage = () => {
-    return (
-        <HomeContainer>
-            <SpaceShipSpace />
-            <HomeMainContent>
-                <AboutMeSection>
-                    <AboutMeHeader>
-                        About Me             
-                    </AboutMeHeader>
-                    <AboutMeBody>
-                        {/* TODO Write about me body text  */}
-                    </AboutMeBody>
-                </AboutMeSection>
-                <ContentContainer>
-                    <ProjectSection>
-                        <ProjectHeader>
-                            Recent Projects
-                        </ProjectHeader>
-                        {/* TODO Add content list component here*/}
-                    </ProjectSection>
-                    <BlogSection>
-                        <BlogHeader>
-                            Recent Blogs
-                        </BlogHeader>
-                        {/* TODO Add content list component here*/}
-                    </BlogSection>
-                </ContentContainer>
-            </HomeMainContent>
-        </HomeContainer>
-    );
+const Home = () => {
+  return (
+    <HomeDiv>
+      {
+        isMobile &&
+        <AsteroidsDiv />
+      }
+      <LinksDiv>
+        <HomeLink LinkAddress="/about-me" LinkName="About Me" />
+        <HomeLink LinkAddress="/contact" LinkName="Contact" />
+        <HomeLink LinkAddress="/projects" LinkName="Projects" />
+        <HomeLink LinkAddress="/blogs" LinkName="Blogs" />
+      </LinksDiv>
+    </HomeDiv>
+  );
 }
 
-export default HomePage;
+export default Home;
