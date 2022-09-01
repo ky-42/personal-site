@@ -9,7 +9,10 @@ const MobileWidth = 500;
 const AppConfig = () => {
   const IsMobile = (useWindowSize().width < 500);
   const StlyeTheme = {
-    mobile: IsMobile
+    mobile: IsMobile,
+    backgroundColour: "#303030",
+    textColour: "#FFFFFF",
+    smallTextColour: "#D5D5D5"
   };
 
   return (

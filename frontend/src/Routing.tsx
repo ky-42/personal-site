@@ -16,11 +16,11 @@ const Routing = () => {
             <Route path="connect" element={<Pages.Connect />} />
             <Route path="projects">
               <Route index element={<Pages.ProjectList />} />
-              <Route path=":projectSlug" element={<Pages.ProjectView />} />
+              <Route path=":projectSlug" element={<Pages.ContentView />} />
             </Route>
             <Route path="blogs">
               <Route index element={<Pages.BlogList />} />
-              <Route path=":blogSlug" element={<Pages.BlogView />} />
+              <Route path=":blogSlug" element={<Pages.ContentView />} />
             </Route>
           </Route>
         </Routes>

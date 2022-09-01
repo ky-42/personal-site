@@ -1,9 +1,9 @@
 import React from "react";
 
-const BlogView = () => {
+const ContentView = () => {
   return (
     <></>   
   )
 }
 
-export default BlogView;
+export default ContentView;

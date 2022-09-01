@@ -20,7 +20,7 @@ const AsteroidsBackground = () => {
             new p5((p: p5) => {
                 p.setup = () => {
                     p.createCanvas(window.innerWidth, window.innerHeight);
-                    p.background(155);
+                    p.background("#0C0C0C");
                 };
             }, CanvasParentRef.current);
         }
