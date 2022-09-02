@@ -29,8 +29,8 @@ pub async fn list_content(
     page_info: web::Json<PageInfo>,
 ) -> Result<web::Json<Vec<FullContent>>, ContentError> {
     let fetched_content_list = web::block(move || {
-        let conn = db_pool.get()?;
-        content_ops::view_content_list(&conn, page_info.into_inner())
+        let mut conn = db_pool.get()?;
+        content_ops::view_content_list(&mut conn, page_info.into_inner())
     })
     .await??;
     Ok(web::Json(fetched_content_list))
@@ -43,8 +43,8 @@ pub async fn view_content(
     slug_requested: web::Path<ContentSlug>,
 ) -> Result<web::Json<FullContent>, ContentError> {
     let fetched_content = web::block(move || {
-        let conn = db_pool.get()?;
-        content_ops::view_content(&conn, &slug_requested.into_inner().slug)
+        let mut conn = db_pool.get()?;
+        content_ops::view_content(&mut conn, &slug_requested.into_inner().slug)
     })
     .await??;
     Ok(web::Json(fetched_content))
@@ -56,8 +56,8 @@ pub async fn update_content(
     update_info: web::Json<FullContent>,
 ) -> Result<HttpResponse, ContentError> {
     web::block(move || {
-        let conn = db_pool.get()?;
-        content_ops::update_content(&conn, update_info.into_inner())
+        let mut conn = db_pool.get()?;
+        content_ops::update_content(&mut conn, update_info.into_inner())
     })
     .await??;
     Ok(HttpResponse::Ok().finish())
@@ -69,8 +69,8 @@ pub async fn delete_content(
 ) -> Result<HttpResponse, ContentError> {
     // Returns the number of rows deleted
     let rows_deleted = web::block(move || {
-        let conn = db_pool.get()?;
-        content_ops::delete_content(&conn, delete_slug.into_inner().slug)
+        let mut conn = db_pool.get()?;
+        content_ops::delete_content(&mut conn, delete_slug.into_inner().slug)
     })
     .await??;
     Ok(HttpResponse::Ok().json(format!(
@@ -89,8 +89,8 @@ pub async fn add_content(
     _: AuthUser,
 ) -> Result<HttpResponse, ContentError> {
     web::block(move || {
-        let conn = db_pool.get()?;
-        content_ops::add_content(&conn, add_info.into_inner())
+        let mut conn = db_pool.get()?;
+        content_ops::add_content(&mut conn, add_info.into_inner())
     })
     .await??;
     Ok(HttpResponse::Ok().finish())
