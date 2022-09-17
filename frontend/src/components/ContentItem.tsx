@@ -1,7 +1,14 @@
 import React from "react";
 import { FullContent } from "../adapters/ResponseTypes/content";
 
-const ContentItem = (content: FullContent) => {
+interface ContentItemProps {
+  content: FullContent
+}
+
+const ContentItem = ({content}: ContentItemProps) => {
+  
+  const content_type = content.base_content.content_type;
+
   return (
     <></>
   )

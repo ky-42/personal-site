@@ -9,17 +9,18 @@ interface ContentPeiceOptions {
   updated_content?: ContentTypes.FullContent
 };
 
-const ContentPeice = async (params:ContentPeiceOptions) => {
+const GetContentPeice = async (params:ContentPeiceOptions) => {
   const response = await backend_axios({
     url: `/content/${params.slug}`,
     method: params.method,
     data: params.updated_content,
   });
   console.log(response);
+  // TODO throw promise error or something here
   return ((response.status === 200) ? response.data : false);
 };
 
-const ContentList = async (params:ContentTypes.PageInfo): Promise<Array<ContentTypes.FullContent>> => {
+const GetContentList = async (params:ContentTypes.PageInfo): Promise<Array<ContentTypes.FullContent>> => {
   const response = await backend_axios.get("/content/list", {
     params,
   })
@@ -42,4 +43,4 @@ const ContentAdd = async ({ addContent, password }:ContentAddParams): Promise<bo
   return (response.status === 200);
 };
 
-export { ContentPeice, ContentList, ContentAdd };
+export { GetContentPeice, GetContentList, ContentAdd };
