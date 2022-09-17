@@ -16,3 +16,6 @@ chrono = { version = "^0.4", features = ["serde"] }
 serde = { version = "^1", features = ["derive"] }
 diesel = { version = "2.0.0", features = ["r2d2", "postgres", "chrono"] }
 
+[dev-dependencies]
+lipsum = "0.8.2"
+rand = "0.8.5"

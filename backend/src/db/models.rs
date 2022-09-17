@@ -149,51 +149,91 @@ pub struct NewFullContent {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use lipsum::lipsum;
+    use rand::seq::SliceRandom;
+    use rand::Rng;
 
-    // creates preset models be created for testing
-    impl NewContent {
-        pub fn new_with_blog_no_desc() -> NewContent {
-            NewContent {
-                content_type: "blog".to_string(),
-                slug: "blog-test".to_string(),
-                title: "Test Blog".to_string(),
-                content_desc: None,
-                body: "Hi".to_string(),
+    impl NewFullContent {
+        pub fn random_project() -> NewFullContent {
+            let mut rng = rand::thread_rng();
+
+            let title = lipsum(rng.gen_range(2..5));
+            let slug = String::from(str::replace(&title, " ", "-"));
+            let content_desc: Option<String> = if rng.gen_range(0..5) > 0 {
+                Some(lipsum(rng.gen_range(7..15)))
+            } else {
+                None
+            };
+            let body = lipsum(rng.gen_range(100..500));
+
+            NewFullContent {
+                new_base_content: NewContent {
+                    content_type: String::from("project"),
+                    slug,
+                    title,
+                    content_desc,
+                    body,
+                },
+                new_extra_content: NewExtraContent::Project(NewProject {
+                    current_status: String::from(
+                        ["finished", "ongoing"].choose(&mut rng).unwrap() as &str
+                    ),
+                }),
             }
         }
 
-        pub fn new_with_project_desc() -> NewContent {
-            NewContent {
-                content_type: "project".to_string(),
-                slug: "project-test".to_string(),
-                title: "Test Project".to_string(),
-                content_desc: Some("this is one of the test projects".to_string()),
-                body: "Hi".to_string(),
+        pub fn random_blog() -> NewFullContent {
+            // TODO maybe add to its own function
+            let mut rng = rand::thread_rng();
+
+            let title = lipsum(rng.gen_range(4..10));
+            let slug = String::from(str::replace(&title, " ", "-"));
+            let content_desc: Option<String> = if rng.gen_range(0..5) > 0 {
+                Some(lipsum(rng.gen_range(7..15)))
+            } else {
+                None
+            };
+            let body = lipsum(rng.gen_range(100..500));
+
+            let tags: Option<Vec<String>> = if rng.gen_range(0..6) > 0 {
+                let num_tags = rng.gen_range(0..4);
+                Some(
+                    [
+                        "Python",
+                        "Javascript",
+                        "Rust",
+                        "Django",
+                        "Tutorial",
+                        "React",
+                        "Flask",
+                        "Actix",
+                        "Discord.py",
+                    ]
+                    .choose_multiple(&mut rng, num_tags)
+                    .cloned()
+                    .collect::<Vec<&str>>()
+                    .iter()
+                    .map(|&s| s.into())
+                    .collect(),
+                )
+            } else {
+                None
+            };
+
+            NewFullContent {
+                new_base_content: NewContent {
+                    content_type: String::from("blog"),
+                    slug,
+                    title,
+                    content_desc,
+                    body,
+                },
+                new_extra_content: NewExtraContent::Blog(NewBlog { tags }),
             }
         }
 
         pub fn get_slug(&self) -> &str {
-            &self.slug
-        }
-    }
-
-    impl NewBlog {
-        pub fn new_without_tags() -> NewBlog {
-            NewBlog { tags: None }
-        }
-    }
-
-    impl NewProject {
-        pub fn new_with_status() -> NewProject {
-            NewProject {
-                current_status: "finished".to_string(),
-            }
-        }
-    }
-
-    impl FullContent {
-        pub fn get_slug<'a>(&'a self) -> &'a str {
-            &self.base_content.slug
+            &self.new_base_content.slug
         }
     }
 }

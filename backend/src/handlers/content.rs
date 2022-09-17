@@ -26,7 +26,7 @@ pub struct ContentSlug {
 // Returns a list of content
 pub async fn list_content(
     db_pool: web::Data<DbPool>,
-    page_info: web::Json<PageInfo>,
+    page_info: web::Query<PageInfo>,
 ) -> Result<web::Json<Vec<FullContent>>, ContentError> {
     let fetched_content_list = web::block(move || {
         let mut conn = db_pool.get()?;
