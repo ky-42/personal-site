@@ -6,15 +6,23 @@ interface ConnectLinkProps {
   Icon: React.ReactNode;
 }
 
-const a = styled.a``;
+const SocialLink = styled.a`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  margin: 25px;
+  border: 5px solid white;
+`;
 
 const ConnectLinkDiv = styled.div``;
 
 const ConnectLink = ({ LinkTo, Icon }: ConnectLinkProps) => {
   return (
-    <a href={LinkTo}>
+    <SocialLink href={LinkTo}>
       <ConnectLinkDiv>{Icon}</ConnectLinkDiv>
-    </a>
+    </SocialLink>
   );
 };
 

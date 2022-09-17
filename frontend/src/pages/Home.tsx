@@ -45,8 +45,8 @@ const Home = () => {
         </NameHeader>
       </AsteroidsButton>
       <LinkContainer>
-        <HomeLink LinkAddress="/about-me" LinkName="About Me" />
-        <HomeLink LinkAddress="/contact" LinkName="Contact" />
+        <HomeLink LinkAddress="/about" LinkName="About Me" />
+        <HomeLink LinkAddress="/connect" LinkName="Connect" />
         <HomeLink LinkAddress="/projects" LinkName="Projects" />
         <HomeLink LinkAddress="/blogs" LinkName="Blogs" />
       </LinkContainer>

@@ -4,10 +4,10 @@ import { ThemeProvider } from "styled-components";
 import { useWindowSize } from "react-use";
 import { BrowserRouter } from "react-router-dom";
 
-const MobileWidth = 500; 
+const MobileWidth = 700; 
 
 const AppConfig = () => {
-  const IsMobile = (useWindowSize().width < 500);
+  const IsMobile = (useWindowSize().width < MobileWidth);
   const StlyeTheme = {
     mobile: IsMobile,
     backgroundColour: "#303030",

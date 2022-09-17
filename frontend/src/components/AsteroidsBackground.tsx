@@ -9,6 +9,7 @@ const CanvasParent = styled.div`
     width: 100%;
     margin: 0;
     padding: 0;
+    top: 0;
 `;
 
 const AsteroidsBackground = () => {

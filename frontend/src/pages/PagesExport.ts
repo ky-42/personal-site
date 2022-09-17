@@ -2,7 +2,6 @@ import Home from "./Home";
 import About from "./About";
 import Connect from "./Connect";
 import ContentView from "./ContentView";
-import BlogList from "./BlogList";
-import ProjectList from "./ProjectList";
+import ContentList from "./ContentList";
 
-export { Home, About, Connect, BlogList, ContentView, ProjectList };
+export { Home, About, Connect, ContentView, ContentList};
