@@ -1,6 +1,5 @@
 use crate::schema::{blog, content, project};
 use chrono::{DateTime, Utc};
-use diesel::prelude::*;
 use serde::{self, Deserialize, Serialize};
 
 // ######################################################################################################
@@ -11,11 +10,11 @@ use serde::{self, Deserialize, Serialize};
 
 #[derive(Deserialize, Debug)]
 pub enum ShowOrder {
-    newest,
-    oldest,
-    most_popular,
-    least_popular,
-    search(String),
+    Newest,
+    Oldest,
+    // most_popular,
+    // least_popular,
+    Search(String),
 }
 
 #[derive(Deserialize, Debug)]
@@ -31,7 +30,7 @@ impl Default for PageInfo {
         PageInfo {
             content_per_page: 4,
             page: 1,
-            show_order: ShowOrder::newest,
+            show_order: ShowOrder::Newest,
             content_type: None,
         }
     }
@@ -198,4 +197,3 @@ mod tests {
         }
     }
 }
-
