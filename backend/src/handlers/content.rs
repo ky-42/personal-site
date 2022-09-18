@@ -54,6 +54,7 @@ pub async fn update_content(
     db_pool: web::Data<DbPool>,
     _content_info: web::Path<ContentSlug>,
     update_info: web::Json<FullContent>,
+    _: AuthUser,
 ) -> Result<HttpResponse, ContentError> {
     web::block(move || {
         let mut conn = db_pool.get()?;
@@ -66,6 +67,7 @@ pub async fn update_content(
 pub async fn delete_content(
     db_pool: web::Data<DbPool>,
     delete_slug: web::Path<ContentSlug>,
+    _: AuthUser,
 ) -> Result<HttpResponse, ContentError> {
     // Returns the number of rows deleted
     let rows_deleted = web::block(move || {
@@ -73,6 +75,7 @@ pub async fn delete_content(
         content_ops::delete_content(&mut conn, delete_slug.into_inner().slug)
     })
     .await??;
+    // TODO change to struct
     Ok(HttpResponse::Ok().json(format!(
         r#"
     {{
