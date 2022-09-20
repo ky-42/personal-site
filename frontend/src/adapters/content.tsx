@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { json } from "stream/consumers";
 import backend_axios from ".";
-import * as ContentTypes from "./ResponseTypes/content";
+import * as ContentTypes from "../types/Content";
 
 interface ContentPeiceOptions {
   slug: string,

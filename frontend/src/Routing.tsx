@@ -2,7 +2,7 @@ import { useLocation, Routes, Route } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import NavBar from "./components/NavBar/NavBar";
 import * as Pages from "./pages/PagesExport";
-import { ContentTypes } from "./adapters/ResponseTypes/content";
+import { ContentTypes } from "./types/Content";
 
 
 const Routing = () => {
@@ -14,6 +14,7 @@ const Routing = () => {
         <Routes location={location} key={location.pathname}>
           <Route path="/">
             <Route index element={<Pages.Home />} />
+            <Route path="manage" element={<Pages.ManageContent />} />
             <Route path="about" element={<Pages.About />} />
             <Route path="connect" element={<Pages.Connect />} />
             <Route path="projects">

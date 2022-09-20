@@ -1,5 +1,5 @@
 import React from "react";
-import { FullContent } from "../adapters/ResponseTypes/content";
+import { FullContent } from "../types/Content";
 
 interface ContentItemProps {
   content: FullContent
