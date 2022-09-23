@@ -6,6 +6,7 @@ import * as ContentTypes from "../types/Content";
 interface ContentPeiceOptions {
   slug: string,
   method: string,
+  password?: string
   updated_content?: ContentTypes.FullContent
 };
 
@@ -14,6 +15,9 @@ const GetContentPeice = async (params:ContentPeiceOptions) => {
     url: `/content/${params.slug}`,
     method: params.method,
     data: params.updated_content,
+    headers: params.password ? {
+      authorization: params.password
+    } : undefined
   });
   console.log(response);
   // TODO throw promise error or something here

@@ -52,28 +52,12 @@ export interface NewContent {
   body: string,
 }
 
-export enum NewContentFeilds {
-  content_type = "content_type",
-  slug = "slug",
-  title = "title",
-  content_desc = "content_desc",
-  body = "body"
-}
-
 export interface NewBlog {
   tags?: Array<string>
 }
 
-export enum NewBlogFeilds {
-  tags = "tags"
-}
-
 export interface NewProject {
   current_status: string,
-}
-
-export enum NewProjectFeilds {
-  current_status = "tags"
 }
 
 export interface NewFullContent {
