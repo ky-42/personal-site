@@ -1,6 +1,6 @@
 use super::{errors::ContentError, extractors::AuthUser};
 use crate::db::{
-    models::{FullContent, NewFullContent, PageInfo},
+    models::{FullContent, NewFullContent, PageInfo, DbRows},
     ops::content_ops,
     DbPool,
 };
@@ -68,22 +68,16 @@ pub async fn delete_content(
     db_pool: web::Data<DbPool>,
     delete_slug: web::Path<ContentSlug>,
     _: AuthUser,
-) -> Result<HttpResponse, ContentError> {
+) -> Result<web::Json<DbRows>, ContentError> {
     // Returns the number of rows deleted
     let rows_deleted = web::block(move || {
         let mut conn = db_pool.get()?;
         content_ops::delete_content(&mut conn, delete_slug.into_inner().slug)
     })
-    .await??;
-    // TODO change to struct
-    Ok(HttpResponse::Ok().json(format!(
-        r#"
-    {{
-        "rows_deleted": "{}"
-    }}
-    "#,
-        rows_deleted
-    )))
+    .await?? as i32;
+    Ok(web::Json(DbRows {
+        rows_effected: rows_deleted
+    }))
 }
 
 pub async fn add_content(

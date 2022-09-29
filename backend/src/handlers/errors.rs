@@ -12,6 +12,8 @@ pub enum ContentError {
     ContentNotFound,
     #[display(fmt = "Database Error")]
     DbError,
+    #[display(fmt = "Pool Error")]
+    PoolError,
     #[display(fmt = "Error with web blocking")]
     WebBlockError,
     #[display(fmt = "You are not the site admin")]
@@ -29,6 +31,7 @@ impl ResponseError for ContentError {
         match self {
             ContentError::ContentNotFound => StatusCode::NOT_FOUND,
             ContentError::DbError => StatusCode::INTERNAL_SERVER_ERROR,
+            ContentError::PoolError => StatusCode::INTERNAL_SERVER_ERROR,
             ContentError::WebBlockError => StatusCode::INTERNAL_SERVER_ERROR,
             ContentError::NotAdmin => StatusCode::UNAUTHORIZED,
         }
@@ -39,7 +42,7 @@ impl ResponseError for ContentError {
 
 impl From<r2d2::Error> for ContentError {
     fn from(_: r2d2::Error) -> Self {
-        ContentError::DbError
+        ContentError::PoolError
     }
 }
 

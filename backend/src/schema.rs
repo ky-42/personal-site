@@ -1,12 +1,14 @@
-table! {
+// @generated automatically by Diesel CLI.
+
+diesel::table! {
     blog (id) {
         id -> Int4,
         content_id -> Int4,
-        tags -> Nullable<Array<Text>>,
+        tags -> Nullable<Array<Nullable<Text>>>,
     }
 }
 
-table! {
+diesel::table! {
     content (id) {
         id -> Int4,
         content_type -> Text,
@@ -19,7 +21,7 @@ table! {
     }
 }
 
-table! {
+diesel::table! {
     project (id) {
         id -> Int4,
         content_id -> Int4,
@@ -27,10 +29,10 @@ table! {
     }
 }
 
-joinable!(blog -> content (content_id));
-joinable!(project -> content (content_id));
+diesel::joinable!(blog -> content (content_id));
+diesel::joinable!(project -> content (content_id));
 
-allow_tables_to_appear_in_same_query!(
+diesel::allow_tables_to_appear_in_same_query!(
     blog,
     content,
     project,
