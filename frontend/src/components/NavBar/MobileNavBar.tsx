@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IoIosArrowUp, IoMdClose } from "react-icons/io"
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import LinkNavBar from "./LinkMobileNavBar";
 
 const NavBarDiv = styled.div`
@@ -38,10 +38,16 @@ const LinksDiv = styled.nav`
 `;
 
 const MobileNavBar = () => {
+  
+  const location = useLocation();
 
   const [expanded, setExpanded] = useState(false);
   
   const BottomIcon = expanded ? <UpArrow /> : <CloseIcon />;
+  
+  useEffect(() => {
+    setExpanded(false);
+  }, [location])
 
   return (
     <NavBarDiv>

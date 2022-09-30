@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { GetContentList } from "../adapters/content";
-import { ContentTypes, PageInfo, listOrder, FullContent } from "../types/Content";
+import { ContentTypes, FullContent } from "../types/Content";
+import { PageInfo, listOrder } from "../types/ViewContent";
 
 import PageTitle from "../components/PageTitle";
 import ContentItem from "../components/ContentItem"

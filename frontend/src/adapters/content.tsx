@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { json } from "stream/consumers";
 import backend_axios from ".";
 import * as ContentTypes from "../types/Content";
+import { PageInfo } from "../types/ViewContent";
 
 interface ContentPeiceOptions {
   slug: string,
@@ -24,7 +25,7 @@ const GetContentPeice = async (params:ContentPeiceOptions) => {
   return ((response.status === 200) ? response.data : false);
 };
 
-const GetContentList = async (params:ContentTypes.PageInfo): Promise<Array<ContentTypes.FullContent>> => {
+const GetContentList = async (params: PageInfo): Promise<Array<ContentTypes.FullContent>> => {
   const response = await backend_axios.get("/content/list", {
     params,
   })
