@@ -42,12 +42,19 @@ async fn main() -> std::io::Result<()> {
 mod tests {
     use super::*;
     use actix_web::test;
-    
+    use std::collections::HashMap;
+    use std::sync::Once;
+
+    static INIT: Once = Once::new();
+
     fn setup_app() -> (db::DbPool, handlers::extractors::AdminInfo) {
-        std::env::set_var("RUST_LOG", "actix_web=debug");
-        env_logger::init();
-        dotenv::dotenv().ok();
+        INIT.call_once(|| {
+            dotenv::dotenv().ok();
+            std::env::set_var("RUST_LOG", "actix_web=debug");
+            env_logger::init();
+        });
         
+        // Change this to mod or something this is repeating operations
         let db_pool = db::create_db_pool();
         let admin_info = handlers::extractors::AdminInfo {
             admin_password: env::var("ADMIN_PASSWORD").expect("Please set admin password"),
@@ -116,5 +123,53 @@ mod tests {
         let delete_response: db::models::DbRows = test::call_and_read_body_json(&app, delete_request).await;
         assert!(delete_response.rows_effected == 1);
         //Todo maybe add another check to make sure the right one got deleted
+    }
+    
+    #[actix_web::test]
+    async fn list_test() {
+        let (db_pool, admin_info) = setup_app();
+        let app = test::init_service(
+            App::new()
+                .wrap(Logger::default())
+                .app_data(web::Data::new(db_pool.clone()))
+                .app_data(web::Data::new(admin_info.clone()))
+                .configure(route_config::route_config)
+        ).await;
+        
+        let mut added_content: HashMap<i32, db::models::NewFullContent> = HashMap::new();
+
+        const CONTENT_AMOUNT: i32 = 16;
+
+        // Adds 16 pieces of content to db
+        for req_number in (0..CONTENT_AMOUNT).rev() {
+            let add_data = db::models::NewFullContent::random_content();
+            let add_request = test::TestRequest::post()
+                .uri("/api/content/add")
+                .set_json(&add_data)
+                .insert_header(("Authorization", admin_info.admin_password.to_owned()))
+                .to_request();
+            let add_response = test::call_service(&app, add_request).await;
+            assert!(add_response.status().is_success());
+            
+            // Saves the added content to a hashmap to compare to returned content
+            added_content.insert(req_number, add_data);
+        }
+        
+        // Todo add more requests to test other things like show order
+        let list_request_one = test::TestRequest::get()
+            .uri("/api/content/list?content_per_page=6&page=0&show_order=Newest")
+            .to_request();
+        let delete_response: Vec<db::models::FullContent> = test::call_and_read_body_json(&app, list_request_one).await;
+        assert_eq!(delete_response.get(0).unwrap().get_slug(), added_content.get(&0).unwrap().get_slug());
+        assert_eq!(delete_response.get(5).unwrap().get_slug(), added_content.get(&5).unwrap().get_slug());
+
+        for value in added_content.values() {
+            let delete_request = test::TestRequest::delete()
+                .uri(&format!("/api/content/{}", value.get_slug()))
+                .insert_header(("Authorization", admin_info.admin_password.to_owned()))
+                .to_request();
+            let delete_response: db::models::DbRows = test::call_and_read_body_json(&app, delete_request).await;
+            assert!(delete_response.rows_effected == 1);
+        }
     }
 }

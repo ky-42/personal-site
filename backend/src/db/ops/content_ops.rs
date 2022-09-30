@@ -24,7 +24,7 @@ pub fn view_content_list(
     let mut base_content_query = content
         .into_boxed()
         .limit(view_info.content_per_page)
-        .offset(view_info.content_per_page * view_info.page - 1);
+        .offset(view_info.content_per_page * view_info.page);
     if let Some(requested_content_type) = view_info.content_type {
         base_content_query =
             base_content_query.filter(content_type.eq::<String>(requested_content_type.into()));
