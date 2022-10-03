@@ -16,3 +16,8 @@ chrono = { version = "^0.4", features = ["serde"] }
 serde = { version = "^1", features = ["derive"] }
 diesel = { version = "2.0.0", features = ["r2d2", "postgres", "chrono"] }
 
+[dev-dependencies]
+lipsum = "0.8.2"
+rand = "0.8.5"
+serde_json = "1.0.85"
+actix-http = "3.2.2"

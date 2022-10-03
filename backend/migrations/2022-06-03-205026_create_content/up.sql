@@ -1,5 +1,3 @@
--- Your SQL goes here
-
 CREATE TABLE content (
     id SERIAL PRIMARY KEY,
     content_type TEXT NOT NULL CHECK (content_type in ('blog', 'project')),

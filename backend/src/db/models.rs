@@ -63,7 +63,7 @@ pub enum ExtraContent {
     Project(Project),
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 pub enum NewExtraContent {
     Blog(NewBlog),
     Project(NewProject),
@@ -78,8 +78,8 @@ pub enum NewExtraContent {
 //TODO make a model that is changeable that dont have
 // times or id and are all option feilds
 #[derive(Queryable, AsChangeset, Identifiable, Serialize, Deserialize, Debug)]
-#[table_name = "content"]
-#[changeset_options(treat_none_as_null = "true")]
+#[diesel(table_name = content)]
+#[diesel(treat_none_as_null = true)]
 pub struct Content {
     id: i32,
     pub content_type: String,
@@ -92,8 +92,7 @@ pub struct Content {
 }
 
 #[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Debug)]
-#[belongs_to(Content)]
-#[table_name = "project"]
+#[diesel(table_name = project, belongs_to(Content))]
 pub struct Project {
     id: i32,
     content_id: i32,
@@ -101,13 +100,11 @@ pub struct Project {
 }
 
 #[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Debug)]
-#[belongs_to(Content)]
-#[table_name = "blog"]
-#[changeset_options(treat_none_as_null = "true")]
+#[diesel(treat_none_as_null = true, table_name = blog, belongs_to(Content))]
 pub struct Blog {
     id: i32,
     content_id: i32,
-    tags: Option<Vec<String>>,
+    tags: Option<Vec<Option<String>>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -118,8 +115,8 @@ pub struct FullContent {
 
 // Structs for adding new content to db
 
-#[derive(Insertable, Deserialize, Debug)]
-#[table_name = "content"]
+#[derive(Insertable, Deserialize, Serialize, Debug)]
+#[diesel(table_name = content)]
 pub struct NewContent {
     content_type: String,
     slug: String,
@@ -128,72 +125,156 @@ pub struct NewContent {
     body: String,
 }
 
-#[derive(Insertable, Deserialize, Debug)]
-#[table_name = "project"]
+#[derive(Insertable, Deserialize, Serialize, Debug)]
+#[diesel(table_name = project)]
 pub struct NewProject {
-    current_status: String,
+    pub current_status: String,
 }
 
-#[derive(Insertable, Deserialize, Debug)]
-#[table_name = "blog"]
+#[derive(Insertable, Deserialize, Serialize, Debug)]
+#[diesel(table_name = blog)]
 pub struct NewBlog {
     tags: Option<Vec<String>>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct NewFullContent {
     pub new_base_content: NewContent,
     pub new_extra_content: NewExtraContent,
+} 
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct DbRows {
+    pub rows_effected: i32
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use lipsum::{lipsum, lipsum_title, lipsum_words};
+    use rand::seq::SliceRandom;
+    use rand::Rng;
+    use serde_json;
+    
+    // Todo fux lipsum cause it keeps generating the same slugs 
 
-    // creates preset models be created for testing
-    impl NewContent {
-        pub fn new_with_blog_no_desc() -> NewContent {
-            NewContent {
-                content_type: "blog".to_string(),
-                slug: "blog-test".to_string(),
-                title: "Test Blog".to_string(),
-                content_desc: None,
-                body: "Hi".to_string(),
+    #[test]
+    #[ignore]
+    fn print_json_content() {
+        println!(
+            "{}",
+            serde_json::to_string(&NewFullContent::random_content()).unwrap()
+        );
+    }
+
+    impl NewFullContent {
+        pub fn random_content() -> NewFullContent {
+            
+            let mut rng = rand::thread_rng();
+
+            // project = 0, blog = 1
+            let extra_type = rng.gen_range(0..2);
+            let (new_extra_content, content_type) = match extra_type {
+                0 => (NewFullContent::random_project(rng), "project".to_owned()),
+                1 => (NewFullContent::random_blog(rng), "blog".to_owned()),
+                _ => (NewFullContent::random_blog(rng), "blog".to_owned())
+            };
+
+            let mut rng = rand::thread_rng();
+            let title = lipsum_title();
+            let slug = String::from(str::replace(&title, " ", "-")).to_lowercase();
+            let content_desc: Option<String> = if rng.gen_range(0..5) > 0 {
+                Some(lipsum_words(rng.gen_range(7..15)))
+            } else {
+                None
+            };
+            let body = lipsum(rng.gen_range(100..500));
+            
+            NewFullContent {
+                new_base_content: NewContent {
+                    content_type,
+                    slug,
+                    title,
+                    content_desc,
+                    body,
+                },
+                new_extra_content,
             }
         }
-
-        pub fn new_with_project_desc() -> NewContent {
-            NewContent {
-                content_type: "project".to_string(),
-                slug: "project-test".to_string(),
-                title: "Test Project".to_string(),
-                content_desc: Some("this is one of the test projects".to_string()),
-                body: "Hi".to_string(),
-            }
+        
+        pub fn random_project(mut rng: rand::prelude::ThreadRng) -> NewExtraContent {
+            NewExtraContent::Project(
+                NewProject {
+                    current_status: String::from(
+                        ["Finished", "Under Development"].choose(&mut rng).unwrap() as &str
+                    )
+                }
+            )
         }
 
+        pub fn random_blog(mut rng: rand::prelude::ThreadRng) -> NewExtraContent {
+            let tags: Option<Vec<String>> = if rng.gen_range(0..6) > 0 {
+                let num_tags = rng.gen_range(1..4);
+                Some(
+                    [
+                        "Python",
+                        "Javascript",
+                        "Rust",
+                        "Django",
+                        "Tutorial",
+                        "React",
+                        "Flask",
+                        "Actix",
+                        "Discord.py",
+                    ]
+                    .choose_multiple(&mut rng, num_tags)
+                    .cloned()
+                    .collect::<Vec<&str>>()
+                    .iter()
+                    .map(|&s| s.into())
+                    .collect(),
+                )
+            } else {
+                None
+            };
+            NewExtraContent::Blog(
+                NewBlog {
+                    tags
+                }
+            )
+        }
+        
         pub fn get_slug(&self) -> &str {
-            &self.slug
+            return &self.new_base_content.slug;
+        }
+
+        pub fn get_title(&self) -> &str {
+
+            return &self.new_base_content.title;
+        }
+
+        pub fn get_body(&self) -> &str {
+
+            return &self.new_base_content.body;
         }
     }
-
-    impl NewBlog {
-        pub fn new_without_tags() -> NewBlog {
-            NewBlog { tags: None }
-        }
-    }
-
-    impl NewProject {
-        pub fn new_with_status() -> NewProject {
-            NewProject {
-                current_status: "finished".to_string(),
-            }
-        }
-    }
-
+    
     impl FullContent {
-        pub fn get_slug<'a>(&'a self) -> &'a str {
-            &self.base_content.slug
+        pub fn get_slug(&self) -> &str {
+            return &self.base_content.slug;
+        }
+
+        pub fn get_title(&self) -> &str {
+
+            return &self.base_content.title;
+        }
+
+        pub fn get_body(&self) -> &str {
+            return &self.base_content.body;
+        }
+        
+        pub fn set_slug(&mut self, slug: String) {
+            self.base_content.slug = slug;
         }
     }
 }

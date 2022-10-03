@@ -24,7 +24,7 @@ pub fn view_content_list(
     let mut base_content_query = content
         .into_boxed()
         .limit(view_info.content_per_page)
-        .offset(view_info.content_per_page * view_info.page - 1);
+        .offset(view_info.content_per_page * view_info.page);
     if let Some(requested_content_type) = view_info.content_type {
         base_content_query =
             base_content_query.filter(content_type.eq::<String>(requested_content_type.into()));
@@ -125,32 +125,3 @@ pub fn update_content(
     };
     Ok(())
 }
-
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-//     use crate::test_helpers;
-
-//     #[test]
-//     fn basic_content_tests() {
-//         let basic_content = models::NewFullContent {
-//             new_base_content: models::NewContent::new_with_blog_no_desc(),
-//             new_extra_content: models::NewExtraContent::Blog(models::NewBlog::new_without_tags()),
-//         };
-//         let conn = test_helpers::db_connection();
-
-//         let slug = basic_content.new_base_content.get_slug().to_string();
-
-//         // Tests adding basic content
-//         let add_content_result = add_content(&conn, basic_content).expect("Could not add content");
-//         assert_eq!((), add_content_result);
-
-//         // Tests getting some content
-//         let retreived_content = view_content(&conn, &slug).expect("Error getting content");
-//         assert_eq!(slug, retreived_content.get_slug());
-
-//         let rows_deleted = delete_content(&conn, retreived_content.get_slug().to_string())
-//             .expect("Could not delete content");
-//         assert_eq!(rows_deleted, 1);
-//     }
-// }
