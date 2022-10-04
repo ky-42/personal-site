@@ -11,7 +11,15 @@ const PageTitleDiv = styled.div`
 `;
 
 const PageTitleText = styled.h1`
-  text-align: center;
+  text-align: left;
+  color: white;
+  &::after {
+    content: '';
+    height: 7px;
+    background: ${props => props.theme.highlightColour};
+    border-radius: 5px;
+    display: block
+  }
 `;
 
 const PageTitle = ({ children, icon }: PageTitleProps) => {
