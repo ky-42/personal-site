@@ -1,55 +1,124 @@
-import React from 'react';
-import { isMobile } from 'react-device-detect';
+import React, {useEffect, useState} from 'react';
+import { BrowserView, isMobile } from 'react-device-detect';
 import styled from 'styled-components';
-import HomeLink from '../components/HomeLink';
-
-const NameHeader = styled.h1`
-  color: ${props => props.theme.textColour};
-`;
-
-const AsteroidsButton = styled.button`
-  width: 20vw;
-  height: 20vh;
-  position: fixed;
-  top: calc(50% - 10vh);
-  left: calc(50% - 10vw);
-  background-color: ${props => props.theme.backgroundColour};
-  border: 10px solid ${props => props.theme.textColour};
-`;
+import HomeUpdate from '../components/HomeUpdate';
+import {GetContentList} from "../adapters/content";
+import {ContentType, FullContent} from "../types/Content";
+import HomeContentItem from "../components/HomeContentItem";
+import {listOrder} from "../types/ViewContent";
+import CurrentlyReading from '../components/CurrentlyReading';
 
 const HomeDiv = styled.div`
-  height: 100vh;
-  width: 100vw;
+  margin: clamp(1.3rem,  6vw, 6rem) auto 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-wrap: wrap;
+  color: ${props => props.theme.textColour};
+  justify-content: space-between;
+  margin-bottom: 80px;
+  max-width: 1400px;
 `;
 
-const LinkContainer = styled.nav`
-  /* TODO change gaps if device is mobile */
-  height: calc(100% - 80px);
-  width: calc(100% - 80px);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  row-gap: 50px;
-  column-gap: 50px;
+const HomeLeft = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  min-width: 500px;
+  align-items: start;
+  margin-left: clamp(0px, calc(12vw-35px), 225px);
+  @media (max-width: 1250px) {
+    min-width: 0;
+    width: auto;
+  }
+`;
+
+const PageTitle = styled.h1`
+  text-decoration: underline ${props => props.theme.highlight};
+  font-size: clamp(1.8rem, 10vw, 3.75rem);
+  text-underline-offset: clamp(9px, 2.5vw, 15px);
+  margin-top: 0;
+`;
+
+const BodyText = styled.p`
+  min-width: 200px;
+  line-height: 1.5;
+`;
+
+const BrowserOnly = styled(BrowserView)`
+  margin-left: 4.5rem;
+  @media (max-width: 1250px) {
+    margin-left: 0;
+    align-self: center;
+  }
+`
+const AsteroidsButton = styled.button`
+  margin-top: 1.5rem;
+  background-color: ${props => props.theme.backgroundColour};
+  font-size: 1rem;
+  padding: 15px 75px;
+  color:  ${props => props.theme.textColour};
+  border: ${props => props.theme.borderSize} solid ${props => props.theme.lightTone};
+`;
+
+const HomeRight = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  @media (min-width: 1250px) {
+    margin-left: clamp(30px, 5vw, 250px);
+  }
+  @media (min-width: 1600px) {
+    margin-left: 250px;
+  }
+  @media (max-width: 1250px) {
+    margin-top: 30px;
+    row-gap: 40px;
+  }
 `;
 
 const Home = () => {
+
+  const [latestProject, setLatestProject] = useState<FullContent>();
+  const [latestBlog, setLatestBlog] = useState<FullContent>();
+
+  useEffect(() => {
+    GetContentList({
+      content_per_page: 1,
+      page:0,
+      show_order: listOrder.Newest,
+      content_type: ContentType.Project
+    }).then((value) => setLatestProject(value[0]))
+
+    GetContentList({
+      content_per_page: 1,
+      page:0,
+      show_order: listOrder.Newest,
+      content_type: ContentType.Blog
+    }).then((value) => setLatestBlog(value[0]))
+
+  }, [])
+
   return (
     <HomeDiv>
-      <AsteroidsButton>
-        <NameHeader>
-          Kyle Denief  
-        </NameHeader>
-      </AsteroidsButton>
-      <LinkContainer>
-        <HomeLink LinkAddress="/about" LinkName="About Me" />
-        <HomeLink LinkAddress="/connect" LinkName="Connect" />
-        <HomeLink LinkAddress="/projects" LinkName="Projects" />
-        <HomeLink LinkAddress="/blogs" LinkName="Blogs" />
-      </LinkContainer>
+      <HomeLeft>
+        <PageTitle>
+          Hi! I'm<br />Kyle Denief
+        </PageTitle>
+        <BodyText>
+        I'm a full-stack web developer (Obviously not a designer) with experience in Python, TypeScript, and Rust. I'm mostly self-taught and just really interested in computers and technology. Currently I'm attending school at Memorial University of Newfoundland looking to major in computer science.
+        </BodyText>
+        <BrowserOnly>
+          <AsteroidsButton>
+            (Coming Soon)
+          </AsteroidsButton>
+        </BrowserOnly>
+      </HomeLeft>
+      <HomeRight>
+        <HomeUpdate updateTitle='Latest Project' updateContent={latestProject !== undefined ? <HomeContentItem content={latestProject} /> : <></> } />
+        <HomeUpdate updateTitle='Latest Blog' updateContent={latestBlog !== undefined ? <HomeContentItem content={latestBlog} /> : <></> } />
+        <HomeUpdate updateTitle='Currently Reading' updateContent={<CurrentlyReading />}/>
+      </HomeRight>
     </HomeDiv>
   );
 }

@@ -9,27 +9,28 @@ const NavBarDiv = styled.div`
 `;
 
 const ExpandButtonDiv = styled.div`
-  width: calc(100% - 10px);
+  width: calc(100% - ${props => props.theme.borderSize}*2);
   position: fixed;
   bottom: 0%;
-  height: 55px;
+  height: ${props => props.theme.navHeight};
   display: flex;
-  background-color: black;
-  border: solid white 5px;
+  background-color: ${props => props.theme.backgroundColour};
+  border: ${props => props.theme.borderSize} solid ${props => props.theme.darkTone};
   align-items: center;
   justify-content: center;
+  font-size: 32px;
 `;
 const UpArrow = styled(IoIosArrowUp)`
-  color: white;
+  color: ${props => props.theme.lightTone};
   font-size: 32px;
 `;
 
 const CloseIcon = styled(IoMdClose)`
-  
+  color: ${props => props.theme.lightTone};
 `;
 
 const LinksDiv = styled.nav`
-  height: calc(100vh - 55px);
+  height: calc(100vh - calc(40px + ${props => props.theme.borderSize}*2));
   position: fixed;
   width: 100vw;
   display: flex;
@@ -43,7 +44,7 @@ const MobileNavBar = () => {
 
   const [expanded, setExpanded] = useState(false);
   
-  const BottomIcon = expanded ? <UpArrow /> : <CloseIcon />;
+  const BottomIcon = expanded ? <CloseIcon /> :<UpArrow />;
   
   useEffect(() => {
     setExpanded(false);
@@ -58,9 +59,9 @@ const MobileNavBar = () => {
         <LinksDiv>
           <LinkNavBar to="/" title='Kyle Denief' />
           <LinkNavBar to="/about" title='About Me' />
+          <LinkNavBar to="/connect" title='Connect' />
           <LinkNavBar to="/projects" title='Projects' />
           <LinkNavBar to="/blogs" title='Blogs' />
-          <LinkNavBar to="/connect" title='Connect' />
         </LinksDiv>
       }
     </NavBarDiv>

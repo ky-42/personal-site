@@ -1,11 +1,11 @@
 use super::{errors::ContentError, extractors::AuthUser};
 use crate::db::{
-    models::{FullContent, NewFullContent, PageInfo, DbRows},
+    models::{ContentType, FullContent, NewFullContent, PageInfo, DbRows},
     ops::content_ops,
     DbPool,
 };
 use actix_web::{web, HttpResponse};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 // ######################################################################################################
 // ------------------------------------------------------------------------------------------------------
@@ -19,11 +19,31 @@ pub struct ContentSlug {
     slug: String,
 }
 
+// Used in count_content func to return a json count
+#[derive(Serialize, Debug)]
+pub struct CountReturn {
+    count: i64    
+}
+
 // ######################################################################################################
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
+// 
 
-// Returns a list of content
+pub async fn under_dev_projects (
+    db_pool: web::Data<DbPool>
+) -> Result<web::Json<Vec<FullContent>>, ContentError> {
+
+    let fetched_projects = web::block(move || {
+        let mut conn = db_pool.get()?;
+        content_ops::view_under_dev_projects(&mut conn)
+    })
+    .await??;
+    Ok(web::Json(fetched_projects))
+}
+
+// Returns a list of content including its extra content
+// For projects only returns finished projects
 pub async fn list_content(
     db_pool: web::Data<DbPool>,
     page_info: web::Query<PageInfo>,
@@ -91,4 +111,19 @@ pub async fn add_content(
     })
     .await??;
     Ok(HttpResponse::Ok().finish())
+}
+
+
+pub async fn count_content(
+    db_pool: web::Data<DbPool>,
+    count_type: web::Path<ContentType>
+) -> Result<web::Json<CountReturn>, ContentError> {
+    let count = web::block(move || {
+        let mut conn = db_pool.get()?;
+        content_ops::content_count(&mut conn, count_type.into_inner())
+    })
+    .await??;
+    Ok(web::Json(CountReturn{
+        count
+    }))
 }

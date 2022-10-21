@@ -1,7 +1,6 @@
 import React from 'react';
 import AppConfig from './AppConfig';
-import AsteroidsBackground from './components/AsteroidsBackground';
-
+import AsteroidsBackground from './components/Asteroids/AsteroidsBackground';
 
 function App() {
   return (

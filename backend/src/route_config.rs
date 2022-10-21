@@ -7,7 +7,21 @@ pub fn route_config(cfg: &mut web::ServiceConfig) {
         web::scope("/api").service(
             web::scope("/content")
                 .service(web::resource("/add").route(web::post().to(content::add_content)))
-                .service(web::resource("/list").route(web::get().to(content::list_content)))
+                .service(web::resource("/count/{count_type}").route(web::get().to(content::count_content)))
+                .service(
+                    web::scope("/list")
+                        .service(
+                            web::scope("/projects")
+                                .service(
+                                    web::resource("/under-development")
+                                        .route(web::get().to(content::under_dev_projects))
+                                )    
+                        )
+                        .service(
+                            web::resource("")
+                                .route(web::get().to(content::list_content))
+                        )
+                )
                 .service(
                     web::resource("/{slug}")
                         .route(web::get().to(content::view_content))

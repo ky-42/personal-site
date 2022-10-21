@@ -13,10 +13,19 @@ const SocialLink = styled.a`
   width: 100px;
   height: 100px;
   margin: 25px;
-  border: 5px solid white;
+  border: 5px solid ${props => props.theme.lightTone};
+  &:hover {
+    border: 5px solid ${props => props.theme.highlight};
+  }
 `;
 
-const ConnectLinkDiv = styled.div``;
+const ConnectLinkDiv = styled.div`
+  color: ${props => props.theme.textColour};
+  font-size: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const ConnectLink = ({ LinkTo, Icon }: ConnectLinkProps) => {
   return (

@@ -4,6 +4,28 @@ use diesel;
 use diesel::insert_into;
 use diesel::prelude::*;
 
+pub fn view_under_dev_projects(
+    db_conn: &mut PgConnection
+) -> Result<Vec<models::FullContent>, ContentError> {
+    use crate::schema::{content, project};
+    let project_results = content::table
+        .inner_join(project::table)
+        .order_by(content::columns::created_at.desc())
+        .filter(project::columns::current_status.eq("under_development"))
+        .load::<(models::Content, models::Project)>(db_conn)?;
+    
+    let mut full_content_list = vec![];
+
+    for project_content in project_results {
+        full_content_list.push(models::FullContent{
+            base_content: project_content.0,
+            extra_content: models::ExtraContent::Project(project_content.1)
+        });
+    }
+
+    Ok(full_content_list)
+}
+
 pub fn view_content(
     db_conn: &mut PgConnection,
     requested_slug: &str,
@@ -20,28 +42,50 @@ pub fn view_content_list(
     db_conn: &mut PgConnection,
     view_info: models::PageInfo,
 ) -> Result<Vec<models::FullContent>, ContentError> {
-    use crate::schema::content::dsl::*;
-    let mut base_content_query = content
-        .into_boxed()
+    use crate::schema::{content, project, blog};
+
+    let base_content_query = content::table
         .limit(view_info.content_per_page)
-        .offset(view_info.content_per_page * view_info.page);
-    if let Some(requested_content_type) = view_info.content_type {
-        base_content_query =
-            base_content_query.filter(content_type.eq::<String>(requested_content_type.into()));
-    };
-    base_content_query = match view_info.show_order {
-        models::ShowOrder::Newest => base_content_query.order(created_at.desc()),
-        models::ShowOrder::Oldest => base_content_query.order(created_at.asc()),
-        models::ShowOrder::Search(_search_term) => base_content_query,
-        // models::ShowOrder::most_popular => {}
-        // models::ShowOrder::least_popular => {}
-    };
-    let base_content_results = base_content_query.load::<models::Content>(db_conn)?;
+        .offset(view_info.content_per_page * view_info.page)
+        .order_by(content::columns::created_at.desc());
 
     let mut full_content_list = vec![];
 
-    for base_content in base_content_results {
-        full_content_list.push(get_extra_content(db_conn, base_content)?);
+    match view_info.content_type {
+        Some(content_type) => {
+            match content_type {
+                models::ContentType::Project => {
+                    let project_results = base_content_query 
+                        .inner_join(project::table)
+                        .filter(project::columns::current_status.eq("finished"))
+                        .load::<(models::Content, models::Project)>(db_conn)?;
+                    for project_content in project_results {
+                        full_content_list.push(models::FullContent{
+                            base_content: project_content.0,
+                            extra_content: models::ExtraContent::Project(project_content.1)
+                        });
+                    }
+                },
+                models::ContentType::Blog => {
+                    let blog_results = base_content_query
+                        .inner_join(blog::table)
+                        .load::<(models::Content, models::Blog)>(db_conn)?;
+                    for blog_content in blog_results {
+                        full_content_list.push(models::FullContent{
+                            base_content: blog_content.0,
+                            extra_content: models::ExtraContent::Blog(blog_content.1)
+                        });
+                    }
+                }
+            }
+        },
+        None => {
+            let base_content_results = base_content_query.load::<models::Content>(db_conn)?;
+
+            for base_content in base_content_results {
+                full_content_list.push(get_extra_content(db_conn, base_content)?);
+            }
+        }
     }
     Ok(full_content_list)
 }
@@ -124,4 +168,26 @@ pub fn update_content(
         }
     };
     Ok(())
+}
+
+pub fn content_count(
+    db_conn: &mut PgConnection,
+    type_to_count: models::ContentType
+) -> Result<i64, ContentError> {
+    match type_to_count {
+        models::ContentType::Blog => {
+            use crate::schema::blog;
+            let count = blog::table
+                .count()
+                .get_result(db_conn)?;
+            Ok(count)
+        }
+        models::ContentType::Project => {
+            use crate::schema::project;
+            let count = project::table
+                .count()
+                .get_result(db_conn)?;
+            Ok(count)
+        }
+    }
 }

@@ -44,6 +44,7 @@ mod tests {
     use actix_web::test;
     use std::collections::HashMap;
     use std::sync::Once;
+    use rand::Rng;
 
     static INIT: Once = Once::new();
 
@@ -171,5 +172,68 @@ mod tests {
             let delete_response: db::models::DbRows = test::call_and_read_body_json(&app, delete_request).await;
             assert!(delete_response.rows_effected == 1);
         }
+    }
+    
+    
+    // TODO fix 
+
+    // #[actix_web::test]
+    // async fn count_test() {
+    //     let (db_pool, admin_info) = setup_app();
+    //     let app = test::init_service(
+    //         App::new()
+    //             .wrap(Logger::default())
+    //             .app_data(web::Data::new(db_pool.clone()))
+    //             .app_data(web::Data::new(admin_info.clone()))
+    //             .configure(route_config::route_config)
+    //     ).await;
+
+    //     let mut rng = rand::thread_rng();
+    //     let add_content_count = rng.gen_range(6..32);
+
+    //     let added_content = create_test_content(Some(add_content_count)).await;
+    //     let count_response: db::models::DbRows = test::call_and_read_body_json(&app, delete_request).await;
+    // } 
+    
+    #[ignore]
+    #[actix_web::test]
+    async fn add_test_content() {
+        create_test_content(None).await;
+    }
+
+    // Creates test content can and can be used in other tests or by the test above
+    async fn create_test_content(add_amount: Option<i32>) -> HashMap<i32, db::models::NewFullContent> {
+        let (db_pool, admin_info) = setup_app();
+        let app = test::init_service(
+            App::new()
+                .wrap(Logger::default())
+                .app_data(web::Data::new(db_pool.clone()))
+                .app_data(web::Data::new(admin_info.clone()))
+                .configure(route_config::route_config)
+        ).await;
+        
+        let mut added_content: HashMap<i32, db::models::NewFullContent> = HashMap::new();
+        
+        let add_amount = match add_amount {
+            Some(amount) => amount,
+            None => 16
+        };
+
+        // Adds 16 pieces of content to db
+        for req_number in (0..add_amount).rev() {
+            let add_data = db::models::NewFullContent::random_content();
+            let add_request = test::TestRequest::post()
+                .uri("/api/content/add")
+                .set_json(&add_data)
+                .insert_header(("Authorization", admin_info.admin_password.to_owned()))
+                .to_request();
+            let add_response = test::call_service(&app, add_request).await;
+            assert!(add_response.status().is_success());
+            
+            // Saves the added content to a hashmap to compare to returned content
+            added_content.insert(req_number, add_data);
+        };
+
+        added_content
     }
 }

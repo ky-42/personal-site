@@ -12,9 +12,6 @@ use serde::{self, Deserialize, Serialize};
 pub enum ShowOrder {
     Newest,
     Oldest,
-    // most_popular,
-    // least_popular,
-    Search(String),
 }
 
 #[derive(Deserialize, Debug)]
@@ -58,12 +55,14 @@ impl From<ContentType> for String {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "lowercase")]
 pub enum ExtraContent {
     Blog(Blog),
     Project(Project),
 }
 
 #[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = "lowercase")]
 pub enum NewExtraContent {
     Blog(NewBlog),
     Project(NewProject),
@@ -97,6 +96,12 @@ pub struct Project {
     id: i32,
     content_id: i32,
     current_status: String,
+}
+
+impl Project {
+    pub fn get_content_id(&self) -> i32 {
+        self.content_id
+    }
 }
 
 #[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Debug)]
@@ -205,9 +210,11 @@ mod tests {
         pub fn random_project(mut rng: rand::prelude::ThreadRng) -> NewExtraContent {
             NewExtraContent::Project(
                 NewProject {
-                    current_status: String::from(
-                        ["Finished", "Under Development"].choose(&mut rng).unwrap() as &str
-                    )
+                    current_status: if rng.gen_range(0..16) > 0 {
+                        String::from("finished")
+                    } else {
+                        String::from("under_development")                        
+                    }
                 }
             )
         }

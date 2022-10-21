@@ -2,9 +2,9 @@
 // Content Enums
 //
 
-export enum ContentTypes {
-  Blog = "Blog",
-  Project = "Project",
+export enum ContentType {
+  Blog = "blog",
+  Project = "project",
 }
 
 
@@ -30,7 +30,7 @@ export interface Blog extends NewBlog {
 
 export interface FullContent {
   base_content: Content;
-  extra_content: {Project: Project} | {Blog: Blog}
+  extra_content: {project: Project} | {blog: Blog}
 }
 
 export interface NewContent {
@@ -51,7 +51,7 @@ export interface NewProject {
 
 export interface NewFullContent {
   new_base_content: NewContent;
-  new_extra_content: {Project: NewProject} | {Blog: NewBlog}
+  new_extra_content: {project: NewProject} | {blog: NewBlog}
 }
 
 

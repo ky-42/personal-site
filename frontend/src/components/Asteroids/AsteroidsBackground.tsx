@@ -21,8 +21,13 @@ const AsteroidsBackground = () => {
             new p5((p: p5) => {
                 p.setup = () => {
                     p.createCanvas(window.innerWidth, window.innerHeight);
-                    p.background("#0C0C0C");
+                    p.background("#222629");
                 };
+                
+                p.windowResized = () => {
+                    p.resizeCanvas(window.innerWidth, window.innerHeight);
+                    p.background("#222629");
+                }
             }, CanvasParentRef.current);
         }
     });

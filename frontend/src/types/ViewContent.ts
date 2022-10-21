@@ -1,4 +1,4 @@
-import { ContentTypes } from "./Content";
+import { ContentType } from "./Content";
 
 //
 // View Content Enums
@@ -20,5 +20,5 @@ export interface PageInfo {
   content_per_page: number;
   page: number;
   show_order: listOrder;
-  content_type?: ContentTypes;
+  content_type?: ContentType;
 }

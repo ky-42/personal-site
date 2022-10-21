@@ -1,41 +1,90 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
+import styled, { keyframes, css } from "styled-components";
 import { AiFillGithub, AiOutlineMail, AiFillTwitterCircle, AiFillLinkedin } from "react-icons/ai";
 
 import PageTitle from "../components/PageTitle";
 import ConnectLink from "../components/ConnectLink";
 
 const ConnectDiv = styled.div`
+  margin: auto;
+  max-width: 1000px;
 `;
+
+const ConnectPar = styled.p`
+  margin: auto;
+`;
+
+const Email = styled.h2`
+  text-align: center;
+  margin: clamp(50px, 8vw, 75px) 0px;
+  font-size: clamp(1.1rem, 6vw, 2.1rem);
+  font-variation-settings: 'wght' 650;
+  text-decoration: underline ${props => props.theme.highlightDark} 0.1rem;
+  text-underline-offset: 0.5rem;
+  cursor: pointer;
+`
 
 const LinksDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const LinkRow = styled.div`
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
 `;
 
+
+const FadeOutAnimation = keyframes`  
+  0% { opacity: 1; }
+  60% { opacity: 1; }
+  100% { opacity: 0; }
+`; 
+
+const animationCss = css`
+  animation: ${FadeOutAnimation} 3s linear 1;
+`
+
+const CopyNotifictionBubble = styled.div<{active: boolean}>`
+  position: fixed;
+  bottom: calc(${props => props.theme.navHeight} + 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  padding: 5px;
+  background-color: ${props => props.theme.backgroundColour};
+  border: ${props => props.theme.lightTone} solid ${props => props.theme.borderSize};
+  border-radius: 2px;
+  opacity: 0;
+  margin: 0;
+  
+  ${props => props.active ? animationCss : ""}
+`
+
 const Connect = () => {
+  
+  const [copyNotification, setCopyNotification] = useState(false);
+  
+  
   return (
     <ConnectDiv>
       <PageTitle>
         Connect With Me        
       </PageTitle>
+      <ConnectPar>
+        Hi! Thanks for your interest in contacting me. Please feel free to contact me for any reason at anytime even if you just want to have a conversation. You can conact me on Linkedin, Twitter, or Github but I might now recive your message right away on those platforms so your best bet is to email me at,
+      </ConnectPar>
+      <Email onClick={() => {
+        navigator.clipboard.writeText("ky42@protonmail.com");
+        setCopyNotification(true);
+        setTimeout(() => setCopyNotification(false), 3000);
+      }}>
+        Ky42@protonmail.com
+      </Email>
       <LinksDiv>
-        {/* TODO make Link rows automatically */}
-        <LinkRow>
-          <ConnectLink LinkTo="" Icon={<AiFillGithub />} />
-          <ConnectLink LinkTo="" Icon={<AiOutlineMail />} />
-        </LinkRow>  
-        <LinkRow>
-          <ConnectLink LinkTo="" Icon={<AiFillTwitterCircle />} />
-          <ConnectLink LinkTo="" Icon={<AiFillLinkedin />} />
-        </LinkRow>
+        <ConnectLink LinkTo="https://github.com/PinkLittlePig" Icon={<AiFillGithub />} />
+        <ConnectLink LinkTo="https://twitter.com/ky421_" Icon={<AiFillTwitterCircle />} />
+        <ConnectLink LinkTo="https://www.linkedin.com/in/kyle-denief-132059230/" Icon={<AiFillLinkedin />} />
       </LinksDiv>
+      <CopyNotifictionBubble active={copyNotification}>
+        Email Copied
+      </CopyNotifictionBubble>
     </ConnectDiv>
   )
 }

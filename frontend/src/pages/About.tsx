@@ -1,35 +1,49 @@
 import React from "react";
 import styled from "styled-components";
+import CurrentlyReading from "../components/CurrentlyReading";
 
 import PageTitle from "../components/PageTitle";
 import ReadingList from "../components/ReadingList";
 
 const AboutDiv = styled.div`
-  
+  max-width: 1200px;
+  margin: auto;
 `;
 
 const PageDiv = styled.div`
-  text-align: center;
+
 `;
 
 const AboutMeText = styled.p`
-  
-`;
 
-const OtherContentDiv = styled.div`
-  
 `;
 
 const ReadingDiv = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
+  margin-top: 50px;
+
 `;
 
-// TODO Find something else to add like games or something
-const SomethingElse = styled.div`
+const ReadingTitle = styled.h2`
+  font-size: clamp(1.7rem, 6vw, 2rem);
+  text-align: center;
+  text-decoration: underline ${props => props.theme.highlightDark} 0.1rem;
+  text-underline-offset: 0.5rem;
+`;
+
+const BooksDiv = styled.div`
   
 `;
+
+const BookListDiv = styled.div`
+  margin-top: 25px;
+  display: flex;
+  column-gap: 50px;
+  row-gap: 25px;
+  justify-content: space-evenly;
+  flex-wrap: wrap-reverse;
+`;
+
+
 
 const About = () => {
   
@@ -48,11 +62,6 @@ const About = () => {
     "Python Crash Course, Eric Matthes"
   ];
 
-  const CurrentlyReading = [
-    "The Ultimate Hitchhiker's Guide to the Galaxy, Douglas Adams",
-    "Jim Henson: The Biography, Brian Jones"
-  ]
-  
   const ToRead = [
     "The Pragmatic Programmer: Your Journey To Mastery, Andrew Hunt & David Thomas",
     "How Not to Be Wrong, Jordan Ellenberg",
@@ -69,17 +78,21 @@ const About = () => {
           About Me
         </PageTitle>
         <AboutMeText>
-          Hi, I'm Kyle. I'm a first year student at Memorial University of Newfoundland and I plan on majoring in computer science. Some of my interests are computers, technology, reading, sports, and fishing. I've been teaching myself about computers for many years now and have always been interested in them. With a combination of school and self teaching I have learned python, and javascript along with a good many other technologies and languages like rust, sql, docker, git and linux. Another interest of mine is reading and below you can see some of the books I'm reading and planning to read. I have also played sports my whole life including hockey, baseball, basketball, and many others. Lastly I have also had many academic successes including winning many high school subject awards and honor roll. I was also a recipient of a scholarship from the James R. Hoffa Memorial Scholarship Fund.
+          I'm a first-year student at Memorial University of Newfoundland and I plan on majoring in computer science. Some of my interests are computers, technology, reading, sports, and fishing. I've been teaching myself about computers for many years now and have always been interested in them. With a combination of school and self-teaching, I have learned Python and JavaScript along with a good many other technologies and languages like SQL, Docker, Git, and Linux. Another interest of mine is reading, and below you can see some of the books I'm planning to read along with some I've already finished. I have also played sports my whole life, including hockey, baseball, basketball, and many others. Lastly, I have also had many academic successes, including winning many high school subject awards and being on the honour roll. I was also a recipient of a scholarship from the James R. Hoffa Memorial Scholarship Fund.
         </AboutMeText>
       </AboutDiv>
-      <OtherContentDiv>
-        <h1>My Readings</h1>
-        <ReadingDiv>
-          <ReadingList ReadingTitle="Finished" BookList={FinishedReading} />
-          <ReadingList ReadingTitle="Reading" BookList={CurrentlyReading} />
-          <ReadingList ReadingTitle="To Read" BookList={ToRead} />
-        </ReadingDiv>
-      </OtherContentDiv>
+      <ReadingDiv>
+        <ReadingTitle>
+          What I'm Reading
+        </ReadingTitle>
+        <BooksDiv>
+          <CurrentlyReading />
+          <BookListDiv>
+            <ReadingList ReadingTitle="Finished" BookList={FinishedReading} />
+            <ReadingList ReadingTitle="To Read" BookList={ToRead} />
+          </BookListDiv>
+        </BooksDiv>
+      </ReadingDiv>
     </PageDiv>
   )
 }

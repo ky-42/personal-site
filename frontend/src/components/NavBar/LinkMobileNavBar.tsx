@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 interface LinkNavBarProps {
   className?: string,
@@ -8,23 +8,32 @@ interface LinkNavBarProps {
   title: string,
 }
 
-const LinkDiv = styled.div`
+const LinkDiv = styled.div<{active: boolean}>`
   flex: 1 1 0;
   display: table;
   text-align: center;
-  background-color: black;
   width: 100vw;
+  background-color: ${props => props.theme.backgroundColour};
+  outline: ${props => props.theme.borderSize} solid ${props => props.theme.darkTone};
+  z-index: ${props => props.active ? 5 : 0};
 `;
 
-const NavLink = styled(Link)`
+const NavLink = styled(Link)<{active: boolean}>`
   display: table-cell;
   vertical-align: middle;
+  color: ${props => props.active ? props.theme.highlight : props.theme.textColour};
+  text-decoration: ${props => props.active ? `underline 1 solid ${props.theme.highlight}` : "none"};
+  font-size: 1.25rem;
 `;
 
 const LinkNavBar = ({className, to, title}:LinkNavBarProps) => {
+
+  const location = useLocation().pathname;
+  const active = location === to;
+
   return (
-    <LinkDiv className={className}>
-      <NavLink to={to}>
+    <LinkDiv className={className} active={active}>
+      <NavLink to={to} active={active}>
         {title}
       </NavLink>
     </LinkDiv>  
