@@ -2,8 +2,7 @@ import axios from "axios";
 import { parseISO } from "date-fns";
 
 const backend_axios = axios.create({
-  // baseURL: "https://kyledenief.me/api"
-  // baseURL: "http://127.0.0.1:8080/api"
+  baseURL: "https://api.kyledenief.me"
 })
 
 backend_axios.interceptors.response.use(originalResponse => {
@@ -37,5 +36,6 @@ const handleDates = (body: any) => {
     else if (typeof value === "object") handleDates(value);
   }
 }
+
 // --------------------------------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------

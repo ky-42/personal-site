@@ -30,7 +30,7 @@ const GetContentPiece = async (params: ContentPieceOptions) => {
 };
 
 const GetContentList = async (params: PageInfo): Promise<Array<ContentTypes.FullContent>> => {
-  const response = await backend_axios.get("/api/content/list", {
+  const response = await backend_axios.get("/content/list", {
     params,
   })
   console.log(response);
@@ -43,7 +43,7 @@ interface ContentAddParams {
 };
 
 const ContentAdd = async ({ addContent, password }:ContentAddParams): Promise<boolean> => {
-  const response = await backend_axios.post("/api/content/add", addContent, {
+  const response = await backend_axios.post("/content/add", addContent, {
     headers: {
       authorization: password,
     }
@@ -56,12 +56,12 @@ const ContentAdd = async ({ addContent, password }:ContentAddParams): Promise<bo
 // ---------------------------------------------------------------------------------------------------------------------
 
 const UnderDevProjects = async (): Promise<Array<ContentTypes.FullContent>> => {
-  const response = await backend_axios.get("/api/content/list/projects/under-development")
+  const response = await backend_axios.get("/content/list/projects/under-development")
   return ((response.status === 200) ? response.data : false);
 }
 
 const CountContentType = async (contentType: ContentTypes.ContentType): Promise<number> => {
-  const response = await backend_axios.get(`/api/content/count/${contentType}`);
+  const response = await backend_axios.get(`/content/count/${contentType}`);
   return ((response.status === 200) ? response.data.count : false);
 }
 

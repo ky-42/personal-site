@@ -8,6 +8,7 @@ mod db;
 mod handlers;
 mod route_config;
 mod schema;
+mod cors_config;
 
 // TODO Move admin stuff to its own module
 
@@ -21,6 +22,8 @@ async fn main() -> std::io::Result<()> {
 
     // Gets database pool
     let db_pool = db::create_db_pool();
+    //Runs db migrations
+    db::run_migrations();
     // Sets get admin password from env and creates struct
     let admin_info = handlers::extractors::AdminInfo {
         admin_password: env::var("ADMIN_PASSWORD").expect("Please set admin password"),
@@ -29,6 +32,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .wrap(Logger::default())
+            .wrap(cors_config::cors_config())
             .app_data(web::Data::new(db_pool.clone()))
             .app_data(web::Data::new(admin_info.clone()))
             .configure(route_config::route_config)
@@ -44,7 +48,7 @@ mod tests {
     use actix_web::test;
     use std::collections::HashMap;
     use std::sync::Once;
-    use rand::Rng;
+    // use rand::Rng;
 
     static INIT: Once = Once::new();
 
