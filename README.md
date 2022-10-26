@@ -8,24 +8,24 @@ Feel free to reach out if you have any questions! Also you can host the site wit
 # Road map
 - [x] 0.5.0
   - [x] Full stable release with all basic features
-- [] 0.6.0
-  - [] Refactoring of major parts of code
-  - [] Minor visual improvements
-  - [] General clean up (adding comment, optimizations, etc.)
-  - [] Markdown support in blogs and projects
-  - [] Add support to update blog and project specific data
-  - [] SEO
-- [] 0.7.0
-  - [] Support for linking blogs to others in a series
-  - [] Support for linking blogs to others in a dev blog format
-  - [] Support for linking a projects to a dev blog series
-- [] 0.8.0
-  - [] Better support for personalizing the site so others can host and extend
-  - [] Adding more blog and project sorting features (Searching, reverse order, etc.)
-- [] 0.9.0
-  - [] Embed support for blogs and projects
-- [] 1.0.0
-  - Asteroids game on the background
+- [ ] 0.6.0
+  - [ ] Refactoring of major parts of code
+  - [ ] Minor visual improvements
+  - [ ] General clean up (adding comment, optimizations, etc.)
+  - [ ] Markdown support in blogs and projects
+  - [ ] Add support to update blog and project specific data
+  - [ ] SEO
+- [ ] 0.7.0
+  - [ ] Support for linking blogs to others in a series
+  - [ ] Support for linking blogs to others in a dev blog format
+  - [ ] Support for linking a projects to a dev blog series
+- [ ] 0.8.0
+  - [ ] Better support for personalizing the site so others can host and extend
+  - [ ] Adding more blog and project sorting features (Searching, reverse order, etc.)
+- [ ] 0.9.0
+  - [ ] Embed support for blogs and projects
+- [ ] 1.0.0
+  - [ ] Asteroids game on the background
 
-##### Some resources I used in the create of the site
-Frontend File Structure -> https://www.freecodecamp.org/news/a-better-way-to-structure-react-projects/
+#### Some resources I used in the create of the site
+Frontend File Structure - https://www.freecodecamp.org/news/a-better-way-to-structure-react-projects/
