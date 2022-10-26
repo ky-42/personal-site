@@ -17,7 +17,7 @@ interface ContentPieceOptions {
 const GetContentPiece = async (params: ContentPieceOptions) => {
   console.log(params.slug)
   const response = await backend_axios({
-    url: `/api/content/${params.slug}`,
+    url: `/content/${params.slug}`,
     method: params.method,
     data: params.updated_content,
     headers: params.password ? {
