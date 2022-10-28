@@ -1,5 +1,3 @@
-import { AxiosResponse } from "axios";
-import { json } from "stream/consumers";
 import backend_axios from ".";
 import * as ContentTypes from "../types/Content";
 import { PageInfo } from "../types/ViewContent";

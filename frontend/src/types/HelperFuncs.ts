@@ -1,7 +1,5 @@
 import { FullContent, NewFullContent } from "./Content";
 
-type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];
-
 export const FullToNewFull = (conversionData: FullContent): NewFullContent => {
   let unpackedExtra;
   let { id: r1, created_at: r2, updated_at: r3, ...baseRemoved } = conversionData.base_content;

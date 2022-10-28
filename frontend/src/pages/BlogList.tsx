@@ -58,7 +58,7 @@ const BlogList = () => {
     CountContentType(ContentType.Blog).then((blogCount) => {
       setMaxPage(Math.ceil(blogCount/content_per_page)-1);
     });
-  })
+  }, [])
 
   useEffect(() => {
     GetContentList({
@@ -67,9 +67,12 @@ const BlogList = () => {
       show_order: listOrder.Newest,
       content_type: ContentType.Blog
     }).then((value) => {
-      if (typeof receivedBlogs[page] === 'undefined') {
-        setReceivedBlogs([...receivedBlogs, value]);
-      };
+        setReceivedBlogs(blogs => {
+          if (typeof blogs[page] === 'undefined') {
+            return [...blogs, value];
+          } 
+          return blogs;
+        });
     });
   }, [page]);
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled, { keyframes, css } from "styled-components";
-import { AiFillGithub, AiOutlineMail, AiFillTwitterCircle, AiFillLinkedin } from "react-icons/ai";
+import { AiFillGithub, AiFillTwitterCircle, AiFillLinkedin } from "react-icons/ai";
 
 import PageTitle from "../components/PageTitle";
 import ConnectLink from "../components/ConnectLink";

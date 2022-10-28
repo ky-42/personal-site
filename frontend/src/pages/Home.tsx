@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { BrowserView, isMobile } from 'react-device-detect';
+import { BrowserView } from 'react-device-detect';
 import styled from 'styled-components';
 import HomeUpdate from '../components/HomeUpdate';
 import {GetContentList} from "../adapters/content";

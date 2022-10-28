@@ -1,9 +1,6 @@
-import React, { useReducer, useState } from "react";
-import styled from "styled-components";
-import PasswordSubmit from "./PasswordSubmit";
-import { Blog, Content, NewBlog, NewContent, NewFullContent, FullContent, NewProject, Project, ContentType } from "../../types/Content";
-import { actionTypes, NewContentFeilds } from "../../types/ManageContent";
-import { ContentAdd, GetContentPiece } from "../../adapters/content";
+import React from "react";
+import { NewFullContent, ContentType } from "../../types/Content";
+import { NewContentFeilds } from "../../types/ManageContent";
 
 interface ContentFormProps {
   contentData: NewFullContent,

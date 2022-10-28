@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styled, { css } from "styled-components";
 import {CountContentType, GetContentList, UnderDevProjects} from "../adapters/content";
 import {listOrder} from "../types/ViewContent";
@@ -137,10 +137,10 @@ const ProjectList = () => {
         show_order: listOrder.Newest,
         content_type: ContentType.Project
       }).then((value) => {
-        setFinishedProjects([...finishedProjects, value]);
+        setFinishedProjects(projects => [...projects, value]);
       });
     }
-  }, [page]);
+  }, [page, finishedProjects.length]);
   
   // Used to hold div hight will projects are being fetched
   const SetFinishedList = () => {

@@ -1,13 +1,9 @@
-import { useLocation } from "react-router-dom";
-
 import DesktopNavBar from "./DesktopNavBar";
 import MobileNavBar from "./MobileNavBar";
 import MobileContext from "../../contexts/Mobile";
 
 
 const NavBar = () => {
-  const location = useLocation();
-
   return(
     <MobileContext.Consumer>
       {

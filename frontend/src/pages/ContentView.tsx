@@ -31,9 +31,9 @@ const ContentDesc = styled.p`
   font-variation-settings: 'wght' 700;
 `;
 
-const ContentTypeDiv = styled.div`
+// const ContentTypeDiv = styled.div`
 
-`;
+// `;
 
 const LowerSection = styled.div`
   line-height: 1.5;
@@ -66,7 +66,7 @@ const ContentView = () => {
         setPageContent(value);
       });
     };
-  }, []);
+  });
   
   return (
     <ContentViewDiv>

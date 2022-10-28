@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { GetContentPiece } from "../../adapters/content";
-import { ContentType, FullContent, NewBlog, NewContent, NewFullContent, NewProject } from "../../types/Content";
+import { ContentType, FullContent, NewFullContent } from "../../types/Content";
 import { FullToNewFull } from "../../types/HelperFuncs";
 import { NewContentFeilds } from "../../types/ManageContent";
 import ContentForm from "./ContentForm";

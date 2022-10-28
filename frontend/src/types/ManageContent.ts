@@ -2,7 +2,7 @@
 // Manage Content Enums
 //
 
-import { ContentType, NewBlog, NewContent, NewProject } from "./Content"
+import { NewBlog, NewContent, NewProject } from "./Content"
 
 export enum actionTypes {
   Create = "Create",
