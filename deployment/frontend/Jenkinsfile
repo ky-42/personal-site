@@ -9,37 +9,40 @@ pipeline {
     stages {
         stage('setup') {
             steps {
-                
-                sh 'cd frontend'
-                sh 'npm install'
+                dir('frontend') {
+                    sh 'npm install'
+                }
             }
         }
         stage('build') {
             steps {
-                sh 'npm start build'
+                dir('frontend') {
+                    sh 'npm start build'
+                }
             }
         }
         stage('deploy') {
             steps {
-                sshPublisher(
-                    continueOnError: false,
-                    failOnError: true,
-                    alwaysPublishFromMaster: true,
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: "${env.SSH_CONFIG_NAME}",
-                            verbose: true,
-                            transfers: [
-                                sshTransfer(
-                                    sourceFiles: "build/*",
-                                    removePrefix: "build/",
-                                    cleanRemote: true
-                                )
-                            ]
-                        )
-                    ]
-
-                )    
+                dir('frontend') {
+                    sshPublisher(
+                        continueOnError: false,
+                        failOnError: true,
+                        alwaysPublishFromMaster: true,
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: "${env.SSH_CONFIG_NAME}",
+                                verbose: true,
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: "build/*",
+                                        removePrefix: "build/",
+                                        cleanRemote: true
+                                    )
+                                ]
+                            )
+                        ]
+                    )    
+                }
             }
         }
     }
