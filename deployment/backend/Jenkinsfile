@@ -1,0 +1,11 @@
+pipeline {
+    agent {
+        docker {
+            image ''
+            args '-u root'
+        }
+    }
+
+    stages {
+    }
+}
