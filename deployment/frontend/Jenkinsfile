@@ -30,7 +30,7 @@ pipeline {
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
-                                        sourceFiles: "build/*",
+                                        sourceFiles: "build/**/*",
                                         removePrefix: "build/",
                                         cleanRemote: true
                                     )
