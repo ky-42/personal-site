@@ -8,16 +8,10 @@ pipeline {
     }
 
     stages {
-        stage('setup') {
-            steps {
-                dir('frontend') {
-                    sh 'npm install'
-                }
-            }
-        }
         stage('build') {
             steps {
                 dir('frontend') {
+                    sh 'npm run install'
                     sh 'npm start build'
                 }
             }
