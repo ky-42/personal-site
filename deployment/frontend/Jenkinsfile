@@ -2,13 +2,14 @@ pipeline {
     agent {
         docker {
             image 'node:19-alpine'
-            args '-u root'
+            args '-p 3000:3000'
         }
     }
 
     stages {
         stage('setup') {
             steps {
+                
                 sh 'cd frontend'
                 sh 'npm install'
             }
