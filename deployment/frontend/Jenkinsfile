@@ -6,7 +6,7 @@ pipeline {
             args '-u root'
         }
     }
-
+    
     stages {
         stage('build') {
             steps {
