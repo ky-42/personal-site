@@ -66,7 +66,7 @@ const ContentView = () => {
         setPageContent(value);
       });
     };
-  });
+  }, [slug]);
   
   return (
     <ContentViewDiv>
