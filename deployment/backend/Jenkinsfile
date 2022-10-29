@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'rust:1-alpine3.16'
+            image 'rust:1-slim-buster'
             args '-u root'
         }
     }
