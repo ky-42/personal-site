@@ -1,7 +1,5 @@
 target
 test_data
-docker-compose.yml
-.env
 
 debug/
 
