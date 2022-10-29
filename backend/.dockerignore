@@ -1,6 +1,0 @@
-target
-.gitignore
-Dockerfile
-.git
-.env
-test_data

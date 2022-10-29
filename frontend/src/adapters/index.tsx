@@ -2,7 +2,7 @@ import axios from "axios";
 import { parseISO } from "date-fns";
 
 const backend_axios = axios.create({
-  baseURL: "https://api.kyledenief.me"
+  baseURL: process.env.REACT_APP_API_URL
 })
 
 backend_axios.interceptors.response.use(originalResponse => {
