@@ -38,6 +38,9 @@ pipeline {
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
+                                        execCommand: "rm backend"
+                                    ),
+                                    sshTransfer(
                                         sourceFiles: "target/release/backend",
                                         removePrefix: "target/release/",
                                         execCommand: "systemctl restart backend-bin.service"
