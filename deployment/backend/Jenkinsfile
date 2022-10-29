@@ -19,6 +19,7 @@ pipeline {
         stage('build') {
             steps {
                 dir('backend') {
+                    sh 'apt install postgresql-libs'
                     sh 'cargo build --release'
                 }
             }
