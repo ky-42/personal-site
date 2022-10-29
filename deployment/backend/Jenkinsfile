@@ -1,11 +1,51 @@
 pipeline {
     agent {
         docker {
-            image ''
+            image 'rust:1-alpine3.16'
             args '-u root'
         }
     }
 
     stages {
+        // TODO set up testing problem is we need an env with postgres setup
+        // stage('test') {
+        //     steps {
+        //         dir('backend') {
+        //             sh 'cargo test'
+        //         }
+        //     }
+        // }
+        
+        stage('build') {
+            steps {
+                dir('backend') {
+                    sh 'cargo build --release'
+                }
+            }
+        }
+        stage('deploy') {
+            steps {
+                dir('backend') {
+                    sshPublisher(
+                        continueOnError: false,
+                        failOnError: true,
+                        alwaysPublishFromMaster: true,
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: "${env.SSH_CONFIG_NAME}",
+                                verbose: true,
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: "target/release/backend",
+                                        removePrefix: "target/release/",
+                                        execCommand: "systemctl restart backend-bin.service"
+                                    )
+                                ]
+                            )
+                        ]
+                    )    
+                }
+            }
+        }
     }
 }
