@@ -10,7 +10,9 @@ pipeline {
         stage('build') {
             steps {
                 dir('frontend') {
-                    sh 'corepack enable'
+                    sh 'corepack enables'
+                    sh 'yarn config delete proxy'
+                    sh 'yarn config set network-timeout 600000 -g'
                     sh 'yarn install'
                     sh 'yarn build'
                 }
