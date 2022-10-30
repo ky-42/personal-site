@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'rust:1-slim-buster'
-            args '-u root'
+            args '-u root -e CC_x86_64_unknown_linux_musl=x86_64-linux-gnu-gcc'
         }
     }
 
@@ -19,9 +19,12 @@ pipeline {
         stage('build') {
             steps {
                 dir('backend') {
+                    sh 'export CC_x86_64_unknown_linux_musl=x86_64-linux-gnu-gcc'
+                    sh 'ls -a'
                     sh 'apt-get update'
-                    sh 'apt-get install -y libpq-dev'
-                    sh 'cargo build --release'
+                    sh 'apt-get install -y libpq-dev build-essential gcc-x86-64-linux-gnu'
+                    sh 'rustup target add x86_64-unknown-linux-musl'
+                    sh 'cargo build --release --target=x86_64-unknown-linux-musl'
                 }
             }
         }
@@ -38,7 +41,7 @@ pipeline {
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: "rm backend"
+                                        execCommand: "rm backend/backend"
                                     ),
                                     sshTransfer(
                                         sourceFiles: "target/release/backend",
