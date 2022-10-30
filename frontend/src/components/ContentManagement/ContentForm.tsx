@@ -34,7 +34,8 @@ const ContentForm = ({contentData, setContentData}: ContentFormProps) => {
     ExtraFeilds = (
       <label>
         Blog Tags (Separate with /):
-        <input type="text" value={new_extra_content.blog.tags === undefined ? "" : new_extra_content.blog.tags.join("/")} onChange={(event) => setContentData({key:"tags", value: event.target.value === "" ? undefined : event.target.value.split("/"), extra: ContentType.Blog })}/>
+        {/* TODO Get rid of the check for null cause it should not be needed */}
+        <input type="text" value={new_extra_content.blog.tags === undefined || new_extra_content.blog.tags === null ? "" : new_extra_content.blog.tags.join("/")} onChange={(event) => setContentData({key:"tags", value: event.target.value === "" ? undefined : event.target.value.split("/"), extra: ContentType.Blog })}/>
       </label>
     );
   }
