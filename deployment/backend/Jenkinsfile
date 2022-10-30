@@ -46,8 +46,8 @@ pipeline {
                                         execCommand: "rm backend/backend"
                                     ),
                                     sshTransfer(
-                                        sourceFiles: "target/release/backend",
-                                        removePrefix: "target/release/",
+                                        sourceFiles: "target/x86_64-unknown-linux-musl/release/backend",
+                                        removePrefix: "target/x86_64-unknown-linux-musl/release/",
                                         execCommand: "systemctl restart backend-bin.service"
                                     )
                                 ]
