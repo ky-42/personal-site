@@ -2,7 +2,6 @@ import MobileContext from "./contexts/Mobile";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { useWindowSize } from "react-use";
 import { BrowserRouter } from "react-router-dom";
-import PageConfig from "./PageConfig";
 import Routing from "./Routing";
 
 const MobileWidth = 700; 
