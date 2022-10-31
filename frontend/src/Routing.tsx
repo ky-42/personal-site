@@ -1,10 +1,11 @@
 import { Routes, Route } from "react-router-dom";
+import PageConfig from "./PageConfig";
 import * as Pages from "./pages/PagesExport";
 
 const Routing = () => {
   return (
       <Routes>
-        <Route path="/">
+        <Route path="/" element={<PageConfig />}>
           <Route index element={<Pages.Home />} />
           <Route path="manage" element={<Pages.ManageContent />} />
           <Route path="about" element={<Pages.About />} />

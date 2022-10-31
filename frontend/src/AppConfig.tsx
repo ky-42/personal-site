@@ -3,6 +3,7 @@ import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { useWindowSize } from "react-use";
 import { BrowserRouter } from "react-router-dom";
 import PageConfig from "./PageConfig";
+import Routing from "./Routing";
 
 const MobileWidth = 700; 
 
@@ -43,7 +44,7 @@ const AppConfig = () => {
       <ThemeProvider theme={StyleTheme}>
         <GlobalCSS />
         <BrowserRouter>
-          <PageConfig />
+          <Routing />
         </BrowserRouter>
       </ThemeProvider>
     </MobileContext.Provider>

@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import NavBar from "./components/NavBar/NavBar";
-import Routing from "./Routing";
+import { Outlet, useLocation } from "react-router-dom";
 
 const BodyDiv = styled.div`
   width: 100vw;
-  height: calc(100vh - calc(${props => props.theme.navHeight} + ${props => props.theme.borderSize}*2));
+  position: fixed;
+  height: calc(100% - calc(${props => props.theme.navHeight} + ${props => props.theme.borderSize}*2));
+  bottom: calc(${props => props.theme.navHeight} + ${props => props.theme.borderSize}*2);
   overflow-y: scroll;
 `;
 
@@ -15,11 +17,22 @@ const SideMargin = styled.div`
 `;
 
 const PageConfig = () => {
+
+  const BodyDivRef = useRef<null | HTMLDivElement>(null);
+  
+  const location = useLocation();
+  
+  useEffect(() => {
+    if (BodyDivRef.current !== null) {
+      BodyDivRef.current.scrollTop = 0;
+    }
+  }, [location])
+
   return (
     <>
-      <BodyDiv>
+      <BodyDiv ref={BodyDivRef}>
         <SideMargin>
-          <Routing />
+          <Outlet />
         </SideMargin>
       </BodyDiv>
       <NavBar />

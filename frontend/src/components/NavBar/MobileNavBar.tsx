@@ -30,7 +30,7 @@ const CloseIcon = styled(IoMdClose)`
 `;
 
 const LinksDiv = styled.nav`
-  height: calc(100vh - calc(40px + ${props => props.theme.borderSize}*2));
+  height: calc(100% - calc(${props => props.theme.navHeight} + ${props => props.theme.borderSize}*2));
   position: fixed;
   width: 100vw;
   display: flex;
