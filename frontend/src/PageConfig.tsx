@@ -3,6 +3,7 @@ import styled from "styled-components";
 import NavBar from "./components/NavBar/NavBar";
 import { Outlet, useLocation } from "react-router-dom";
 
+// Where all content will be displayed does not include nav bar
 const BodyDiv = styled.div`
   width: 100vw;
   position: fixed;
@@ -11,17 +12,28 @@ const BodyDiv = styled.div`
   overflow-y: scroll;
 `;
 
+// Idk why this couldnt go in the BodyDiv but it couldnt
 const SideMargin = styled.div`
-  --margin-sides: clamp(1.35rem, 6vw, 10rem);
-  margin: 0 var(--margin-sides);
+  margin: 0 clamp(1.35rem, 6vw, 10rem);
 `;
 
 const PageConfig = () => {
-
-  const BodyDivRef = useRef<null | HTMLDivElement>(null);
+  
+  /*
+  Set up the page for the content of the pages to be put in.
+  the screen in separated in to two divs the navbar on the bottom
+  and a div to show to pages content. These two divs dont overlap.
+  */
   
   const location = useLocation();
   
+  /*
+  Scoll to top of the main content div when user goes to new page.
+  Needed because the div contining the main content does not
+  rerender just the inside elements meaning the scoll of the div
+  does not reset.
+  */
+  const BodyDivRef = useRef<null | HTMLDivElement>(null);
   useEffect(() => {
     if (BodyDivRef.current !== null) {
       BodyDivRef.current.scrollTop = 0;

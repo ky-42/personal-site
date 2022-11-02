@@ -1,11 +1,13 @@
-import MobileContext from "./contexts/Mobile";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
-import { useWindowSize } from "react-use";
 import { BrowserRouter } from "react-router-dom";
+import { useWindowSize } from "react-use";
+import MobileContext from "./contexts/Mobile";
 import Routing from "./Routing";
 
+// Size in px at which site starts using mobile features
 const MobileWidth = 700; 
 
+// Stlyes to pass to all components
 const StyleTheme = {
   mobile: false,
   textColour: "#FFFFFF",
@@ -20,10 +22,10 @@ const StyleTheme = {
 
 const GlobalCSS = createGlobalStyle`
   body{
-    padding: 0;
     margin: 0;
     font-family: 'JetBrainsMono';
-    color: ${StyleTheme.textColour}
+    color: ${StyleTheme.textColour};
+    background-color: ${StyleTheme.backgroundColour}
   }
   
   p {
@@ -35,11 +37,12 @@ const GlobalCSS = createGlobalStyle`
   }
 `
 const AppConfig = () => {
-  const IsMobile = (useWindowSize().width < MobileWidth);
-  StyleTheme.mobile = IsMobile;
+  // Sets config for things that will effect or be used by all pages
+
+  StyleTheme.mobile = (useWindowSize().width < MobileWidth);
 
   return (
-    <MobileContext.Provider value={IsMobile}>
+    <MobileContext.Provider value={StyleTheme.mobile}>
       <ThemeProvider theme={StyleTheme}>
         <GlobalCSS />
         <BrowserRouter>
