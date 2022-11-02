@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { FullContent } from "../types/Content";
+import { FullContent } from "../../types/Content";
 import { Link } from "react-router-dom";
 
 interface ContentItemProps {
@@ -31,7 +31,7 @@ const ItemDesc = styled.p`
   font-size: clamp(0.9rem, 3vw - 0.2rem, 1.05rem);
 `;
 
-const HomeContentItem = ({content}: ContentItemProps) => {
+const ContentItem = ({content}: ContentItemProps) => {
   const ContentDate = new Intl.DateTimeFormat('en-US', {month: "short", day: "numeric", year: "numeric"}).format(content.base_content.created_at)
 
   return (
@@ -49,4 +49,4 @@ const HomeContentItem = ({content}: ContentItemProps) => {
   )
 }
 
-export default HomeContentItem;
+export default ContentItem;

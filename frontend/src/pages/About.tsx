@@ -3,7 +3,7 @@ import styled from "styled-components";
 import CurrentlyReading from "../components/CurrentlyReading";
 
 import PageTitle from "../components/PageTitle";
-import ReadingList from "../components/ReadingList";
+import ReadingList from "../components/AboutMe/ReadingList";
 
 const AboutDiv = styled.div`
   max-width: 1200px;

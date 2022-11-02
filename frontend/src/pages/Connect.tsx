@@ -3,7 +3,7 @@ import styled, { keyframes, css } from "styled-components";
 import { AiFillGithub, AiFillTwitterCircle, AiFillLinkedin } from "react-icons/ai";
 
 import PageTitle from "../components/PageTitle";
-import ConnectLink from "../components/ConnectLink";
+import ExternalLink from "../components/Connect/ExternalLink";
 
 const ConnectDiv = styled.div`
   margin: auto;
@@ -78,9 +78,9 @@ const Connect = () => {
         Ky42@protonmail.com
       </Email>
       <LinksDiv>
-        <ConnectLink LinkTo="https://github.com/PinkLittlePig" Icon={<AiFillGithub />} />
-        <ConnectLink LinkTo="https://twitter.com/ky421_" Icon={<AiFillTwitterCircle />} />
-        <ConnectLink LinkTo="https://www.linkedin.com/in/kyle-denief-132059230/" Icon={<AiFillLinkedin />} />
+        <ExternalLink LinkTo="https://github.com/PinkLittlePig" Icon={<AiFillGithub />} />
+        <ExternalLink LinkTo="https://twitter.com/ky421_" Icon={<AiFillTwitterCircle />} />
+        <ExternalLink LinkTo="https://www.linkedin.com/in/kyle-denief-132059230/" Icon={<AiFillLinkedin />} />
       </LinksDiv>
       <CopyNotifictionBubble active={copyNotification}>
         Email Copied

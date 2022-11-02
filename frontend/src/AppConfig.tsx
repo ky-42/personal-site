@@ -39,6 +39,7 @@ const GlobalCSS = createGlobalStyle`
 const AppConfig = () => {
   // Sets config for things that will effect or be used by all pages
 
+  // Checks if screen is of mobile width 
   StyleTheme.mobile = (useWindowSize().width < MobileWidth);
 
   return (

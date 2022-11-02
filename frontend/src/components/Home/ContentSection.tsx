@@ -20,7 +20,7 @@ const UpdateHeader = styled.h2`
   text-underline-offset: 0.5rem;
 `;
 
-const HomeUpdate = ({ updateTitle, updateContent }: HomeUpdateProps) => {
+const ContentSection = ({ updateTitle, updateContent }: HomeUpdateProps) => {
   return (
     <UpdateContainer>
       <UpdateHeader>
@@ -31,4 +31,4 @@ const HomeUpdate = ({ updateTitle, updateContent }: HomeUpdateProps) => {
   )
 };
 
-export default HomeUpdate;
+export default ContentSection;

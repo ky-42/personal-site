@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { BrowserView } from 'react-device-detect';
 import styled from 'styled-components';
-import HomeUpdate from '../components/HomeUpdate';
+import ContentSection from '../components/Home/ContentSection';
 import {GetContentList} from "../adapters/content";
 import {ContentType, FullContent} from "../types/Content";
-import HomeContentItem from "../components/HomeContentItem";
+import ContentItem from "../components/Home/ContentItem";
 import {listOrder} from "../types/ViewContent";
 import CurrentlyReading from '../components/CurrentlyReading';
 
@@ -115,9 +115,9 @@ const Home = () => {
         </BrowserOnly>
       </HomeLeft>
       <HomeRight>
-        <HomeUpdate updateTitle='Latest Project' updateContent={latestProject !== undefined ? <HomeContentItem content={latestProject} /> : <></> } />
-        <HomeUpdate updateTitle='Latest Blog' updateContent={latestBlog !== undefined ? <HomeContentItem content={latestBlog} /> : <></> } />
-        <HomeUpdate updateTitle='Currently Reading' updateContent={<CurrentlyReading />}/>
+        <ContentSection updateTitle='Latest Project' updateContent={latestProject !== undefined ? <ContentItem content={latestProject} /> : <></> } />
+        <ContentSection updateTitle='Latest Blog' updateContent={latestBlog !== undefined ? <ContentItem content={latestBlog} /> : <></> } />
+        <ContentSection updateTitle='Currently Reading' updateContent={<CurrentlyReading />}/>
       </HomeRight>
     </HomeDiv>
   );

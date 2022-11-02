@@ -2,7 +2,7 @@ import React, { useReducer, useState } from "react";
 import styled from "styled-components";
 import { actionTypes, DeleteState, NewContentFeilds } from "../types/ManageContent";
 import PageTitle from "../components/PageTitle";
-import ActionButtons from "../components/ActionButtons";
+import ActionButtons from "../components/ContentManagement/ActionButtons";
 import ContentForm from "../components/ContentManagement/ContentForm";
 import DeleteForm from "../components/ContentManagement/DeleteForm";
 import PasswordSubmit from "../components/ContentManagement/PasswordSubmit";
