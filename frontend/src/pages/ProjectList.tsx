@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import styled, { css } from "styled-components";
 import {CountContentType, GetContentList, UnderDevProjects} from "../adapters/content";
-import {listOrder} from "../types/ViewContent";
+import {listOrder} from "../types/RequestContent";
 import {ContentType, FullContent} from "../types/Content";
 import PageTitle from "../components/PageTitle";
 import ContentListItem from '../components/ContentListItem';

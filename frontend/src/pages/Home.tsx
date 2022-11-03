@@ -5,7 +5,7 @@ import ContentSection from '../components/Home/ContentSection';
 import {GetContentList} from "../adapters/content";
 import {ContentType, FullContent} from "../types/Content";
 import ContentItem from "../components/Home/ContentItem";
-import {listOrder} from "../types/ViewContent";
+import {listOrder} from "../types/RequestContent";
 import CurrentlyReading from '../components/CurrentlyReading';
 
 const HomeDiv = styled.div`

@@ -1,16 +1,18 @@
-//
-// Content Enums
-//
+/* -------------------------------------------------------------------------- */
+/*                                Content Enums                               */
+/* -------------------------------------------------------------------------- */
 
 export enum ContentType {
   Blog = "blog",
   Project = "project",
 }
 
+/* -------------------------------------------------------------------------- */
+/*                             Content Interfaces                             */
+/* -------------------------------------------------------------------------- */
 
-//
-// Content Interfaces
-//
+
+/* ------------------ Existing/Updatable Content Interfaces ----------------- */
 
 export interface Content extends NewContent {
   id: number;
@@ -33,6 +35,11 @@ export interface FullContent {
   extra_content: {project: Project} | {blog: Blog}
 }
 
+/* -------------------------------------------------------------------------- */
+
+
+/* ------------------------- New Content Interfaces ------------------------- */
+
 export interface NewContent {
   content_type: string;
   slug: string;
@@ -54,6 +61,4 @@ export interface NewFullContent {
   new_extra_content: {project: NewProject} | {blog: NewBlog}
 }
 
-
-
-
+/* -------------------------------------------------------------------------- */
