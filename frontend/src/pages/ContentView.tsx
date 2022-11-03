@@ -3,6 +3,7 @@ import { GetContentPiece } from "../adapters/content";
 import { useParams } from "react-router-dom";
 import { FullContent } from "../types/Content";
 import styled from "styled-components";
+import ReactMarkdown from "react-markdown";
 
 const ContentViewDiv = styled.div`
   margin: auto;
@@ -83,7 +84,9 @@ const ContentView = () => {
       </TopSection>
       <LowerSection>
         <ContentBody>
-          {pageContent?.base_content.body}
+          <ReactMarkdown>
+            {pageContent ? pageContent?.base_content.body : ""}
+          </ReactMarkdown>
         </ContentBody>
       </LowerSection>
     </ContentViewDiv>
