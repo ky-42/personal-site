@@ -1,3 +1,5 @@
+mod content;
+
 use crate::schema::{blog, content, project};
 use chrono::{DateTime, Utc};
 use serde::{self, Deserialize, Serialize};
@@ -72,86 +74,26 @@ pub enum NewExtraContent {
 // ------------------------------------------------------------------------------------------------------
 // ######################################################################################################
 
+/* -------------------------- Existing Data Structs ------------------------- */
 // Structs for getting and updating data from db
 
-//TODO make a model that is changeable that dont have
-// times or id and are all option feilds
-#[derive(Queryable, AsChangeset, Identifiable, Serialize, Deserialize, Debug)]
-#[diesel(table_name = content)]
-#[diesel(treat_none_as_null = true)]
-pub struct Content {
-    id: i32,
-    pub content_type: String,
-    slug: String,
-    title: String,
-    content_desc: Option<String>,
-    body: String,
-    created_at: DateTime<Utc>,
-    updated_at: DateTime<Utc>,
-}
+/* -------------------------------------------------------------------------- */
 
-#[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Debug)]
-#[diesel(table_name = project, belongs_to(Content))]
-pub struct Project {
-    id: i32,
-    content_id: i32,
-    current_status: String,
-}
-
-impl Project {
-    pub fn get_content_id(&self) -> i32 {
-        self.content_id
-    }
-}
-
-#[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Debug)]
-#[diesel(treat_none_as_null = true, table_name = blog, belongs_to(Content))]
-pub struct Blog {
-    id: i32,
-    content_id: i32,
-    tags: Option<Vec<Option<String>>>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct FullContent {
-    pub base_content: Content,
-    pub extra_content: ExtraContent,
-}
-
+/* ---------------------------- New Data Structs ---------------------------- */
 // Structs for adding new content to db
 
-#[derive(Insertable, Deserialize, Serialize, Debug)]
-#[diesel(table_name = content)]
-pub struct NewContent {
-    content_type: String,
-    slug: String,
-    title: String,
-    content_desc: Option<String>,
-    body: String,
-}
-
-#[derive(Insertable, Deserialize, Serialize, Debug)]
-#[diesel(table_name = project)]
-pub struct NewProject {
-    pub current_status: String,
-}
-
-#[derive(Insertable, Deserialize, Serialize, Debug)]
-#[diesel(table_name = blog)]
-pub struct NewBlog {
-    tags: Option<Vec<String>>,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-pub struct NewFullContent {
-    pub new_base_content: NewContent,
-    pub new_extra_content: NewExtraContent,
-} 
+/* -------------------------------------------------------------------------- */
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct DbRows {
     pub rows_effected: i32
 }
+
+
+
+
+
+
 
 #[cfg(test)]
 mod tests {

@@ -10,8 +10,6 @@ mod route_config;
 mod schema;
 mod cors_config;
 
-// TODO Move admin stuff to its own module
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // Loads .env file
@@ -20,10 +18,11 @@ async fn main() -> std::io::Result<()> {
     // For logging
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    // Gets database pool
-    let db_pool = db::create_db_pool();
-    //Runs db migrations
+    // Runs database migrations
     db::run_migrations();
+    // Creates a database connection pool
+    let db_pool = db::create_db_pool();
+
     // Sets get admin password from env and creates struct
     let admin_info = handlers::extractors::AdminInfo {
         admin_password: env::var("ADMIN_PASSWORD").expect("Please set admin password"),
@@ -41,6 +40,11 @@ async fn main() -> std::io::Result<()> {
     .run()
     .await
 }
+
+
+
+
+
 
 #[cfg(test)]
 mod tests {

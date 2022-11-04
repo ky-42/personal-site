@@ -1,12 +1,12 @@
 use crate::db::models;
-use crate::handlers::errors::ContentError;
+use crate::handlers::errors::AppError;
 use diesel;
 use diesel::insert_into;
 use diesel::prelude::*;
 
 pub fn view_under_dev_projects(
     db_conn: &mut PgConnection
-) -> Result<Vec<models::FullContent>, ContentError> {
+) -> Result<Vec<models::FullContent>, AppError> {
     use crate::schema::{content, project};
     let project_results = content::table
         .inner_join(project::table)
@@ -29,7 +29,7 @@ pub fn view_under_dev_projects(
 pub fn view_content(
     db_conn: &mut PgConnection,
     requested_slug: &str,
-) -> Result<models::FullContent, ContentError> {
+) -> Result<models::FullContent, AppError> {
     // Used to get a single peice of content
     use crate::schema::content::dsl::*;
     let base_content = content
@@ -41,7 +41,7 @@ pub fn view_content(
 pub fn view_content_list(
     db_conn: &mut PgConnection,
     view_info: models::PageInfo,
-) -> Result<Vec<models::FullContent>, ContentError> {
+) -> Result<Vec<models::FullContent>, AppError> {
     use crate::schema::{content, project, blog};
 
     let base_content_query = content::table
@@ -93,7 +93,7 @@ pub fn view_content_list(
 fn get_extra_content(
     db_conn: &mut PgConnection,
     base_content: models::Content,
-) -> Result<models::FullContent, ContentError> {
+) -> Result<models::FullContent, AppError> {
     match &base_content.content_type[..] {
         // Gets extra content then creates full content to return
         "blog" => {
@@ -112,7 +112,7 @@ fn get_extra_content(
         }
         _ => {
             // TODO add another error for this specifically
-            Err(ContentError::ContentNotFound)
+            Err(AppError::ContentNotFound)
         }
     }
 }
@@ -120,7 +120,7 @@ fn get_extra_content(
 pub fn delete_content(
     db_conn: &mut PgConnection,
     delete_slug: String,
-) -> Result<usize, ContentError> {
+) -> Result<usize, AppError> {
     // Reutrns number of rows effected
     use crate::schema::content::dsl::*;
     Ok(diesel::delete(content.filter(slug.eq(delete_slug))).execute(db_conn)?)
@@ -129,7 +129,7 @@ pub fn delete_content(
 pub fn add_content(
     db_conn: &mut PgConnection,
     add_data: models::NewFullContent,
-) -> Result<(), ContentError> {
+) -> Result<(), AppError> {
     use crate::schema::content;
     // Adds base content and gets new id
     let base_content_id: i32 = insert_into(content::table)
@@ -157,7 +157,7 @@ pub fn add_content(
 pub fn update_content(
     db_conn: &mut PgConnection,
     update_data: models::FullContent,
-) -> Result<(), ContentError> {
+) -> Result<(), AppError> {
     let _base_update: models::Content = update_data.base_content.save_changes(db_conn)?;
     let _extra_update = match update_data.extra_content {
         models::ExtraContent::Blog(blog_update_data) => {
@@ -173,7 +173,7 @@ pub fn update_content(
 pub fn content_count(
     db_conn: &mut PgConnection,
     type_to_count: models::ContentType
-) -> Result<i64, ContentError> {
+) -> Result<i64, AppError> {
     match type_to_count {
         models::ContentType::Blog => {
             use crate::schema::blog;

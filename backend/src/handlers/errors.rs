@@ -8,7 +8,7 @@ use diesel;
 use r2d2;
 
 #[derive(Display, Debug)]
-pub enum ContentError {
+pub enum AppError {
     ContentNotFound,
     #[display(fmt = "Database Error")]
     DbError,
@@ -18,45 +18,56 @@ pub enum ContentError {
     WebBlockError,
     #[display(fmt = "You are not the site admin")]
     NotAdmin,
+    #[display(fmt = "No admin password is set")]
+    NoAdmin
 }
 
-// Makes error able to be returned by handler
-impl ResponseError for ContentError {
+// Makes content errors returnable by an actix web handler
+impl ResponseError for AppError {
+    
+    //Creates a response to return when therer is a content error
     fn error_response(&self) -> HttpResponse {
         HttpResponse::build(self.status_code())
             .insert_header(header::ContentType::html())
             .body(self.to_string())
     }
+
+    // Converts a content error to a status code
     fn status_code(&self) -> StatusCode {
         match self {
-            ContentError::ContentNotFound => StatusCode::NOT_FOUND,
-            ContentError::DbError => StatusCode::INTERNAL_SERVER_ERROR,
-            ContentError::PoolError => StatusCode::INTERNAL_SERVER_ERROR,
-            ContentError::WebBlockError => StatusCode::INTERNAL_SERVER_ERROR,
-            ContentError::NotAdmin => StatusCode::UNAUTHORIZED,
+            AppError::ContentNotFound => StatusCode::NOT_FOUND,
+            AppError::DbError => StatusCode::INTERNAL_SERVER_ERROR,
+            AppError::PoolError => StatusCode::INTERNAL_SERVER_ERROR,
+            AppError::WebBlockError => StatusCode::INTERNAL_SERVER_ERROR,
+            AppError::NotAdmin => StatusCode::UNAUTHORIZED,
+            AppError::NoAdmin => StatusCode::UNAUTHORIZED,
         }
     }
 }
 
-// Implementations for converting between errors
+/* -------------------------------------------------------------------------- */
+/*                        Content Error implementations                       */
+/* -------------------------------------------------------------------------- */
 
-impl From<r2d2::Error> for ContentError {
+// Implementations to convert possible errors from other libaries to a content error
+
+impl From<r2d2::Error> for AppError {
     fn from(_: r2d2::Error) -> Self {
-        ContentError::PoolError
+        AppError::PoolError
     }
 }
 
-impl From<BlockingError> for ContentError {
+impl From<BlockingError> for AppError {
     fn from(_: BlockingError) -> Self {
-        ContentError::WebBlockError
+        AppError::WebBlockError
     }
 }
 
-impl From<diesel::result::Error> for ContentError {
+impl From<diesel::result::Error> for AppError {
     fn from(db_error: diesel::result::Error) -> Self {
         match db_error {
-            diesel::result::Error::NotFound => ContentError::ContentNotFound,
-            _ => ContentError::DbError,
+            diesel::result::Error::NotFound => AppError::ContentNotFound,
+            _ => AppError::DbError,
         }
     }
 }

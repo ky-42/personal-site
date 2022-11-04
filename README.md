@@ -28,5 +28,11 @@ Feel free to reach out if you have any questions! Also you can host the site wit
 - [ ] 1.0.0
   - [ ] Asteroids game on the background
 
+# How to setup test env
+Things you will need:
+- postgresql-libs / libpq-dev
+- docker compose or a postgres server
+- yarn or npm
+
 #### Some resources I used in the create of the site
 Frontend File Structure - https://www.freecodecamp.org/news/a-better-way-to-structure-react-projects/
