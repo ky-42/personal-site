@@ -24,13 +24,13 @@ diesel::table! {
 diesel::table! {
     project (id) {
         id -> Int4,
-        content_id -> Int4,
         current_status -> Text,
+        content_type -> Nullable<Text>,
     }
 }
 
 diesel::joinable!(blog -> content (content_id));
-diesel::joinable!(project -> content (content_id));
+diesel::joinable!(project -> content (id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     blog,
