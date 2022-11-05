@@ -30,7 +30,6 @@ diesel::table! {
 }
 
 diesel::joinable!(blog -> content (content_id));
-diesel::joinable!(project -> content (id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     blog,
