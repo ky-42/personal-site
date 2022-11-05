@@ -1,0 +1,1 @@
+ALTER TABLE project ADD CONSTRAINT project_status_types CHECK (current_status IN ('under_development', 'finished'));

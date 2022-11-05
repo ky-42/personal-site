@@ -3,8 +3,8 @@
 diesel::table! {
     blog (id) {
         id -> Int4,
-        content_id -> Int4,
         tags -> Nullable<Array<Nullable<Text>>>,
+        content_type -> Text,
     }
 }
 
@@ -25,11 +25,9 @@ diesel::table! {
     project (id) {
         id -> Int4,
         current_status -> Text,
-        content_type -> Nullable<Text>,
+        content_type -> Text,
     }
 }
-
-diesel::joinable!(blog -> content (content_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     blog,
