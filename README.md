@@ -23,7 +23,6 @@ Feel free to reach out if you have any questions! Also you can host the site wit
   - [ ] Better support for personalizing the site so others can host and extend
   - [ ] Adding more blog and project sorting features (Searching, reverse order, etc.)
 - [ ] 0.9.0
-  - [ ] Embed support for blogs and projects
   - [ ] Better content managment page
 - [ ] 1.0.0
   - [ ] Asteroids game on the background
