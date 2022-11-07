@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import useWindowSize from "react-use/lib/useWindowSize";
 import MobileContext from "./contexts/Mobile";
 import Routing from "./Routing";
+import { HelmetProvider } from "react-helmet-async";
 
 // Size in px at which site starts using mobile features
 const MobileWidth = 700; 
@@ -47,7 +48,9 @@ const AppConfig = () => {
       <ThemeProvider theme={StyleTheme}>
         <GlobalCSS />
         <BrowserRouter>
-          <Routing />
+          <HelmetProvider>
+            <Routing />
+          </HelmetProvider>
         </BrowserRouter>
       </ThemeProvider>
     </MobileContext.Provider>
