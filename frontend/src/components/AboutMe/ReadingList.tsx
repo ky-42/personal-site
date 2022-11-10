@@ -1,70 +1,67 @@
 import React from "react";
 import styled from "styled-components";
 
-interface ReadingListProps {
-  ReadingTitle: string,
-  BookList: Array<string>
-}
+/* -------------------------- General CSS elements -------------------------- */
 
-const ReadingListContainer = styled.div`
+const ListContainer = styled.div`
   width: 480px;
-  max-width: 480px;
-  flex-shrink: 0;
-  @media (max-width: 700px) {
-    flex-shrink: 1;
-    min-width: 0;
-    width: auto;
-  }
+  text-align: center;
 `;
 
-const ReadingListTitle = styled.h3`
-  text-align: center;
+const ListTitle = styled.h3`
   text-decoration: underline ${props => props.theme.highlightDark} 0.1rem;
   text-underline-offset: 0.3rem;
 `;
 
 const UnorderedReading = styled.ul`
-  text-align: center;
   padding: 0;
 `;
 
+/* ------------------------ In reading list elements ------------------------ */
+
 const Book = styled.li`
+  margin: 10px 0;
   list-style-type: none;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  // Used to repect top and bottom margin/padding 
   display: inline-block;
 `;
 
-const ListSeparator = styled.hr`
-  
-`;
+const ListSeparator = styled.hr``;
+
+/* -------------------------------------------------------------------------- */
+
+interface ReadingListProps {
+  ReadingTitle: string,
+  BookList: Array<string>
+}
 
 const ReadingList = ({ ReadingTitle, BookList }: ReadingListProps) => {
+
+  // Creats a list of book elements from a list of titles
   let BookListElements = BookList.map((BookTitle, index) => 
     <Book key={index}>
       {BookTitle}
     </Book>
   );
 
-  // Adds hrs between all list elements
+  // Adds list separators between all list elements
   BookListElements.forEach((_, index) => {
     BookListElements.splice((index*2)+1, 0, <ListSeparator key={10000-index}/>)
   });
 
-  // Removes the extra hr at the end
+  // Removes the extra list separator at the end of the list of elemets
   BookListElements.pop();
   
   return(
-    <ReadingListContainer>
-      <ReadingListTitle>
+    <ListContainer>
+      <ListTitle>
         {ReadingTitle}
-      </ReadingListTitle>
+      </ListTitle>
       <UnorderedReading>
-        {
-          BookListElements
-        }
+        {/* Unpacks list with book elements and hr's */}
+        {BookListElements}
       </UnorderedReading>
-    </ReadingListContainer>
+    </ListContainer>
   )
 }
 

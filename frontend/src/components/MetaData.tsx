@@ -31,3 +31,5 @@ const MetaData = ({title, description, type}: MetaDataProps) => {
     </Helmet>
   )
 }
+
+export default MetaData;
