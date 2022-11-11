@@ -8,7 +8,7 @@ interface LinkNavBarProps {
   title: string,
 }
 
-const LinkDiv = styled.div<{active: boolean}>`
+const LinkDiv = styled.div<{active: number}>`
   flex: 1 1 0;
   display: table;
   text-align: center;
@@ -18,11 +18,11 @@ const LinkDiv = styled.div<{active: boolean}>`
   z-index: ${props => props.active ? 5 : 0};
 `;
 
-const NavLink = styled(Link)<{active: boolean}>`
+const NavLink = styled(Link)<{active: number}>`
   display: table-cell;
   vertical-align: middle;
   color: ${props => props.active ? props.theme.highlight : props.theme.textColour};
-  text-decoration: ${props => props.active ? `underline 1 solid ${props.theme.highlight}` : "none"};
+  text-decoration: ${props => props.active ? `underline ${props.theme.highlight}` : "none"};
   font-size: 1.25rem;
 `;
 
@@ -32,8 +32,8 @@ const LinkNavBar = ({className, to, title}:LinkNavBarProps) => {
   const active = location === to;
 
   return (
-    <LinkDiv className={className} active={active}>
-      <NavLink to={to} active={active}>
+    <LinkDiv className={className} active={+active}>
+      <NavLink to={to} active={+active}>
         {title}
       </NavLink>
     </LinkDiv>  

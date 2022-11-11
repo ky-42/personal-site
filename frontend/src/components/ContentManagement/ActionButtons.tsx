@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { actionTypes } from "../types/ManageContent";
+import { actionTypes } from "../../types/ManageContent";
 
 const ActionButtonDiv = styled.div`
   

@@ -18,8 +18,6 @@ const ContentTitle = styled.h1`
   margin-top: 28px;
   margin-bottom: 5px;
   font-size: clamp(1.3rem, 7vw, 3.75rem);
-  text-decoration: underline ${props => props.theme.highlight} 2px;
-  /* text-underline-offset: clamp(9px, 2.5vw, 15px); */
 `;
 
 const ContentDate = styled.p`

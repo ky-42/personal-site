@@ -1,17 +1,12 @@
 import backend_axios from ".";
 import * as ContentTypes from "../types/Content";
-import { PageInfo } from "../types/ViewContent";
+import { PageInfo, ContentPieceOptions, ContentAddParams } from "../types/RequestContent";
 
-interface ContentPieceOptions {
-  slug: string,
-  method: string,
-  password?: string
-  updated_content?: ContentTypes.FullContent
-};
 
-// ---------------------------------------------------------------------------------------------------------------------
-// ---------------------------------------------------------------------------------------------------------------------
 
+/* -------------------------- CRUD content adapters ------------------------- */
+
+// Deals with an existing peice of content on the backend 
 const GetContentPiece = async (params: ContentPieceOptions) => {
   console.log(params.slug)
   const response = await backend_axios({
@@ -27,17 +22,13 @@ const GetContentPiece = async (params: ContentPieceOptions) => {
   return ((response.status === 200) ? response.data : false);
 };
 
+// Gets a list of content from server
 const GetContentList = async (params: PageInfo): Promise<Array<ContentTypes.FullContent>> => {
   const response = await backend_axios.get("/content/list", {
     params,
   })
   console.log(response);
   return ((response.status === 200) ? response.data : false);
-};
-
-interface ContentAddParams {
-  addContent: ContentTypes.NewFullContent,
-  password: string
 };
 
 const ContentAdd = async ({ addContent, password }:ContentAddParams): Promise<boolean> => {
@@ -50,20 +41,24 @@ const ContentAdd = async ({ addContent, password }:ContentAddParams): Promise<bo
   return (response.status === 200);
 };
 
-// ---------------------------------------------------------------------------------------------------------------------
-// ---------------------------------------------------------------------------------------------------------------------
+/* -------------------------------------------------------------------------- */
 
+
+/* ------------------------- Other Content Adapters ------------------------- */
+
+// Gets Projects that are under development
 const UnderDevProjects = async (): Promise<Array<ContentTypes.FullContent>> => {
   const response = await backend_axios.get("/content/list/projects/under-development")
   return ((response.status === 200) ? response.data : false);
 }
 
+// Gets the count of a type of content from backend
 const CountContentType = async (contentType: ContentTypes.ContentType): Promise<number> => {
   const response = await backend_axios.get(`/content/count/${contentType}`);
   return ((response.status === 200) ? response.data.count : false);
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
-// ---------------------------------------------------------------------------------------------------------------------
+/* -------------------------------------------------------------------------- */
+
 
 export { GetContentPiece, GetContentList, ContentAdd, UnderDevProjects, CountContentType };

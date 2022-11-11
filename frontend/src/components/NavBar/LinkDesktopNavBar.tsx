@@ -6,7 +6,6 @@ const LinkDiv = styled(NavLink)`
   background-color: ${props => props.theme.backgroundColour};
   width: 100%;
   height: 100%;
-  text-decoration: none;
 `;
 
 // Needed to create hover effect becuase otherwise there would be 
@@ -27,6 +26,7 @@ const HoverDiv = styled.div<{active: boolean}>`
 
 const LinkText = styled.h3`
   font-size: clamp(1.1rem, 2vw, 1.3rem);
+  text-decoration: none;
 `;
 
 interface LinkNavBarProps {

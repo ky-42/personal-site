@@ -1,8 +1,8 @@
-//
-// Manage Content Enums
-//
-
 import { NewBlog, NewContent, NewProject } from "./Content"
+
+/* -------------------------------------------------------------------------- */
+/*                      Types for the manage content page                     */
+/* -------------------------------------------------------------------------- */
 
 export enum actionTypes {
   Create = "Create",

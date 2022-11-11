@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import styled, { css } from "styled-components";
 import {CountContentType, GetContentList, UnderDevProjects} from "../adapters/content";
-import {listOrder} from "../types/ViewContent";
+import {listOrder} from "../types/RequestContent";
 import {ContentType, FullContent} from "../types/Content";
 import PageTitle from "../components/PageTitle";
 import ContentListItem from '../components/ContentListItem';
@@ -38,9 +38,7 @@ const ContentList = styled.div`
 `;
 
 const ProjectsTypeTitle = styled.h2`
-  text-decoration: underline ${props => props.theme.highlightDark};
   font-size: clamp(1.7rem, 6vw, 2rem);
-  text-underline-offset: 0.5rem;
   text-align: center;
 `;
 

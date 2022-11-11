@@ -16,11 +16,9 @@ const UpdateContainer = styled.div`
 
 const UpdateHeader = styled.h2`
   text-align: center;
-  text-decoration: underline ${props => props.theme.highlightDark} 0.1rem;
-  text-underline-offset: 0.5rem;
 `;
 
-const HomeUpdate = ({ updateTitle, updateContent }: HomeUpdateProps) => {
+const ContentSection = ({ updateTitle, updateContent }: HomeUpdateProps) => {
   return (
     <UpdateContainer>
       <UpdateHeader>
@@ -31,4 +29,4 @@ const HomeUpdate = ({ updateTitle, updateContent }: HomeUpdateProps) => {
   )
 };
 
-export default HomeUpdate;
+export default ContentSection;

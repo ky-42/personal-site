@@ -14,7 +14,6 @@ const ContentItemDiv = styled(Link)`
   height: 140px;
   outline: 2px solid ${props => props.theme.darkTone};
   color: ${props => props.theme.textColour};
-  text-decoration: none;
   outline-offset: -1px;
   padding: 20px;
   display: flex;
@@ -30,7 +29,6 @@ const ItemTitle = styled.h4`
   font-size: 1.25rem;
   font-weight:normal;
   margin: 0;
-  text-decoration: underline solid ${props => props.theme.textColour} 1px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;  

@@ -27,7 +27,7 @@ const ConnectLinkDiv = styled.div`
   align-items: center;
 `;
 
-const ConnectLink = ({ LinkTo, Icon }: ConnectLinkProps) => {
+const ExternalLink = ({ LinkTo, Icon }: ConnectLinkProps) => {
   return (
     <SocialLink href={LinkTo}>
       <ConnectLinkDiv>{Icon}</ConnectLinkDiv>
@@ -35,4 +35,4 @@ const ConnectLink = ({ LinkTo, Icon }: ConnectLinkProps) => {
   );
 };
 
-export default ConnectLink;
+export default ExternalLink;

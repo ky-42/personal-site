@@ -1,8 +1,9 @@
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { BrowserRouter } from "react-router-dom";
-import { useWindowSize } from "react-use";
+import useWindowSize from "react-use/lib/useWindowSize";
 import MobileContext from "./contexts/Mobile";
 import Routing from "./Routing";
+import { HelmetProvider } from "react-helmet-async";
 
 // Size in px at which site starts using mobile features
 const MobileWidth = 700; 
@@ -35,10 +36,34 @@ const GlobalCSS = createGlobalStyle`
   button {
     font-family: 'JetBrainsMono';
   }
+  
+  h1 {
+    text-decoration: underline ${StyleTheme.highlight};
+    text-underline-offset: clamp(9px, 2.5vw, 15px);
+  }
+  
+  h2 {
+    text-decoration: underline ${StyleTheme.highlightDark};
+    text-underline-offset: 0.5rem;
+  }
+  
+  h3 {
+    text-decoration: underline ${StyleTheme.highlightDark};
+    text-underline-offset: 0.3rem;
+  }
+
+  h4, h5, h6 {
+    text-decoration: underline ${StyleTheme.textColour}
+  }
+  
+  a {
+    text-decoration: none;
+  }
 `
 const AppConfig = () => {
   // Sets config for things that will effect or be used by all pages
 
+  // Checks if screen is of mobile width 
   StyleTheme.mobile = (useWindowSize().width < MobileWidth);
 
   return (
@@ -46,7 +71,9 @@ const AppConfig = () => {
       <ThemeProvider theme={StyleTheme}>
         <GlobalCSS />
         <BrowserRouter>
-          <Routing />
+          <HelmetProvider>
+            <Routing />
+          </HelmetProvider>
         </BrowserRouter>
       </ThemeProvider>
     </MobileContext.Provider>

@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import { BrowserView } from 'react-device-detect';
 import styled from 'styled-components';
-import HomeUpdate from '../components/HomeUpdate';
+import ContentSection from '../components/Home/ContentSection';
 import {GetContentList} from "../adapters/content";
 import {ContentType, FullContent} from "../types/Content";
-import HomeContentItem from "../components/HomeContentItem";
-import {listOrder} from "../types/ViewContent";
+import ContentItem from "../components/Home/ContentItem";
+import {listOrder} from "../types/RequestContent";
 import CurrentlyReading from '../components/CurrentlyReading';
 
 const HomeDiv = styled.div`
@@ -32,9 +32,7 @@ const HomeLeft = styled.div`
 `;
 
 const PageTitle = styled.h1`
-  text-decoration: underline ${props => props.theme.highlight};
   font-size: clamp(1.8rem, 10vw, 3.75rem);
-  text-underline-offset: clamp(9px, 2.5vw, 15px);
   margin-top: 0;
 `;
 
@@ -115,9 +113,9 @@ const Home = () => {
         </BrowserOnly>
       </HomeLeft>
       <HomeRight>
-        <HomeUpdate updateTitle='Latest Project' updateContent={latestProject !== undefined ? <HomeContentItem content={latestProject} /> : <></> } />
-        <HomeUpdate updateTitle='Latest Blog' updateContent={latestBlog !== undefined ? <HomeContentItem content={latestBlog} /> : <></> } />
-        <HomeUpdate updateTitle='Currently Reading' updateContent={<CurrentlyReading />}/>
+        <ContentSection updateTitle='Latest Project' updateContent={latestProject !== undefined ? <ContentItem content={latestProject} /> : <></> } />
+        <ContentSection updateTitle='Latest Blog' updateContent={latestBlog !== undefined ? <ContentItem content={latestBlog} /> : <></> } />
+        <ContentSection updateTitle='Currently Reading' updateContent={<CurrentlyReading />}/>
       </HomeRight>
     </HomeDiv>
   );
