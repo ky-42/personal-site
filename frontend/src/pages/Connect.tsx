@@ -19,8 +19,6 @@ const Email = styled.h2`
   margin: clamp(50px, 8vw, 75px) 0px;
   font-size: clamp(1.1rem, 6vw, 2.1rem);
   font-variation-settings: 'wght' 650;
-  text-decoration: underline ${props => props.theme.highlightDark} 0.1rem;
-  text-underline-offset: 0.5rem;
   cursor: pointer;
 `
 

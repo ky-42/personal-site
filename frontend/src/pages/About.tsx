@@ -23,8 +23,6 @@ const ReadingTitle = styled.h2`
   margin-top: 50px;
   font-size: clamp(1.7rem, 6vw, 2rem);
   text-align: center;
-  text-decoration: underline ${props => props.theme.highlightDark} 0.1rem;
-  text-underline-offset: 0.5rem;
 `;
 
 const BookListDiv = styled.div`

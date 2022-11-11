@@ -16,8 +16,6 @@ const UpdateContainer = styled.div`
 
 const UpdateHeader = styled.h2`
   text-align: center;
-  text-decoration: underline ${props => props.theme.highlightDark} 0.1rem;
-  text-underline-offset: 0.5rem;
 `;
 
 const ContentSection = ({ updateTitle, updateContent }: HomeUpdateProps) => {

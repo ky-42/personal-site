@@ -32,9 +32,7 @@ const HomeLeft = styled.div`
 `;
 
 const PageTitle = styled.h1`
-  text-decoration: underline ${props => props.theme.highlight};
   font-size: clamp(1.8rem, 10vw, 3.75rem);
-  text-underline-offset: clamp(9px, 2.5vw, 15px);
   margin-top: 0;
 `;
 

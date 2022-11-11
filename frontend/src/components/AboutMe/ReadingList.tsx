@@ -9,8 +9,6 @@ const ListContainer = styled.div`
 `;
 
 const ListTitle = styled.h3`
-  text-decoration: underline ${props => props.theme.highlightDark} 0.1rem;
-  text-underline-offset: 0.3rem;
 `;
 
 const UnorderedReading = styled.ul`

@@ -22,7 +22,7 @@ const NavLink = styled(Link)<{active: number}>`
   display: table-cell;
   vertical-align: middle;
   color: ${props => props.active ? props.theme.highlight : props.theme.textColour};
-  text-decoration: ${props => props.active ? `underline 1 solid ${props.theme.highlight}` : "none"};
+  text-decoration: ${props => props.active ? `underline ${props.theme.highlight}` : "none"};
   font-size: 1.25rem;
 `;
 

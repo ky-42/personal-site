@@ -36,6 +36,29 @@ const GlobalCSS = createGlobalStyle`
   button {
     font-family: 'JetBrainsMono';
   }
+  
+  h1 {
+    text-decoration: underline ${StyleTheme.highlight};
+    text-underline-offset: clamp(9px, 2.5vw, 15px);
+  }
+  
+  h2 {
+    text-decoration: underline ${StyleTheme.highlightDark};
+    text-underline-offset: 0.5rem;
+  }
+  
+  h3 {
+    text-decoration: underline ${StyleTheme.highlightDark};
+    text-underline-offset: 0.3rem;
+  }
+
+  h4, h5, h6 {
+    text-decoration: underline ${StyleTheme.textColour}
+  }
+  
+  a {
+    text-decoration: none;
+  }
 `
 const AppConfig = () => {
   // Sets config for things that will effect or be used by all pages

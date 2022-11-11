@@ -11,13 +11,11 @@ const ContentItemDiv = styled(Link)`
   max-width: clamp(300px, 225px + 40vw, 500px);
   margin-left: clamp(10px, 5vw, 60px);
   color: ${props => props.theme.textColour};
-  text-decoration: none;
 `
 const ItemTitle = styled.h4`
   font-size: clamp(1.3rem, 4vw, 1.6rem);
   font-weight:normal;
   margin: 0;
-  text-decoration: underline solid ${props => props.theme.textColour} 1px;
 `;
 
 const ItemDate = styled.p`
