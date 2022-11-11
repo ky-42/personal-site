@@ -12,7 +12,7 @@ Feel free to reach out if you have any questions! Also you can host the site wit
   - [ ] Refactoring of major parts of code
   - [ ] Minor visual improvements
   - [ ] General clean up (adding comment, optimizations, etc.)
-  - [ ] Markdown support in blogs and projects
+  - [x] Markdown support in blogs and projects
   - [ ] Add support to update blog and project specific data
   - [ ] SEO
 - [ ] 0.7.0
