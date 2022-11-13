@@ -1,4 +1,6 @@
-
+use crate::schema::{content};
+use serde::{self, Deserialize, Serialize};
+use chrono::{DateTime, Utc};
 
 //TODO make a model that is changeable that dont have
 // times or id and are all option feilds
@@ -16,13 +18,6 @@ pub struct Content {
     updated_at: DateTime<Utc>,
 }
 
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct FullContent {
-    pub base_content: Content,
-    pub extra_content: ExtraContent,
-}
-
 #[derive(Insertable, Deserialize, Serialize, Debug)]
 #[diesel(table_name = content)]
 pub struct NewContent {
@@ -32,9 +27,3 @@ pub struct NewContent {
     content_desc: Option<String>,
     body: String,
 }
-
-#[derive(Deserialize, Serialize, Debug)]
-pub struct NewFullContent {
-    pub new_base_content: NewContent,
-    pub new_extra_content: NewExtraContent,
-} 

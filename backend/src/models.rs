@@ -1,7 +1,6 @@
 mod content;
 
 use crate::schema::{blog, content, project};
-use chrono::{DateTime, Utc};
 use serde::{self, Deserialize, Serialize};
 
 // ######################################################################################################
@@ -56,19 +55,6 @@ impl From<ContentType> for String {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "lowercase")]
-pub enum ExtraContent {
-    Blog(Blog),
-    Project(Project),
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-#[serde(rename_all = "lowercase")]
-pub enum NewExtraContent {
-    Blog(NewBlog),
-    Project(NewProject),
-}
 
 // ######################################################################################################
 // ------------------------------------------------------------------------------------------------------

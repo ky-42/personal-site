@@ -2,8 +2,9 @@
 
 diesel::table! {
     blog (id) {
-        id -> Int4,
+        content_id -> Int4,
         tags -> Nullable<Array<Nullable<Text>>>,
+        id -> Int4,
         content_type -> Text,
     }
 }
@@ -23,8 +24,9 @@ diesel::table! {
 
 diesel::table! {
     project (id) {
-        id -> Int4,
+        content_id -> Int4,
         current_status -> Text,
+        id -> Int4,
         content_type -> Text,
     }
 }
