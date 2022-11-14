@@ -6,6 +6,10 @@ import PageTitle from "../components/PageTitle";
 import ReadingList from "../components/AboutMe/ReadingList";
 import MetaData from "../components/MetaData";
 
+/* -------------------------------------------------------------------------- */
+
+const AboutBody = styled.main``;
+
 /* -------------------------- About section elments ------------------------- */
 
 const AboutSection = styled.section`
@@ -64,7 +68,7 @@ const About = () => {
   ]
 
   return (
-    <div>
+    <AboutBody>
       <MetaData
         title="About Me | Kyle Denief"
         description="A bit about what I'm interested in, where I'm going to school, what I'm reading and what I know!"
@@ -90,7 +94,7 @@ const About = () => {
           <ReadingList ReadingTitle="To Read" BookList={ToRead} />
         </BookListDiv>
       </ReadingSection>
-    </div>
+    </AboutBody>
   )
 }
 

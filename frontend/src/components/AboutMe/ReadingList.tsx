@@ -8,8 +8,7 @@ const ListContainer = styled.div`
   text-align: center;
 `;
 
-const ListTitle = styled.h3`
-`;
+const ListTitle = styled.h3``;
 
 const UnorderedReading = styled.ul`
   padding: 0;
