@@ -4,10 +4,11 @@ import { AiFillGithub, AiFillTwitterCircle, AiFillLinkedin } from "react-icons/a
 
 import PageTitle from "../components/PageTitle";
 import ExternalLink from "../components/Connect/ExternalLink";
+import MetaData from "../components/MetaData";
 
 /* -------------------------------------------------------------------------- */
 
-const ConnectDiv = styled.div`
+const ConnectBody = styled.main`
   margin: auto;
   max-width: 1000px;
 `;
@@ -23,7 +24,7 @@ const Email = styled.h2`
 `;
 
 // Div that contains external links
-const ExternalLinksDiv = styled.div`
+const ExternalLinks = styled.section`
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
@@ -69,7 +70,13 @@ const Connect = () => {
   const [copyNotification, setCopyNotification] = useState(false);
   
   return (
-    <ConnectDiv>
+    <ConnectBody>
+      <MetaData
+        title="Connect With Me | Kyle Denief"
+        description="How you can connect with me and the best way to do it!"
+        type="website"
+      />
+    
       <PageTitle>
         Connect With Me        
       </PageTitle>
@@ -89,17 +96,17 @@ const Connect = () => {
         Ky42@protonmail.com
       </Email>
 
-      <ExternalLinksDiv>
+      <ExternalLinks>
         <ExternalLink LinkTo="https://github.com/PinkLittlePig" Icon={<AiFillGithub />} />
         <ExternalLink LinkTo="https://twitter.com/ky421_" Icon={<AiFillTwitterCircle />} />
         <ExternalLink LinkTo="https://www.linkedin.com/in/kyle-denief-132059230/" Icon={<AiFillLinkedin />} />
-      </ExternalLinksDiv>
+      </ExternalLinks>
 
       {/* Copy notification element */}
       <CopyNotifictionBubble active={copyNotification}>
         Email Copied
       </CopyNotifictionBubble>
-    </ConnectDiv>
+    </ConnectBody>
   )
 }
 
