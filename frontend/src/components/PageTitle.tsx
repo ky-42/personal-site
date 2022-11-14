@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 /* -------------------------------------------------------------------------- */
 
-const PageTitleDiv = styled.div`
+const PageTitleHeader = styled.header`
   margin-top: clamp(1.3rem,  6vw, 3.75rem);
 `;
 
@@ -22,12 +22,12 @@ interface PageTitleProps {
 
 const PageTitle = ({ children, icon }: PageTitleProps) => {
   return(
-    <PageTitleDiv>
+    <PageTitleHeader>
       {icon}
       <PageTitleText>
         {children}
       </PageTitleText>
-    </PageTitleDiv>
+    </PageTitleHeader>
   )
 }
 
