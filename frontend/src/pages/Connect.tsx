@@ -73,7 +73,7 @@ const Connect = () => {
     <ConnectBody>
       <MetaData
         title="Connect With Me | Kyle Denief"
-        description="How you can connect with me and the best way to do it!"
+        description="Hi I'm Kyle Denief if you want to chat the best way to contact me is email!"
         type="website"
       />
     
