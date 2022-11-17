@@ -32,3 +32,16 @@ export interface ContentAddParams {
   addContent: NewFullContent,
   password: string
 };
+
+/* ---- Types used to help handle loading and errors when requesting data --- */
+
+export enum RequestStatus {
+  Loading,
+  Success,
+  Error
+}
+
+export type RequestState<RequestedData> = 
+  | { requestStatus: RequestStatus.Loading }
+  | { requestStatus: RequestStatus.Success, contentList: RequestedData }
+  | { requestStatus: RequestStatus.Error, requestError: string };

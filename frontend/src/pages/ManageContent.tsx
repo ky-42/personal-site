@@ -1,6 +1,6 @@
 import React, { useReducer, useState } from "react";
 import styled from "styled-components";
-import { actionTypes, DeleteState, NewContentFeilds } from "../types/ManageContent";
+import { ActionTypes, DeleteState, NewContentFeilds } from "../types/ManageContent";
 import PageTitle from "../components/PageTitle";
 import ActionButtons from "../components/ContentManagement/ActionButtons";
 import ContentForm from "../components/ContentManagement/ContentForm";
@@ -147,16 +147,16 @@ const ClearButton = styled.button`
 
 const ManageContent = () => {
  
-  const [currentAction, setCurrentAction] = useState(actionTypes.Create);
+  const [currentAction, setCurrentAction] = useState(ActionTypes.Create);
   const [password, setPassword] = useState("");
   const [deleteData, setDeleteData] = useReducer(deleteReducer, deleteInitState);
   const [contentData, setContentData] = useReducer(contentReducer, contentInitState);
   const [updateOriginal, setUpdateOriginal] = useState<FullContent>();
  
   const ActionElement = {
-    [actionTypes.Create]: <ContentForm contentData={contentData} setContentData={setContentData} />,
-    [actionTypes.Update]: <UpdateForm contentData={contentData} setContentData={setContentData} setUpdateOriginal={setUpdateOriginal} />,
-    [actionTypes.Delete]: <DeleteForm deleteData={deleteData} setDeleteData={setDeleteData} />,
+    [ActionTypes.Create]: <ContentForm contentData={contentData} setContentData={setContentData} />,
+    [ActionTypes.Update]: <UpdateForm contentData={contentData} setContentData={setContentData} setUpdateOriginal={setUpdateOriginal} />,
+    [ActionTypes.Delete]: <DeleteForm deleteData={deleteData} setDeleteData={setDeleteData} />,
   };
   
   const clearFields = () => {
@@ -168,9 +168,9 @@ const ManageContent = () => {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     switch (currentAction) {
-      case actionTypes.Create: createSubmit(contentData, password); break;
-      case actionTypes.Update: updateSubmit(contentData, updateOriginal, password); break;
-      case actionTypes.Delete: deleteSubmit(deleteData, password); break;
+      case ActionTypes.Create: createSubmit(contentData, password); break;
+      case ActionTypes.Update: updateSubmit(contentData, updateOriginal, password); break;
+      case ActionTypes.Delete: deleteSubmit(deleteData, password); break;
     }
   };
   
