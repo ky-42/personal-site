@@ -1,44 +1,61 @@
+import axios from "axios";
 import backend_axios from ".";
-import * as ContentTypes from "../types/Content";
-import { PageInfo, ContentPieceOptions, ContentAddParams } from "../types/RequestContent";
+import { ContentType, FullContent } from "../types/Content";
+import { PageInfo, ContentPieceOptions, ContentAddParams, RequestState, RequestStatus } from "../types/RequestContent";
 
 
 
 /* -------------------------- CRUD content adapters ------------------------- */
 
 // Deals with an existing peice of content on the backend 
-const GetContentPiece = async (params: ContentPieceOptions) => {
-  console.log(params.slug)
-  const response = await backend_axios({
-    url: `/content/${params.slug}`,
-    method: params.method,
-    data: params.updated_content,
-    headers: params.password ? {
-      authorization: params.password
-    } : undefined
-  });
-  console.log(response);
-  // TODO throw promise error or something here
-  return ((response.status === 200) ? response.data : false);
+const GetContentPiece = async <FetchType>(params: ContentPieceOptions): Promise<RequestState<FetchType>> => {
+  try {
+
+    const response = await backend_axios.request<FetchType>({
+      url: `/content/${params.slug}`,
+      method: params.method,
+      data: params.updated_content,
+      headers: params.password ? {
+        authorization: params.password
+      } : undefined
+    });
+
+    return {requestStatus: RequestStatus.Success, contentList: response.data};
+
+  } catch (err) {
+    return HandleAxiosError(err);
+  }
 };
 
 // Gets a list of content from server
-const GetContentList = async (params: PageInfo): Promise<Array<ContentTypes.FullContent>> => {
-  const response = await backend_axios.get("/content/list", {
-    params,
-  })
-  console.log(response);
-  return ((response.status === 200) ? response.data : false);
+const GetContentList = async (params: PageInfo): Promise<RequestState<FullContent[]>> => {
+  try {
+
+    const response = await backend_axios.get<FullContent[]>("/content/list", {
+      params,
+    });
+
+    return {requestStatus: RequestStatus.Success, contentList: response.data};
+
+  } catch (err) {
+    return HandleAxiosError(err);
+  }
 };
 
-const ContentAdd = async ({ addContent, password }:ContentAddParams): Promise<boolean> => {
-  const response = await backend_axios.post("/content/add", addContent, {
-    headers: {
-      authorization: password,
-    }
-  });
-  console.log(response);
-  return (response.status === 200);
+const ContentAdd = async ({ addContent, password }:ContentAddParams): Promise<RequestState<boolean>> => {
+  try {
+
+    const response = await backend_axios.post("/content/add", addContent, {
+      headers: {
+        authorization: password,
+      }
+    });
+    
+    return {requestStatus: RequestStatus.Success, contentList: true};
+
+  } catch (err) {
+    return HandleAxiosError(err);
+  }
 };
 
 /* -------------------------------------------------------------------------- */
@@ -47,18 +64,38 @@ const ContentAdd = async ({ addContent, password }:ContentAddParams): Promise<bo
 /* ------------------------- Other Content Adapters ------------------------- */
 
 // Gets Projects that are under development
-const UnderDevProjects = async (): Promise<Array<ContentTypes.FullContent>> => {
-  const response = await backend_axios.get("/content/list/projects/under-development")
-  return ((response.status === 200) ? response.data : false);
+const UnderDevProjects = async (): Promise<RequestState<FullContent[]>> => {
+  try {
+
+    const response = await backend_axios.get<FullContent[]>("/content/list/projects/under-development")
+    return {requestStatus: RequestStatus.Success, contentList: response.data};
+
+  } catch (err) {
+    return HandleAxiosError(err);
+  }
 }
 
 // Gets the count of a type of content from backend
-const CountContentType = async (contentType: ContentTypes.ContentType): Promise<number> => {
-  const response = await backend_axios.get(`/content/count/${contentType}`);
-  return ((response.status === 200) ? response.data.count : false);
+const CountContentType = async (contentType: ContentType): Promise<RequestState<number>> => {
+  try {
+
+    const response = await backend_axios.get<{count: number}>(`/content/count/${contentType}`);
+    return {requestStatus: RequestStatus.Success, contentList: response.data.count};
+
+  } catch (err) {
+    return HandleAxiosError(err);
+  }
 }
 
 /* -------------------------------------------------------------------------- */
+
+const HandleAxiosError = (err: any): RequestState<any> => {
+  if (axios.isAxiosError(err)) {
+    return {requestStatus: RequestStatus.Error, requestError: `${err.response?.status}: ${err.response?.statusText}`};
+  };
+  console.log(err);
+  return {requestStatus: RequestStatus.Error, requestError: "It worked on my machine"};
+}
 
 
 export { GetContentPiece, GetContentList, ContentAdd, UnderDevProjects, CountContentType };
