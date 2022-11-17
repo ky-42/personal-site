@@ -6,9 +6,8 @@ use std::env;
 
 mod db;
 mod handlers;
-mod route_config;
+mod configs;
 mod schema;
-mod cors_config;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -31,10 +30,10 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .wrap(Logger::default())
-            .wrap(cors_config::cors_config())
+            .wrap(configs::cors_config())
             .app_data(web::Data::new(db_pool.clone()))
             .app_data(web::Data::new(admin_info.clone()))
-            .configure(route_config::route_config)
+            .configure(configs::route_config)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
@@ -83,7 +82,7 @@ mod tests {
                 .wrap(Logger::default())
                 .app_data(web::Data::new(db_pool.clone()))
                 .app_data(web::Data::new(admin_info.clone()))
-                .configure(route_config::route_config)
+                .configure(configs::route_config)
         ).await;
 
         // Send content add request
@@ -142,7 +141,7 @@ mod tests {
                 .wrap(Logger::default())
                 .app_data(web::Data::new(db_pool.clone()))
                 .app_data(web::Data::new(admin_info.clone()))
-                .configure(route_config::route_config)
+                .configure(configs::route_config)
         ).await;
         
         let mut added_content: HashMap<i32, db::models::NewFullContent> = HashMap::new();
@@ -217,7 +216,7 @@ mod tests {
                 .wrap(Logger::default())
                 .app_data(web::Data::new(db_pool.clone()))
                 .app_data(web::Data::new(admin_info.clone()))
-                .configure(route_config::route_config)
+                .configure(configs::route_config)
         ).await;
         
         let mut added_content: HashMap<i32, db::models::NewFullContent> = HashMap::new();

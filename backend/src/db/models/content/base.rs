@@ -1,3 +1,4 @@
+use super::ContentType;
 use crate::schema::{content};
 use serde::{self, Deserialize, Serialize};
 use chrono::{DateTime, Utc};
@@ -9,7 +10,7 @@ use chrono::{DateTime, Utc};
 #[diesel(treat_none_as_null = true)]
 pub struct Content {
     id: i32,
-    pub content_type: String,
+    content_type: ContentType,
     slug: String,
     title: String,
     content_desc: Option<String>,
@@ -21,7 +22,7 @@ pub struct Content {
 #[derive(Insertable, Deserialize, Serialize, Debug)]
 #[diesel(table_name = content)]
 pub struct NewContent {
-    content_type: String,
+    content_type: ContentType,
     slug: String,
     title: String,
     content_desc: Option<String>,

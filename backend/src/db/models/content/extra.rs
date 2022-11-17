@@ -1,7 +1,8 @@
+use super::base::Content;
+use super::ContentType;
 use crate::schema::{blog, project};
 use serde::{self, Deserialize, Serialize};
 
-use super::base::Content;
 
 /* -------------------------------------------------------------------------- */
 
@@ -24,7 +25,7 @@ pub enum NewExtraContent {
 #[diesel(table_name = project, belongs_to(Content, foreign_key = id ))]
 pub struct Project {
     id: i32,
-    content_type: String,
+    content_type: ContentType,
     current_status: String,
 }
 
@@ -32,7 +33,7 @@ pub struct Project {
 #[diesel(treat_none_as_null = true, table_name = blog, belongs_to(Content, foreign_key = id ))]
 pub struct Blog {
     id: i32,
-    content_type: String,
+    content_type: ContentType,
     tags: Option<Vec<Option<String>>>,
 }
 

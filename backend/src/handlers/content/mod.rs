@@ -1,6 +1,6 @@
-use super::{errors::AppError, extractors::AuthUser};
+use super::{errors::AppError, extractors::AuthUser, route_data};
 use crate::db::{
-    models::{ContentType, FullContent, NewFullContent, PageInfo, DbRows},
+    models::content::{ FullContent, NewFullContent, ContentType },
     ops::content_ops,
     DbPool,
 };
@@ -44,7 +44,7 @@ pub async fn under_dev_projects (
 // For projects only returns finished projects
 pub async fn list_content(
     db_pool: web::Data<DbPool>,
-    page_info: web::Query<PageInfo>,
+    page_info: web::Query<route_data::PageInfo>,
 ) -> Result<web::Json<Vec<FullContent>>, AppError> {
     let fetched_content_list: Vec<FullContent> = web::block(move || {
         let mut conn = db_pool.get()?;
@@ -109,7 +109,7 @@ pub async fn delete_content(
     db_pool: web::Data<DbPool>,
     delete_slug: web::Path<ContentSlug>,
     _: AuthUser,
-) -> Result<web::Json<DbRows>, AppError> {
+) -> Result<web::Json<route_data::DbRows>, AppError> {
     // Returns the number of rows deleted
     let rows_deleted = web::block(move || {
         let mut conn = db_pool.get()?;
@@ -117,7 +117,7 @@ pub async fn delete_content(
     })
     .await?? as i32;
 
-    Ok(web::Json(DbRows{
+    Ok(web::Json(route_data::DbRows{
         rows_effected: rows_deleted
     }))
 }
