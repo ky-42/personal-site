@@ -19,7 +19,7 @@ const LoadErrorHandle = <T, >({successCallback, requestInfo}: LoadErrorHandlePro
     case RequestStatus.Error:
       return <ErrorDisplay errorString={requestInfo.requestError} />;
     case RequestStatus.Success:
-      return successCallback(requestInfo.contentList);
+      return successCallback(requestInfo.requestedData);
   };
 }
 

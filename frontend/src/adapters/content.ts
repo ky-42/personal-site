@@ -20,7 +20,7 @@ const GetContentPiece = async <FetchType>(params: ContentPieceOptions): Promise<
       } : undefined
     });
 
-    return {requestStatus: RequestStatus.Success, contentList: response.data};
+    return {requestStatus: RequestStatus.Success, requestedData: response.data};
 
   } catch (err) {
     return HandleAxiosError(err);
@@ -35,7 +35,7 @@ const GetContentList = async (params: PageInfo): Promise<RequestState<FullConten
       params,
     });
 
-    return {requestStatus: RequestStatus.Success, contentList: response.data};
+    return {requestStatus: RequestStatus.Success, requestedData: response.data};
 
   } catch (err) {
     return HandleAxiosError(err);
@@ -51,7 +51,7 @@ const ContentAdd = async ({ addContent, password }:ContentAddParams): Promise<Re
       }
     });
     
-    return {requestStatus: RequestStatus.Success, contentList: true};
+    return {requestStatus: RequestStatus.Success, requestedData: true};
 
   } catch (err) {
     return HandleAxiosError(err);
@@ -68,7 +68,7 @@ const UnderDevProjects = async (): Promise<RequestState<FullContent[]>> => {
   try {
 
     const response = await backend_axios.get<FullContent[]>("/content/list/projects/under-development")
-    return {requestStatus: RequestStatus.Success, contentList: response.data};
+    return {requestStatus: RequestStatus.Success, requestedData: response.data};
 
   } catch (err) {
     return HandleAxiosError(err);
@@ -80,7 +80,7 @@ const CountContentType = async (contentType: ContentType): Promise<RequestState<
   try {
 
     const response = await backend_axios.get<{count: number}>(`/content/count/${contentType}`);
-    return {requestStatus: RequestStatus.Success, contentList: response.data.count};
+    return {requestStatus: RequestStatus.Success, requestedData: response.data.count};
 
   } catch (err) {
     return HandleAxiosError(err);

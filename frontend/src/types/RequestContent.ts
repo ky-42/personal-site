@@ -43,5 +43,5 @@ export enum RequestStatus {
 
 export type RequestState<RequestedData> = 
   | { requestStatus: RequestStatus.Loading }
-  | { requestStatus: RequestStatus.Success, contentList: RequestedData }
+  | { requestStatus: RequestStatus.Success, requestedData: RequestedData }
   | { requestStatus: RequestStatus.Error, requestError: string };
