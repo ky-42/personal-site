@@ -104,15 +104,9 @@ const ProjectList = () => {
   const [pageFinishedProjects, setPageFinishedProjects] = useState<RequestState<FullContent[]>>({requestStatus: RequestStatus.Loading});
   const [fetchedFinishedProjects, setFetchedFinishedProjects] = useState<Record<number, RequestState<FullContent[]>>>({});
 
-  // This and func below used to scroll to top of list of projects
-  // when there is on column 
+  // Used to scroll to top of list of projects when page changes and top
+  // is out of view
   const finishedHeader = useRef<HTMLHeadingElement>(null);
-  
-  const scrollToFinished = () => {
-    if (window.innerWidth <= 1000) {
-      finishedHeader.current?.scrollIntoView()
-    }
-  }
 
   // Makes sure page dosent go negative or past the max page
   const changePageNum = (change: boolean) => {
@@ -214,11 +208,11 @@ const ProjectList = () => {
 
       {/* Arrows to change finished projects page */}
       <PageChangeDiv>
-        <Arrow active={+(0 !== page)} onClick={() => {scrollToFinished(); changePageNum(false)}} />
+        <Arrow active={+(0 !== page)} onClick={() => {finishedHeader.current?.scrollIntoView(); changePageNum(false)}} />
         <PageNum>
           {page + 1}
         </PageNum>
-        <Arrow active={+(maxPage !== page)} flip={+true} onClick={() => {scrollToFinished(); changePageNum(true)}} />
+        <Arrow active={+(maxPage !== page)} flip={+true} onClick={() => {finishedHeader.current?.scrollIntoView(); changePageNum(true)}} />
       </PageChangeDiv>
 
     </ProjectListBody>
