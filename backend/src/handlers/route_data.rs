@@ -1,5 +1,7 @@
 use serde::{self, Deserialize, Serialize};
 
+/* -------------------------------------------------------------------------- */
+
 #[derive(Deserialize, Serialize, Debug)]
 pub struct DbRows {
     pub rows_effected: i32

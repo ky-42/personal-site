@@ -1,41 +1,13 @@
-use crate::db::models;
+use crate::db::models::content as models;
 use crate::handlers::errors::AppError;
 use diesel;
 use diesel::insert_into;
 use diesel::prelude::*;
 
-pub fn view_under_dev_projects(
-    db_conn: &mut PgConnection
-) -> Result<Vec<models::FullContent>, AppError> {
-    use crate::schema::{content, project};
-    let project_results = content::table
-        .inner_join(project::table)
-        .order_by(content::columns::created_at.desc())
-        .filter(project::columns::current_status.eq("under_development"))
-        .load::<(models::Content, models::Project)>(db_conn)?;
-    
-    let mut full_content_list = vec![];
-
-    for project_content in project_results {
-        full_content_list.push(models::FullContent{
-            base_content: project_content.0,
-            extra_content: models::ExtraContent::Project(project_content.1)
-        });
-    }
-
-    Ok(full_content_list)
-}
-
 pub fn view_content(
     db_conn: &mut PgConnection,
     requested_slug: &str,
 ) -> Result<models::FullContent, AppError> {
-    // Used to get a single peice of content
-    use crate::schema::content::dsl::*;
-    let base_content = content
-        .filter(slug.eq(requested_slug))
-        .first::<models::Content>(db_conn)?;
-    get_extra_content(db_conn, base_content)
 }
 
 pub fn view_content_list(
@@ -170,24 +142,22 @@ pub fn update_content(
     Ok(())
 }
 
+// Gets count of a spcific content type
 pub fn content_count(
     db_conn: &mut PgConnection,
     type_to_count: models::ContentType
 ) -> Result<i64, AppError> {
+    //Match returns table
     match type_to_count {
         models::ContentType::Blog => {
             use crate::schema::blog;
-            let count = blog::table
-                .count()
-                .get_result(db_conn)?;
-            Ok(count)
+            blog::table
         }
         models::ContentType::Project => {
             use crate::schema::project;
-            let count = project::table
-                .count()
-                .get_result(db_conn)?;
-            Ok(count)
+            project::table
         }
     }
+    .count()
+    .get_result(db_conn)?
 }

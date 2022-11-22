@@ -1,1 +1,6 @@
-ALTER TABLE project ADD CONSTRAINT project_status_types CHECK (current_status IN ('under_development', 'finished'));
+CREATE TYPE ProjectStatus AS ENUM (
+    'under_development',
+    'finished'
+);
+
+ALTER TABLE project ALTER COLUMN current_status TYPE ProjectStatus USING current_status::ProjectStatus;

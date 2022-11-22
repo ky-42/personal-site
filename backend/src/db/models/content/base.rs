@@ -1,10 +1,27 @@
 use super::ContentType;
-use crate::schema::{content};
+use crate::schema::content;
 use serde::{self, Deserialize, Serialize};
 use chrono::{DateTime, Utc};
 
-//TODO make a model that is changeable that dont have
-// times or id and are all option feilds
+
+/* --------------------------- Base content models -------------------------- */
+
+/*
+Models for the content table
+The content table sores values that all connent
+will have no matter what type of content it is 
+*/
+
+#[derive(Insertable, Deserialize, Serialize, Debug)]
+#[diesel(table_name = content)]
+pub struct NewContent {
+    content_type: ContentType,
+    slug: String,
+    title: String,
+    content_desc: Option<String>,
+    body: String,
+}
+
 #[derive(Queryable, AsChangeset, Identifiable, Serialize, Deserialize, Debug)]
 #[diesel(table_name = content)]
 #[diesel(treat_none_as_null = true)]
@@ -19,12 +36,25 @@ pub struct Content {
     updated_at: DateTime<Utc>,
 }
 
-#[derive(Insertable, Deserialize, Serialize, Debug)]
-#[diesel(table_name = content)]
-pub struct NewContent {
-    content_type: ContentType,
-    slug: String,
-    title: String,
-    content_desc: Option<String>,
-    body: String,
+
+#[cfg(test)]
+pub mod tests {
+    
+    use super::*;
+
+    impl NewContent {
+        pub fn get_slug(&self) -> &str {
+            return &self.slug;
+        }
+    }
+
+    impl Content {
+        pub fn get_slug(&self) -> &str {
+            return &self.slug;
+        }
+        
+        pub fn set_slug(&mut self, slug: String) {
+            self.slug = slug;
+        }
+    }
 }

@@ -44,5 +44,3 @@ impl FromRequest for AuthUser {
         ready(AuthUser::check_request_authentication(req))
     }
 }
-
-/* -------------------------------------------------------------------------- */

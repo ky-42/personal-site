@@ -87,7 +87,7 @@ mod tests {
 
         // Send content add request
         // Todo randomize between project and blog
-        let add_data = db::models::NewFullContent::random_content();
+        let add_data = db::models::content::NewFullContent::random_content();
         let add_request = test::TestRequest::post()
             .uri("/api/content/add")
             .set_json(&add_data)
@@ -98,18 +98,14 @@ mod tests {
         
         // Sends view request. Gets the content that was added
         let view_request = test::TestRequest::get()
-            .uri(&format!("/api/content/{}", add_data.get_slug()))
+            .uri(&format!("/api/content/{}", add_data.new_base_content.get_slug()))
             .to_request();
-        let mut view_response: db::models::FullContent = test::call_and_read_body_json(&app, view_request).await;
-
-        //Todo add test to check extra content
-        assert_eq!(add_data.get_body(), view_response.get_body());
-        assert_eq!(add_data.get_title(), view_response.get_title());
+        let mut view_response: db::models::content::FullContent = test::call_and_read_body_json(&app, view_request).await;
         
         // Sends update request. Changes slug 
-        view_response.set_slug(String::from("new-slug"));
+        view_response.base_content.set_slug(String::from("new-slug"));
         let update_request = test::TestRequest::put()
-            .uri(&format!("/api/content/{}", view_response.get_slug()))
+            .uri(&format!("/api/content/{}", view_response.base_content.get_slug()))
             .set_json(&view_response)
             .insert_header(("Authorization", admin_info.admin_password.to_owned()))
             .to_request();
@@ -128,7 +124,7 @@ mod tests {
             .uri("/api/content/new-slug")
             .insert_header(("Authorization", admin_info.admin_password.to_owned()))
             .to_request();
-        let delete_response: db::models::DbRows = test::call_and_read_body_json(&app, delete_request).await;
+        let delete_response: handlers::route_data::DbRows = test::call_and_read_body_json(&app, delete_request).await;
         assert!(delete_response.rows_effected == 1);
         //Todo maybe add another check to make sure the right one got deleted
     }
@@ -144,13 +140,13 @@ mod tests {
                 .configure(configs::route_config)
         ).await;
         
-        let mut added_content: HashMap<i32, db::models::NewFullContent> = HashMap::new();
+        let mut added_content: HashMap<i32, db::models::content::NewFullContent> = HashMap::new();
 
         const CONTENT_AMOUNT: i32 = 16;
 
         // Adds 16 pieces of content to db
         for req_number in (0..CONTENT_AMOUNT).rev() {
-            let add_data = db::models::NewFullContent::random_content();
+            let add_data = db::models::content::NewFullContent::random_content();
             let add_request = test::TestRequest::post()
                 .uri("/api/content/add")
                 .set_json(&add_data)
@@ -167,40 +163,20 @@ mod tests {
         let list_request_one = test::TestRequest::get()
             .uri("/api/content/list?content_per_page=6&page=0&show_order=Newest")
             .to_request();
-        let delete_response: Vec<db::models::FullContent> = test::call_and_read_body_json(&app, list_request_one).await;
-        assert_eq!(delete_response.get(0).unwrap().get_slug(), added_content.get(&0).unwrap().get_slug());
-        assert_eq!(delete_response.get(5).unwrap().get_slug(), added_content.get(&5).unwrap().get_slug());
+        let delete_response: Vec<db::models::content::FullContent> = test::call_and_read_body_json(&app, list_request_one).await;
+        assert_eq!(delete_response.get(0).unwrap().base_content.get_slug(), added_content.get(&0).unwrap().new_base_content.get_slug());
+        assert_eq!(delete_response.get(5).unwrap().base_content.get_slug(), added_content.get(&5).unwrap().new_base_content.get_slug());
 
         for value in added_content.values() {
             let delete_request = test::TestRequest::delete()
-                .uri(&format!("/api/content/{}", value.get_slug()))
+                .uri(&format!("/api/content/{}", value.new_base_content.get_slug()))
                 .insert_header(("Authorization", admin_info.admin_password.to_owned()))
                 .to_request();
-            let delete_response: db::models::DbRows = test::call_and_read_body_json(&app, delete_request).await;
+            let delete_response: handlers::route_data::DbRows = test::call_and_read_body_json(&app, delete_request).await;
             assert!(delete_response.rows_effected == 1);
         }
     }
     
-    
-    // TODO fix 
-
-    // #[actix_web::test]
-    // async fn count_test() {
-    //     let (db_pool, admin_info) = setup_app();
-    //     let app = test::init_service(
-    //         App::new()
-    //             .wrap(Logger::default())
-    //             .app_data(web::Data::new(db_pool.clone()))
-    //             .app_data(web::Data::new(admin_info.clone()))
-    //             .configure(route_config::route_config)
-    //     ).await;
-
-    //     let mut rng = rand::thread_rng();
-    //     let add_content_count = rng.gen_range(6..32);
-
-    //     let added_content = create_test_content(Some(add_content_count)).await;
-    //     let count_response: db::models::DbRows = test::call_and_read_body_json(&app, delete_request).await;
-    // } 
     
     #[ignore]
     #[actix_web::test]
@@ -209,7 +185,7 @@ mod tests {
     }
 
     // Creates test content can and can be used in other tests or by the test above
-    async fn create_test_content(add_amount: Option<i32>) -> HashMap<i32, db::models::NewFullContent> {
+    async fn create_test_content(add_amount: Option<i32>) -> HashMap<i32, db::models::content::NewFullContent> {
         let (db_pool, admin_info) = setup_app();
         let app = test::init_service(
             App::new()
@@ -219,7 +195,7 @@ mod tests {
                 .configure(configs::route_config)
         ).await;
         
-        let mut added_content: HashMap<i32, db::models::NewFullContent> = HashMap::new();
+        let mut added_content: HashMap<i32, db::models::content::NewFullContent> = HashMap::new();
         
         let add_amount = match add_amount {
             Some(amount) => amount,
@@ -228,7 +204,7 @@ mod tests {
 
         // Adds 16 pieces of content to db
         for req_number in (0..add_amount).rev() {
-            let add_data = db::models::NewFullContent::random_content();
+            let add_data = db::models::content::NewFullContent::random_content();
             let add_request = test::TestRequest::post()
                 .uri("/api/content/add")
                 .set_json(&add_data)

@@ -6,6 +6,8 @@ use actix_web::web;
 use actix_cors::Cors;
 use std::env;
 
+/* -------------------------------------------------------------------------- */
+
 // Configures all routing for the app
 // No routing should take place outside of this function
 pub fn route_config(cfg: &mut web::ServiceConfig) {

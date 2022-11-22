@@ -7,6 +7,8 @@ use derive_more::Display;
 use diesel;
 use r2d2;
 
+/* -------------------------------------------------------------------------- */
+
 #[derive(Display, Debug)]
 pub enum AppError {
     ContentNotFound,
