@@ -1,7 +1,7 @@
 use super::{errors::AppError, extractors::AuthUser, route_data};
 use crate::db::{
-    models::content::{ FullContent, NewFullContent, ContentType },
-    ops::content_ops,
+    models::content::{ FullContent, NewFullContent, ContentType, ops },
+
     DbPool,
 };
 use actix_web::{web, HttpResponse};
@@ -48,7 +48,7 @@ pub async fn list_content(
 ) -> Result<web::Json<Vec<FullContent>>, AppError> {
     let fetched_content_list: Vec<FullContent> = web::block(move || {
         let mut conn = db_pool.get()?;
-        content_ops::view_content_list(&mut conn, page_info.into_inner())
+        content_ops::read_content_list(&mut conn, page_info.into_inner())
     })
     .await??;
 
@@ -80,7 +80,7 @@ pub async fn view_content(
 ) -> Result<web::Json<FullContent>, AppError> {
     let fetched_content: FullContent = web::block(move || {
         let mut conn = db_pool.get()?;
-        content_ops::view_content(&mut conn, &slug_requested.into_inner().slug)
+        content_ops::read_content(&mut conn, &slug_requested.into_inner().slug)
     })
     .await??;
 

@@ -7,6 +7,7 @@ use std::io::Write;
 
 pub mod base;
 pub mod extra;
+pub mod ops;
 
 /* ----------------- Models for a complete piece of content ----------------- */
 // Used to combine the base values for a peice

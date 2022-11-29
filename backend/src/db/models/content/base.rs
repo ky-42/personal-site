@@ -36,6 +36,19 @@ pub struct Content {
     updated_at: DateTime<Utc>,
 }
 
+/* -------------------------------------------------------------------------- */
+
+impl Content {
+    pub fn get_id(&self) -> i32 {
+        self.id
+    }
+    
+    pub fn get_content_type(&self) -> super::ContentType {
+        self.content_type
+    }
+}
+
+/* -------------------------------------------------------------------------- */
 
 #[cfg(test)]
 pub mod tests {

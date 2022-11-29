@@ -38,8 +38,8 @@ pub struct NewBlog {
 #[diesel(table_name = blog, treat_none_as_null = true, belongs_to(Content, foreign_key = id ))]
 pub struct Blog {
     id: i32,
-    content_type: ContentType,
     tags: Option<Vec<Option<String>>>,
+    content_type: ContentType,
 }
 
 #[derive(Insertable, Deserialize, Serialize, Debug)]
@@ -52,16 +52,16 @@ pub struct NewProject {
 #[diesel(table_name = project, belongs_to(Content, foreign_key = id ))]
 pub struct Project {
     id: i32,
-    content_type: ContentType,
     current_status: CurrentStatus,
+    content_type: ContentType,
 }
 
 /* ---------------------------- Models data types --------------------------- */
 
 // Represtent the current status of a project
-#[derive(Debug, Serialize, Deserialize, AsExpression, FromSqlRow)]
+#[derive(Debug, Serialize, Deserialize, AsExpression, FromSqlRow, QueryId)]
 #[diesel(sql_type = sql_types::Projectstatus)]
-enum CurrentStatus {
+pub enum CurrentStatus {
     UnderDevelopment,
     Finished
 }
@@ -87,6 +87,21 @@ impl FromSql<sql_types::Projectstatus, Pg> for CurrentStatus {
     }
 }
 
+/* -------------------------------------------------------------------------- */
+
+impl Blog {
+    pub fn get_id(&self) -> i32 {
+        self.id
+    }
+}
+
+impl Project {
+    pub fn get_id(&self) -> i32 {
+        self.id
+    }
+}
+
+/* -------------------------------------------------------------------------- */
 
 #[cfg(test)]
 pub mod tests {
