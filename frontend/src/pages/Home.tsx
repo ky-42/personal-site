@@ -9,6 +9,7 @@ import ContentItem from "../components/Home/ContentItem";
 import { RequestState, listOrder, RequestStatus } from "../types/RequestContent";
 import CurrentlyReading from '../components/CurrentlyReading';
 import LoadErrorHandle from '../components/LoadingErrorHandler';
+import MetaData from '../components/MetaData';
 
 /* -------------------------------------------------------------------------- */
 
@@ -125,7 +126,13 @@ const Home = () => {
   return (
     <HomeBody>
 
-    <LeftPageColumn>
+      <MetaData
+        title="Kyle Denief"
+        description="Hi I'm Kyle Denief a university student and self taught programmer. Check out my latest project or blog if that interests you and have a good day!"
+        type="website"
+      />
+
+      <LeftPageColumn>
         <PageTitle>
           Hi! I'm<br />Kyle Denief
         </PageTitle>
