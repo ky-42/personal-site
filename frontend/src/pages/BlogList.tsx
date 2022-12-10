@@ -2,17 +2,23 @@ import React, {useEffect, useState} from "react";
 import styled, { css } from "styled-components";
 import {CountContentType, GetContentList} from "../adapters/content";
 import {ContentType, FullContent} from "../types/Content";
-import {listOrder} from "../types/RequestContent";
+import {listOrder, RequestState, RequestStatus} from "../types/RequestContent";
 import PageTitle from "../components/PageTitle";
 import ContentListItem from "../components/ContentListItem";
+import MetaData from "../components/MetaData";
+import LoadErrorHandle from "../components/LoadingErrorHandler";
 
-const BlogListDiv = styled.div`
+/* -------------------------------------------------------------------------- */
+
+const BlogListBody = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-const ContentList = styled.div`
+/* -------------------------------------------------------------------------- */
+
+const ContentList = styled.section`
   max-width: 880px;
   display: flex;
   flex-wrap: wrap;
@@ -23,6 +29,8 @@ const ContentList = styled.div`
     max-width: 440px;
   }
 `;
+
+/* -------------------------------------------------------------------------- */
 
 const ActiveLoadMore = css`
   color: ${props => props.theme.textColour};
@@ -46,52 +54,83 @@ const LoadMore = styled.button<{active: boolean}>`
   font-size: 1rem;
 `;
 
+/* -------------------------------------------------------------------------- */
+
 const BlogList = () => {
   
   const content_per_page = 8;
   
   const [page, setPage] = useState(0);
   const [maxPage, setMaxPage] = useState(0);
-  const [receivedBlogs, setReceivedBlogs] = useState<FullContent[][]>([]);
   
+  const [recivedBlogs, setRecivedBlogs] = useState<FullContent[]>([]);
+  
+  // Gets max page
   useEffect(() => {
     CountContentType(ContentType.Blog).then((blogCount) => {
-      setMaxPage(Math.ceil(blogCount/content_per_page)-1);
+      // Error handling for max page count
+      switch (blogCount.requestStatus){
+        case RequestStatus.Error:
+          // TODO make notification to user that this happend
+          setMaxPage(1000);
+          break;
+        case RequestStatus.Success:
+          setMaxPage((Math.ceil(blogCount.requestedData/content_per_page)-1));
+          break;
+      }
     });
   }, [])
-
+  
   useEffect(() => {
     GetContentList({
       content_per_page,
       page,
       show_order: listOrder.Newest,
       content_type: ContentType.Blog
-    }).then((value) => {
-        setReceivedBlogs(blogs => {
-          if (typeof blogs[page] === 'undefined') {
-            return [...blogs, value];
-          } 
-          return blogs;
-        });
+    }).then(value => {
+      switch (value.requestStatus){
+        case RequestStatus.Error:
+          // TODO make notification to user that this happend
+          break;
+        case RequestStatus.Success:
+          setRecivedBlogs(alreadyRecivedBlogs => {return alreadyRecivedBlogs.concat(value.requestedData)});
+          break;
+      }
     });
   }, [page]);
 
-  return (
-    <BlogListDiv>
-      <PageTitle>
-        Blogs
-      </PageTitle>
+  const listFetchSuccess = (data: FullContent[]) => {
+    return (
       <ContentList>
         {
-          receivedBlogs.flat().map(gotBlog => {
+          recivedBlogs.map(gotBlog => {
             return <ContentListItem content={gotBlog} key={gotBlog.base_content.id} />;
           })
         }
       </ContentList>
+    )
+  }
+
+  return (
+    <BlogListBody>
+
+      <MetaData
+        title="Blogs | Kyle Denief"
+        description="A list of the blogs I've created. Most are about my experiences programming but theres a little bit of everything!"
+        type="website"
+      />
+
+      <PageTitle>
+        Blogs
+      </PageTitle>
+
+      <LoadErrorHandle requestInfo={pageFinishedProjects} successCallback={listFetchSuccess} />
+
       <LoadMore active={page !== maxPage} onClick={() => {if (page !== maxPage) setPage(page + 1)}}>
         Load More
       </LoadMore>
-    </BlogListDiv>
+
+    </BlogListBody>
   )
 }
 
