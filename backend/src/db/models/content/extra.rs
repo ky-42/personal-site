@@ -111,20 +111,24 @@ pub mod tests {
     use rand::seq::SliceRandom;
     use rand::Rng;
     
-    pub fn random_extra(mut rng: rand::prelude::ThreadRng) -> (NewExtraContent, ContentType) {
+    pub fn random_extra() -> (NewExtraContent, ContentType) {
         // project = 0, blog = 1
+        let mut rng = rand::thread_rng();
         let extra_type = rng.gen_range(0..2);
         // Picks a random type of extra content and creates an instance of its
         // new model with random data
         match extra_type {
-            0 => (NewExtraContent::Project(NewProject::random(rng)), ContentType::Project),
-            _ => (NewExtraContent::Blog(NewBlog::random(rng)), ContentType::Blog)
+            0 => (NewExtraContent::Project(NewProject::random()), ContentType::Project),
+            _ => (NewExtraContent::Blog(NewBlog::random()), ContentType::Blog)
         }
     }
 
     impl NewProject {
         // Generates an instance of NewProject with random values
-        pub fn random(mut rng: rand::prelude::ThreadRng) -> NewProject {
+        pub fn random() -> NewProject {
+
+            let mut rng = rand::thread_rng();
+
             let current_status =  {
                 // 1/16 chance of project being finished
                 if rng.gen_range(0..16) > 0 {
@@ -142,7 +146,10 @@ pub mod tests {
     
     impl NewBlog {
         // Generates an instance of NewBlog with random values
-        pub fn random(mut rng: rand::prelude::ThreadRng) -> NewBlog {
+        pub fn random() -> NewBlog {
+
+            let mut rng = rand::thread_rng();
+
             // 1/6 chance of even having tags
             let tags: Option<Vec<String>> = if rng.gen_range(0..6) > 0 {
                 // Number of tags to add

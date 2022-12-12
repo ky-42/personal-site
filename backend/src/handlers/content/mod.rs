@@ -1,6 +1,6 @@
 use super::{errors::AppError, extractors::AuthUser, route_data};
 use crate::db::{
-    models::content::{ FullContent, NewFullContent, ContentType, ops },
+    models::content::{ FullContent, NewFullContent, FullContentList, ContentFilter, ops },
 
     DbPool,
 };
@@ -27,48 +27,20 @@ pub struct CountReturn {
 /*                                 Responders                                 */
 /* -------------------------------------------------------------------------- */
 
-// Returns all the projects that are under development
-pub async fn under_dev_projects (
-    db_pool: web::Data<DbPool>
-) -> Result<web::Json<Vec<FullContent>>, AppError> {
-    let fetched_projects: Vec<FullContent> = web::block(move || {
-        let mut conn = db_pool.get()?;
-        content_ops::view_under_dev_projects(&mut conn)
-    })
-    .await??;
-
-    Ok(web::Json(fetched_projects))
-}
-
 // Returns a list of content including its extra content
 // For projects only returns finished projects
 pub async fn list_content(
     db_pool: web::Data<DbPool>,
     page_info: web::Query<route_data::PageInfo>,
-) -> Result<web::Json<Vec<FullContent>>, AppError> {
-    let fetched_content_list: Vec<FullContent> = web::block(move || {
-        let mut conn = db_pool.get()?;
-        content_ops::read_content_list(&mut conn, page_info.into_inner())
+    query_filters: web::Json<ContentFilter>
+) -> Result<web::Json<FullContentList>, AppError> {
+    let fetched_content_list: FullContentList = web::block(move || {
+        let mut db_conn = db_pool.get()?;
+        FullContentList::list(page_info.into_inner(), query_filters.into_inner(), &mut db_conn)
     })
     .await??;
 
     Ok(web::Json(fetched_content_list))
-}
-
-// Returns how of a type of content the site has
-pub async fn count_content(
-    db_pool: web::Data<DbPool>,
-    count_type: web::Path<ContentType>
-) -> Result<web::Json<CountReturn>, AppError> {
-    let count = web::block(move || {
-        let mut conn = db_pool.get()?;
-        content_ops::content_count(&mut conn, count_type.into_inner())
-    })
-    .await??;
-
-    Ok(web::Json(CountReturn{
-        count
-    }))
 }
 
 /* ----------------------- CRUD routes for content ----------------------- */
@@ -79,8 +51,8 @@ pub async fn view_content(
     slug_requested: web::Path<ContentSlug>,
 ) -> Result<web::Json<FullContent>, AppError> {
     let fetched_content: FullContent = web::block(move || {
-        let mut conn = db_pool.get()?;
-        content_ops::read_content(&mut conn, &slug_requested.into_inner().slug)
+        let mut db_conn = db_pool.get()?;
+        FullContent::view(slug_requested.into_inner().slug, &mut db_conn)
     })
     .await??;
 
@@ -96,8 +68,8 @@ pub async fn update_content(
     _: AuthUser,
 ) -> Result<HttpResponse, AppError> {
     web::block(move || {
-        let mut conn = db_pool.get()?;
-        content_ops::update_content(&mut conn, update_info.into_inner())
+        let mut db_conn = db_pool.get()?;
+        update_info.into_inner().update(&mut db_conn)
     })
     .await??;
 
@@ -112,8 +84,8 @@ pub async fn delete_content(
 ) -> Result<web::Json<route_data::DbRows>, AppError> {
     // Returns the number of rows deleted
     let rows_deleted = web::block(move || {
-        let mut conn = db_pool.get()?;
-        content_ops::delete_content(&mut conn, delete_slug.into_inner().slug)
+        let mut db_conn = db_pool.get()?;
+        FullContent::delete(delete_slug.into_inner().slug, &mut db_conn)
     })
     .await?? as i32;
 
@@ -129,8 +101,8 @@ pub async fn add_content(
     _: AuthUser,
 ) -> Result<HttpResponse, AppError> {
     web::block(move || {
-        let mut conn = db_pool.get()?;
-        content_ops::add_content(&mut conn, add_info.into_inner())
+        let mut db_conn = db_pool.get()?;
+        add_info.into_inner().add(&mut db_conn)
     })
     .await??;
 

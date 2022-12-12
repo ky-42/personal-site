@@ -1,4 +1,3 @@
-pub mod ops;
 pub mod models;
 
 use diesel::prelude::*;

@@ -89,7 +89,7 @@ mod tests {
         // Todo randomize between project and blog
         let add_data = db::models::content::NewFullContent::random_content();
         let add_request = test::TestRequest::post()
-            .uri("/api/content/add")
+            .uri("/content/add")
             .set_json(&add_data)
             .insert_header(("Authorization", admin_info.admin_password.to_owned()))
             .to_request();
@@ -98,14 +98,14 @@ mod tests {
         
         // Sends view request. Gets the content that was added
         let view_request = test::TestRequest::get()
-            .uri(&format!("/api/content/{}", add_data.new_base_content.get_slug()))
+            .uri(&format!("/content/{}", add_data.new_base_content.get_slug()))
             .to_request();
         let mut view_response: db::models::content::FullContent = test::call_and_read_body_json(&app, view_request).await;
         
         // Sends update request. Changes slug 
         view_response.base_content.set_slug(String::from("new-slug"));
         let update_request = test::TestRequest::put()
-            .uri(&format!("/api/content/{}", view_response.base_content.get_slug()))
+            .uri(&format!("/content/{}", view_response.base_content.get_slug()))
             .set_json(&view_response)
             .insert_header(("Authorization", admin_info.admin_password.to_owned()))
             .to_request();
@@ -115,13 +115,13 @@ mod tests {
         // We know the slug updated if the request worked cause we request with the slug
         // so we dont need to check anything
         let update_view_request = test::TestRequest::get()
-            .uri("/api/content/new-slug")
+            .uri("/content/new-slug")
             .to_request();
         test::call_service(&app, update_view_request).await;
 
         // Delete the content that was added from the db
         let delete_request = test::TestRequest::delete()
-            .uri("/api/content/new-slug")
+            .uri("/content/new-slug")
             .insert_header(("Authorization", admin_info.admin_password.to_owned()))
             .to_request();
         let delete_response: handlers::route_data::DbRows = test::call_and_read_body_json(&app, delete_request).await;
@@ -148,7 +148,7 @@ mod tests {
         for req_number in (0..CONTENT_AMOUNT).rev() {
             let add_data = db::models::content::NewFullContent::random_content();
             let add_request = test::TestRequest::post()
-                .uri("/api/content/add")
+                .uri("/content/add")
                 .set_json(&add_data)
                 .insert_header(("Authorization", admin_info.admin_password.to_owned()))
                 .to_request();
@@ -161,7 +161,7 @@ mod tests {
         
         // Todo add more requests to test other things like show order
         let list_request_one = test::TestRequest::get()
-            .uri("/api/content/list?content_per_page=6&page=0&show_order=Newest")
+            .uri("/content/list?content_per_page=6&page=0&show_order=Newest")
             .to_request();
         let delete_response: Vec<db::models::content::FullContent> = test::call_and_read_body_json(&app, list_request_one).await;
         assert_eq!(delete_response.get(0).unwrap().base_content.get_slug(), added_content.get(&0).unwrap().new_base_content.get_slug());
@@ -169,7 +169,7 @@ mod tests {
 
         for value in added_content.values() {
             let delete_request = test::TestRequest::delete()
-                .uri(&format!("/api/content/{}", value.new_base_content.get_slug()))
+                .uri(&format!("/content/{}", value.new_base_content.get_slug()))
                 .insert_header(("Authorization", admin_info.admin_password.to_owned()))
                 .to_request();
             let delete_response: handlers::route_data::DbRows = test::call_and_read_body_json(&app, delete_request).await;
@@ -206,7 +206,7 @@ mod tests {
         for req_number in (0..add_amount).rev() {
             let add_data = db::models::content::NewFullContent::random_content();
             let add_request = test::TestRequest::post()
-                .uri("/api/content/add")
+                .uri("/content/add")
                 .set_json(&add_data)
                 .insert_header(("Authorization", admin_info.admin_password.to_owned()))
                 .to_request();
