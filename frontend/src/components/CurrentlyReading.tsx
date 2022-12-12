@@ -1,7 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-const CurrentlyReadingDiv = styled.div`
+/* -------------------------------------------------------------------------- */
+
+const CurrentlyReadingBody = styled.article`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,15 +17,18 @@ const BookTitle = styled.p`
 
 const StartedDate = styled.p`
   color: ${props => props.theme.lightTone};
-  font-size: 12px;
+  font-size: clamp(0.7rem, 1.875vw, 0.75rem);
   text-align: center;
   margin: 0;
   margin-top: 10px;
 `;
 
+/* -------------------------------------------------------------------------- */
+
 const CurrentlyReading = () => {
+  // Shows a hardcoded book title and start date
   return(
-    <CurrentlyReadingDiv>
+    <CurrentlyReadingBody>
       <BookTitle>
       Jim Henson: The Biography,
       <br />
@@ -32,7 +37,7 @@ const CurrentlyReading = () => {
       <StartedDate>
         Started: Aug. 25th, 2022  
       </StartedDate>
-    </CurrentlyReadingDiv>
+    </CurrentlyReadingBody>
   )
 };
 

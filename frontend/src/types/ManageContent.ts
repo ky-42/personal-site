@@ -4,7 +4,7 @@ import { NewBlog, NewContent, NewProject } from "./Content"
 /*                      Types for the manage content page                     */
 /* -------------------------------------------------------------------------- */
 
-export enum actionTypes {
+export enum ActionTypes {
   Create = "Create",
   Update = "Update",
   Delete = "Delete"
