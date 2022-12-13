@@ -1,7 +1,7 @@
 import axios from "axios";
 import backend_axios from ".";
 import { ContentType, FullContent } from "../types/Content";
-import { PageInfo, ContentPieceOptions, ContentAddParams, RequestState, RequestStatus } from "../types/RequestContent";
+import { PageInfo, ContentPieceOptions, ContentAddParams, RequestState, RequestStatus, FullContentList, ContentFilter } from "../types/RequestContent";
 
 
 
@@ -28,11 +28,11 @@ const GetContentPiece = async <FetchType>(params: ContentPieceOptions): Promise<
 };
 
 // Gets a list of content from server
-const GetContentList = async (params: PageInfo): Promise<RequestState<FullContent[]>> => {
+const GetContentList = async (page_info: PageInfo, content_filters: ContentFilter): Promise<RequestState<FullContentList>> => {
   try {
 
-    const response = await backend_axios.get<FullContent[]>("/content/list", {
-      params,
+    const response = await backend_axios.get<FullContentList>("/content/list", {
+      params: {...page_info, ...content_filters}
     });
 
     return {requestStatus: RequestStatus.Success, requestedData: response.data};

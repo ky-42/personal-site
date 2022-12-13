@@ -6,6 +6,11 @@ export enum ContentType {
   Blog = "blog",
   Project = "project",
 }
+  
+export enum ProjectStatus {
+  UnderDevelopment = "under_development",
+  Finished = "finished"
+}
 
 /* -------------------------------------------------------------------------- */
 /*                             Content Interfaces                             */
@@ -22,12 +27,12 @@ export interface Content extends NewContent {
 
 export interface Project extends NewProject {
   id: number;
-  content_id: number;
+  content_type: ContentType;
 }
 
 export interface Blog extends NewBlog {
   id: number;
-  content_id: number;
+  content_type: ContentType;
 }
 
 export interface FullContent {
@@ -41,7 +46,7 @@ export interface FullContent {
 /* ------------------------- New Content Interfaces ------------------------- */
 
 export interface NewContent {
-  content_type: string;
+  content_type: ContentType;
   slug: string;
   title: string;
   content_desc?: string;

@@ -11,11 +11,11 @@ export const FullToNewFull = (conversionData: FullContent): NewFullContent => {
   // on type of content is in the extra content
   if ("project" in conversionData.extra_content) {
     let extra_content = conversionData.extra_content.project;
-    let {id: r1, content_id: r2, ...extraRemoved} = extra_content;
+    let {id: r1, content_type: r2, ...extraRemoved} = extra_content;
     unpackedExtra = {"project": extraRemoved};
   } else {
     let extra_content = conversionData.extra_content.blog;
-    let {id: r1, content_id: r2, ...extraRemoved} = extra_content;
+    let {id: r1, content_type: r2, ...extraRemoved} = extra_content;
     unpackedExtra = {"blog": extraRemoved};
   }
 
