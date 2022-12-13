@@ -30,12 +30,12 @@ const CurrentlyReading = () => {
   return(
     <CurrentlyReadingBody>
       <BookTitle>
-      Jim Henson: The Biography,
+      The Pragmatic Programmer,
       <br />
-      Brian Jones
+      David Thomas & Andrew Hunt
       </BookTitle>
       <StartedDate>
-        Started: Aug. 25th, 2022  
+        Started: Dec. 11, 2022  
       </StartedDate>
     </CurrentlyReadingBody>
   )

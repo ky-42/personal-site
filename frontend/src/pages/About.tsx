@@ -44,6 +44,7 @@ const About = () => {
   
   // Lists of books to be displayed
   const FinishedReading = [
+    "Jim Henson: The Biography, Brian Jones",
     "Atomic Habits, James Clear",
     "The Wealthy Barber, David Chilton",
     "What Color is Your Parachute?, Richard Bolles",
