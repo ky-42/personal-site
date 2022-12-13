@@ -6,7 +6,7 @@ import ContentContainer from '../components/Home/ContentSection';
 import { GetContentList } from "../adapters/content";
 import { ContentType, FullContent } from "../types/Content";
 import ContentItem from "../components/Home/ContentItem";
-import { RequestState, listOrder, RequestStatus } from "../types/RequestContent";
+import { RequestState, listOrder, RequestStatus, PageInfo, ContentFilter, FullContentList } from "../types/RequestContent";
 import CurrentlyReading from '../components/CurrentlyReading';
 import LoadErrorHandle from '../components/LoadingErrorHandler';
 import MetaData from '../components/MetaData';
@@ -85,40 +85,52 @@ const HomeRight = styled.div`
   }
 `;
 
+/* ---------------- Objects to pass to latest content request --------------- */
+
+const latestContentPageInfo: PageInfo = {
+  content_per_page: 1,
+  page: 0,
+  show_order: listOrder.Newest
+}
+
+const projectFilter: ContentFilter = {
+  content_type: ContentType.Project
+};
+
+const blogFilter: ContentFilter = {
+  content_type: ContentType.Blog
+};
+
 /* -------------------------------------------------------------------------- */
 
 const Home = () => {
 
   // Data for latest content links
-  const [latestProjectList, setLatestProjectList] = useState<RequestState<FullContent[]>>({requestStatus: RequestStatus.Loading});
-  const [latestBlogList, setLatestBlogList] = useState<RequestState<FullContent[]>>({requestStatus: RequestStatus.Loading});
+  const [latestProjectList, setLatestProjectList] = useState<RequestState<FullContentList>>({requestStatus: RequestStatus.Loading});
+  const [latestBlogList, setLatestBlogList] = useState<RequestState<FullContentList>>({requestStatus: RequestStatus.Loading});
 
   useEffect(() => {
     // Gets latest project
     GetContentList({
-      content_per_page: 1,
-      page:0,
-      show_order: listOrder.Newest,
-      content_type: ContentType.Project
-    }).then((contentList: RequestState<FullContent[]>) => {
+      page_info: latestContentPageInfo,
+      content_filters: projectFilter
+    }).then((contentList: RequestState<FullContentList>) => {
       setLatestProjectList(contentList);
     })
 
     // Gets latest blog
     GetContentList({
-      content_per_page: 1,
-      page:0,
-      show_order: listOrder.Newest,
-      content_type: ContentType.Blog
-    }).then((contentList: RequestState<FullContent[]>) => {
+      page_info: latestContentPageInfo,
+      content_filters: blogFilter
+    }).then((contentList: RequestState<FullContentList>) => {
       setLatestBlogList(contentList);
     })
   }, [])
   
   // Element to display when latest blog or project is successfully fetched
-  const contentFetchSuccess = (data: FullContent[]): JSX.Element => {
-    if (data.length > 0){
-      return <ContentItem content={data[0]} />
+  const contentFetchSuccess = (data: FullContentList): JSX.Element => {
+    if (data.content_count > 0){
+      return <ContentItem content={data.full_content_list[0]} />
     }
     return <p>No new content</p>
   }

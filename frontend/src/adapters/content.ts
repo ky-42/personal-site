@@ -28,7 +28,13 @@ const GetContentPiece = async <FetchType>(params: ContentPieceOptions): Promise<
 };
 
 // Gets a list of content from server
-const GetContentList = async (page_info: PageInfo, content_filters: ContentFilter): Promise<RequestState<FullContentList>> => {
+
+interface ContentListInfo {
+  page_info: PageInfo,
+  content_filters: ContentFilter
+}
+
+const GetContentList = async ({page_info, content_filters}: ContentListInfo): Promise<RequestState<FullContentList>> => {
   try {
 
     const response = await backend_axios.get<FullContentList>("/content/list", {
