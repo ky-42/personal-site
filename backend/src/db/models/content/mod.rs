@@ -29,7 +29,7 @@ pub struct NewFullContent {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FullContentList {
     full_content_list: Vec<FullContent>,
-    max_page: i64
+    content_count: i64
 }
 
 /* -------------------------------------------------------------------------- */
@@ -48,6 +48,7 @@ pub struct ContentFilter {
 // content model it will be associated with
 #[derive(Debug, Serialize, Deserialize, AsExpression, FromSqlRow)]
 #[diesel(sql_type = sql_types::Contenttype)]
+#[serde(rename_all = "lowercase")]
 pub enum ContentType {
     Blog,
     Project

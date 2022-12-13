@@ -90,7 +90,6 @@ mod tests {
         let add_data = db::models::content::NewFullContent::random_content();
         let add_request = test::TestRequest::post()
             .uri("/content/add")
-            .uri("/content/add")
             .set_json(&add_data)
             .insert_header(("Authorization", admin_info.admin_password.to_owned()))
             .to_request();

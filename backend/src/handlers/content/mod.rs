@@ -32,7 +32,7 @@ pub struct CountReturn {
 pub async fn list_content(
     db_pool: web::Data<DbPool>,
     page_info: web::Query<route_data::PageInfo>,
-    query_filters: web::Json<ContentFilter>
+    query_filters: web::Query<ContentFilter>
 ) -> Result<web::Json<FullContentList>, AppError> {
     let fetched_content_list: FullContentList = web::block(move || {
         let mut db_conn = db_pool.get()?;
