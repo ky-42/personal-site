@@ -39,17 +39,20 @@ const GlobalCSS = createGlobalStyle`
   
   h1 {
     text-decoration: underline ${StyleTheme.highlight};
-    text-underline-offset: clamp(9px, 2.5vw, 15px);
+    text-underline-offset: clamp(3px, 2vw, 15px);
+    line-height: 150%;
   }
   
   h2 {
     text-decoration: underline ${StyleTheme.highlightDark};
-    text-underline-offset: 0.5rem;
+    text-underline-offset: 0.4rem;
+    line-height: 155%;
   }
   
   h3 {
     text-decoration: underline ${StyleTheme.highlightDark};
-    text-underline-offset: 0.3rem;
+    text-underline-offset: 0.4rem;
+    line-height: 150%;
   }
 
   h4, h5, h6 {

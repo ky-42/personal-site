@@ -24,6 +24,9 @@ const ContentTitle = styled.h1`
   margin-top: 28px;
   margin-bottom: 5px;
   font-size: clamp(1.3rem, 7vw, 3.75rem);
+  @media (max-width: 400px){
+    line-height: 160%;
+  }
 `;
 
 const ContentDate = styled.p`
