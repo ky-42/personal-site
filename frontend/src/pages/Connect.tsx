@@ -13,7 +13,9 @@ const ConnectBody = styled.main`
   max-width: 1000px;
 `;
 
-const BodyText = styled.p``;
+const BodyText = styled.p`
+  margin-bottom: 0;
+`;
 
 const Email = styled.h2`
   text-align: center;
@@ -83,7 +85,7 @@ const Connect = () => {
         Connect With Me        
       </PageTitle>
       <BodyText>
-        Hi! Thanks for your interest in contacting me. Please feel free to contact me for any reason at anytime even if you just want to have a conversation. You can conact me on Linkedin, Twitter, or Github but I might now recive your message right away on those platforms so your best bet is to email me at,
+      Hi! Thanks for your interest in connecting with me. I am open to communication for any reason, and I welcome the opportunity to have a conversation. You can reach me on LinkedIn, Twitter, or GitHub, but for the quickest response, please email me at,
       </BodyText>
 
       <Email onClick={() => {

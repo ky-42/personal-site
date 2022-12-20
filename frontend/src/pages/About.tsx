@@ -17,7 +17,9 @@ const AboutSection = styled.section`
   max-width: 1200px;
 `;
 
-const AboutMeText = styled.p``;
+const AboutMeText = styled.p`
+  line-height: 150%;
+`;
 
 /* ------------------------ Reading section elements ------------------------ */
 
@@ -81,7 +83,7 @@ const About = () => {
           About Me
         </PageTitle>
         <AboutMeText>
-          I'm a first-year student at Memorial University of Newfoundland and I plan on majoring in computer science. Some of my interests are computers, technology, reading, sports, and fishing. I've been teaching myself about computers for many years now and have always been interested in them. With a combination of school and self-teaching, I have learned Python and JavaScript along with a good many other technologies and languages like SQL, Docker, Git, and Linux. Another interest of mine is reading, and below you can see some of the books I'm planning to read along with some I've already finished. I have also played sports my whole life, including hockey, baseball, basketball, and many others. Lastly, I have also had many academic successes, including winning many high school subject awards and being on the honour roll. I was also a recipient of a scholarship from the James R. Hoffa Memorial Scholarship Fund.
+          As a first-year computer science student at Memorial University of Newfoundland, I am highly motivated to learn and excel in the field of technology. In addition to my coursework, I have self-taught myself a range of programming languages and technologies, including Python, TypeScript, SQL, Docker, Git, Rust, and Linux. I have also gained experience with popular web development frameworks such as React, Flask, and Actix Web. My passion for computers and technology has driven me to continually improve my skills and knowledge. I am proud to have had numerous academic achievements, including winning high school subject awards, being on the honor roll, and receiving a scholarship from the James R. Hoffa Memorial Scholarship Fund. Outside of my studies, I enjoy reading, sports, and fishing. I have played a variety of sports throughout my life, including hockey, baseball, and basketball. I am excited to see where my studies and self-learning will take me in the future.
         </AboutMeText>
       </AboutSection>
 

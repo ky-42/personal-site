@@ -149,7 +149,7 @@ const Home = () => {
           Hi! I'm<br />Kyle Denief
         </PageTitle>
         <IntroText>
-          I'm a full-stack web developer (Obviously not a designer) with experience in Python, TypeScript, and Rust. I'm mostly self-taught and just really interested in computers and technology. Currently I'm attending school at Memorial University of Newfoundland looking to major in computer science.
+          I am a full-stack web developer with a strong foundation in front-end and back-end development, skilled in Python, TypeScript, and Rust. Self-taught and driven by a passion for computers and technology, I am continually improving my skills. I am currently enrolled in a computer science degree program at Memorial University of Newfoundland, where I aim to hone my abilities.
         </IntroText>
 
         {/* Button to start asteroids game (only works on desktop) */}
