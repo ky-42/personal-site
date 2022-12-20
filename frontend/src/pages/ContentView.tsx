@@ -6,7 +6,7 @@ import ReactMarkdown from "react-markdown";
 import { ContentPieceOperations } from "../adapters/content";
 import { FullContent } from "../types/Content";
 import { RequestState, RequestStatus } from "../types/RequestContent";
-import LoadErrorHandle from "../components/LoadingErrorHandler";
+import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
 import MetaData from "../components/MetaData";
 
 /* -------------------------------------------------------------------------- */

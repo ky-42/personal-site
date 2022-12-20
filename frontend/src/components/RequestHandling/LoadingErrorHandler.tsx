@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { RequestState, RequestStatus } from "../types/RequestContent";
+import { RequestState, RequestStatus } from "../../types/RequestContent";
 import ErrorDisplay from "./ErrorDisplay";
 import LoadingPlaceholder from "./LoadingPlaceholder";
 import SuccessPlaceholder from "./SuccessPlaceholder";

@@ -6,8 +6,8 @@ import {GetContentList} from "../adapters/content";
 import {FullContentList, listOrder, PageInfo, RequestState, RequestStatus} from "../types/RequestContent";
 import {ContentType, ProjectStatus} from "../types/Content";
 import PageTitle from "../components/PageTitle";
-import ContentListItem from '../components/ContentListItem';
-import LoadErrorHandle from '../components/LoadingErrorHandler';
+import ContentListItem from '../components/ContentShow/ContentListItem';
+import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
 import MetaData from '../components/MetaData';
 
 /* -------------------------------------------------------------------------- */

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { FullContent } from "../types/Content";
+import { FullContent } from "../../types/Content";
 import { Link } from "react-router-dom";
 
 /* -------------------------------------------------------------------------- */

@@ -7,8 +7,8 @@ import { GetContentList } from "../adapters/content";
 import { ContentType, FullContent } from "../types/Content";
 import ContentItem from "../components/Home/ContentItem";
 import { RequestState, listOrder, RequestStatus, PageInfo, ContentFilter, FullContentList } from "../types/RequestContent";
-import CurrentlyReading from '../components/CurrentlyReading';
-import LoadErrorHandle from '../components/LoadingErrorHandler';
+import CurrentlyReading from '../components/ContentShow/CurrentlyReading';
+import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
 import MetaData from '../components/MetaData';
 
 /* -------------------------------------------------------------------------- */
