@@ -37,6 +37,6 @@ pub fn cors_config() -> actix_cors::Cors {
           .as_bytes()
       )
     })
-    .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
+    .allow_any_method()
     .allow_any_header()
 }

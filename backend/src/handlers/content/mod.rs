@@ -1,6 +1,6 @@
 use super::{errors::AppError, extractors::AuthUser, route_data};
 use crate::db::{
-    models::content::{ FullContent, NewFullContent, FullContentList, ContentFilter, ops },
+    models::content::{ FullContent, NewFullContent, FullContentList, ContentFilter },
 
     DbPool,
 };

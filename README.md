@@ -8,22 +8,22 @@ Feel free to reach out if you have any questions! Also you can host the site wit
 # Road map
 - [x] 0.5.0
   - [x] Full stable release with all basic features
-- [ ] 0.6.0
-  - [ ] Refactoring of major parts of code
-  - [ ] Minor visual improvements
-  - [ ] General clean up (adding comment, optimizations, etc.)
+- [x] 0.6.0
+  - [x] Refactoring of major parts of code
+  - [x] Minor visual improvements
+  - [x] General clean up (adding comment, optimizations, etc.)
   - [x] Markdown support in blogs and projects
-  - [ ] Add support to update blog and project specific data
-  - [ ] SEO
+  - [x] Add support to update blog and project specific data
+  - [x] SEO
 - [ ] 0.7.0
+  - [x] Better content managment page
+  - [ ] Better support for personalizing the site so others can host and extend
+- [ ] 0.8.0
   - [ ] Support for linking blogs to others in a series
   - [ ] Support for linking blogs to others in a dev blog format
   - [ ] Support for linking a projects to a dev blog series
-- [ ] 0.8.0
-  - [ ] Better support for personalizing the site so others can host and extend
-  - [ ] Adding more blog and project sorting features (Searching, reverse order, etc.)
 - [ ] 0.9.0
-  - [ ] Better content managment page
+  - [ ] Adding more blog and project sorting features (Searching, reverse order, etc.)
 - [ ] 1.0.0
   - [ ] Asteroids game on the background
 
