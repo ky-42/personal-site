@@ -23,7 +23,7 @@ const TopSection = styled.header``;
 const ContentTitle = styled.h1`
   margin-top: 28px;
   margin-bottom: 5px;
-  font-size: clamp(1.3rem, 7vw, 3.75rem);
+  font-size: clamp(1.7rem, 9vw, 3.75rem);
   @media (max-width: 400px){
     line-height: 160%;
   }
@@ -46,7 +46,31 @@ const LowerSection = styled.div`
 `;
 
 const ContentBody = styled(ReactMarkdown)`
-  font-size: clamp(1r05em, 4vw, 1.25rem);
+  font-size: clamp(1.05rem, 4vw, 1.25rem);
+  
+  > h1 {
+    font-size: clamp(1.55rem, 7vw, 2.8rem);
+  }
+
+  > h2 {
+    font-size: clamp(1.40rem, 6vw, 2.3rem);
+  }
+
+  > h3 {
+    font-size: clamp(1.25rem, 5vw, 1.75rem);
+  }
+
+  > h4 {
+    font-size: clamp(1.25rem, 5vw, 1.75rem);
+  }
+
+  > h5 {
+    font-size: clamp(1.10rem, 4.5vw, 1.4rem);
+  }
+
+  > h6 {
+    font-size: clamp(1.05rem, 4.25vw, 1.25rem);
+  }
 `;
 
 /* -------------------------------------------------------------------------- */
