@@ -45,8 +45,10 @@ const LoadErrorHandle = <T, >(handlingData: LoadErrorHandleProps<T>): JSX.Elemen
             handlingData.loadingEffect.effect();
             setLoadingCalls(callsLeft => callsLeft ? callsLeft-1 : undefined);
           }
-        }
-        break
+        };
+
+        break;
+
       case RequestStatus.Error: 
         // Checks if there is a error side effect if so checks if it should be called
         if (handlingData.errorEffect !== undefined) {
@@ -56,8 +58,10 @@ const LoadErrorHandle = <T, >(handlingData: LoadErrorHandleProps<T>): JSX.Elemen
             handlingData.errorEffect.effect({errorString: handlingData.requestInfo.requestError});
             setErrorCalls(callsLeft => callsLeft ? callsLeft-1 : undefined);
           }
-        }
-        break
+        };
+
+        break;
+
       case RequestStatus.Success:
         // Checks if there is a success side effect if so checks if it should be called
         if (handlingData.successEffect !== undefined) {
@@ -67,10 +71,15 @@ const LoadErrorHandle = <T, >(handlingData: LoadErrorHandleProps<T>): JSX.Elemen
             handlingData.successEffect.effect({data: handlingData.requestInfo.requestedData});
             setSuccessCalls(callsLeft => callsLeft ? callsLeft-1 : undefined);
           }
-        }
-        break
+        };
+
+        break;
+
       }
-  }, [handlingData.requestInfo.requestStatus, handlingData.requestInfo]);
+      
+      // TODO maybe fix this
+      // eslint-disable-next-line
+  }, [handlingData, handlingData.requestInfo, handlingData.requestInfo.requestStatus]);
 
   // Helps handle requestest by showing different elements based on the requests state
   switch (handlingData.requestInfo.requestStatus) {
