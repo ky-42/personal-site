@@ -9,7 +9,7 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 550px;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
 `;
 
 const ContainerHeader = styled.h2`

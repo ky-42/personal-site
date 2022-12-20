@@ -24,6 +24,7 @@ const ContentList = styled.section`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  margin-bottom: 30px;
   outline: 2px solid ${props => props.theme.backgroundColour};
   outline-offset: -1px;
   @media (max-width: 1000px){
@@ -48,7 +49,6 @@ const DeactiveLoadMore = css`
 
 const LoadMore = styled.button<{active: boolean}>`
   ${props => props.active ? ActiveLoadMore : DeactiveLoadMore}
-  margin: 30px;
   padding: 12px 45px;
   display: block; 
   background-color: ${props => props.theme.backgroundColour};

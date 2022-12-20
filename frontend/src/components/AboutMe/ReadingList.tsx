@@ -12,6 +12,7 @@ const ListTitle = styled.h3``;
 
 const UnorderedReading = styled.ul`
   padding: 0;
+  margin: 0;
 `;
 
 /* ------------------------ In reading list elements ------------------------ */

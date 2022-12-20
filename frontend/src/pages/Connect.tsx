@@ -28,6 +28,8 @@ const ExternalLinks = styled.section`
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
+  row-gap: 50px;
+  column-gap: 50px;
 `;
 
 /* ------------------------- Email copy notification ------------------------ */

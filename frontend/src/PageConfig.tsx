@@ -14,7 +14,7 @@ const BodyDiv = styled.div`
 
 // Idk why this couldnt go in the BodyDiv but it couldnt
 const SideMargin = styled.div`
-  margin: 0 clamp(1.35rem, 6vw, 10rem);
+  margin: 0 clamp(1.35rem, 6vw, 10rem) 30px;
 `;
 
 const PageConfig = () => {

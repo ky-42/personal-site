@@ -8,7 +8,6 @@ const SocialLink = styled.a`
   display: flex;
   width: 100px;
   height: 100px;
-  margin: 25px;
   border: 5px solid ${props => props.theme.lightTone};
   &:hover {
     border-color: ${props => props.theme.highlight};
