@@ -50,7 +50,7 @@ const ProjectsTypeTitle = styled.h2`
 /* ------------------- Elements for arrows to change pages ------------------ */
 
 const PageChangeDiv = styled.div`
-  margin-top: 26px;
+  margin-top: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
