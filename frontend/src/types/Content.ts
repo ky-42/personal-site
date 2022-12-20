@@ -16,7 +16,7 @@ export enum ProjectStatus {
 /*                             Content Interfaces                             */
 /* -------------------------------------------------------------------------- */
 
-// If updating 
+// If updating update to new content helper and the validation methods when they are added
 
 /* ------------------ Existing/Updatable Content Interfaces ----------------- */
 
@@ -40,9 +40,6 @@ export interface FullContent {
   base_content: Content;
   extra_content: {project: Project} | {blog: Blog}
 }
-
-/* -------------------------------------------------------------------------- */
-
 
 /* ------------------------- New Content Interfaces ------------------------- */
 

@@ -22,6 +22,7 @@ interface InputAreaProps {
   InputElement: JSX.Element
 }
 
+// Component that holds and input giving it a header and structure
 const InputArea = ({ lableText, InputElement }: InputAreaProps) => {
   return (
     <Input>

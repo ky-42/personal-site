@@ -7,7 +7,11 @@ import { InputGroup, LongTextInput, ShortTextInput } from "./InputElements";
 import InputArea from "./InputArea";
 import { ReducerAction, SetReducer, UpdateReducer } from "../../types/ManageContent";
 
+/* -------------------------------------------------------------------------- */
+
 const BaseContentManagmentArea = styled.div``;
+
+/* -------------------------------------------------------------------------- */
 
 interface baseContentManagmentProps {
   baseContentData: Content,
@@ -16,6 +20,7 @@ interface baseContentManagmentProps {
   >
 }
 
+// Form part for inputing the data about the base content
 const BaseContentManagment = ({baseContentData, setBaseContentData}: baseContentManagmentProps) => {
   
   return (

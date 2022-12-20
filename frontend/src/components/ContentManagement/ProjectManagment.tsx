@@ -6,7 +6,11 @@ import { ReducerAction, SetReducer, UpdateReducer } from "../../types/ManageCont
 import { DropDown } from "./InputElements";
 import InputArea from "./InputArea";
 
+/* -------------------------------------------------------------------------- */
+
 const ProjectManagmentArea = styled.div``;
+
+/* -------------------------------------------------------------------------- */
 
 interface projectManagmentProps {
   projectData: Project,
@@ -15,6 +19,7 @@ interface projectManagmentProps {
   >
 }
 
+// Form part for inputing data about the project specific parts of content
 const ProjectManagment = ({projectData, setProjectData}: projectManagmentProps) => {
   
   return (

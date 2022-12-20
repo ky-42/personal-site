@@ -6,7 +6,11 @@ import { ShortTextInput } from "./InputElements";
 import { ReducerAction, SetReducer, UpdateReducer } from "../../types/ManageContent";
 import InputArea from "./InputArea";
 
+/* -------------------------------------------------------------------------- */
+
 const BlogManagmentArea = styled.div``;
+
+/* -------------------------------------------------------------------------- */
 
 interface blogManagmentProps {
   blogData: Blog,
@@ -15,6 +19,7 @@ interface blogManagmentProps {
   >
 }
 
+// Form part for inputing data about the blog specific parts of content
 const BlogManagment = ({blogData, setBlogData}: blogManagmentProps) => {
   
   return (

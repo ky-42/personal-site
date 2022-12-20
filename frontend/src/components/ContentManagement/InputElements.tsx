@@ -1,6 +1,8 @@
 import styled, { css } from "styled-components";
 import { BasicInputStyling } from "../../styles/InputStyling";
 
+/* ----------------------------- Input elements ----------------------------- */
+
 export const LongTextInput = styled.textarea`
   ${BasicInputStyling}
   height: 325px;
@@ -30,6 +32,8 @@ export const StyledButton = styled.button`
     color: ${props => props.theme.lightTone};
   }
 `;
+
+/* ------------------ Input element organizers and wrappers ----------------- */
 
 export const InputSection = styled.section`
   margin: 50px 0;
