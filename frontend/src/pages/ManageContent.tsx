@@ -257,7 +257,7 @@ const ManageContent = () => {
         </InputGroup>
 
         {
-          (currentAction == ActionTypes.Update || currentAction == ActionTypes.Delete) &&
+          (currentAction === ActionTypes.Update || currentAction === ActionTypes.Delete) &&
           <InputGroup>
             <InputArea
               lableText={"Slug To " + currentAction + " (Enter to load data)"}

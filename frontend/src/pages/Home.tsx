@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import ContentContainer from '../components/Home/ContentSection';
 import { GetContentList } from "../adapters/content";
-import { ContentType, FullContent } from "../types/Content";
+import { ContentType } from "../types/Content";
 import ContentItem from "../components/Home/ContentItem";
 import { RequestState, listOrder, RequestStatus, PageInfo, ContentFilter, FullContentList } from "../types/RequestContent";
 import CurrentlyReading from '../components/ContentShow/CurrentlyReading';

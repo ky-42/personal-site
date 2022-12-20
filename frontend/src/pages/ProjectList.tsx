@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import {AiFillCaretLeft} from "react-icons/ai";
 
 import {GetContentList} from "../adapters/content";
-import {FullContentList, listOrder, PageInfo, RequestState, RequestStatus} from "../types/RequestContent";
+import {FullContentList, listOrder, RequestState, RequestStatus} from "../types/RequestContent";
 import {ContentType, ProjectStatus} from "../types/Content";
 import PageTitle from "../components/PageTitle";
 import ContentListItem from '../components/ContentShow/ContentListItem';
@@ -108,13 +108,6 @@ const ProjectList = () => {
   // is out of view
   const finishedHeader = useRef<HTMLHeadingElement>(null);
 
-  // Object passed to reuqest for proper paging of projects
-  const pageInfo: PageInfo = {
-    content_per_page: contentPerPage,
-    page,
-    show_order: listOrder.Newest  
-  };
-
   // Makes sure page dosent go negative or past the max page
   const changePageNum = (change: boolean) => {
     if (
@@ -130,12 +123,16 @@ const ProjectList = () => {
   // Gets under dev projects and gets max page
   useEffect(() => {
     GetContentList({
-      page_info: pageInfo,
+      page_info: {
+        content_per_page: 12,
+        page: 0,
+        show_order: listOrder.Newest  
+      },
       content_filters: {
         content_type: ContentType.Project,
         project_status: ProjectStatus.UnderDevelopment
       }
-    }). then((value) => {
+    }).then((value) => {
       setUnderDevProjects(value);
     })
   }, []);
@@ -145,7 +142,11 @@ const ProjectList = () => {
     // Checks if the page the user is on was already fetched
     if (fetchedFinishedProjects[page] === undefined) {
       GetContentList({
-        page_info: pageInfo,
+        page_info: {
+          content_per_page: contentPerPage,
+          page,
+          show_order: listOrder.Newest  
+        },
         content_filters: {
           content_type: ContentType.Project,
           project_status: ProjectStatus.Finished
@@ -163,7 +164,7 @@ const ProjectList = () => {
       // Uses old data if page was requested before
       setPageFinishedProjects(fetchedFinishedProjects[page]);
     };
-  }, [page]);
+  }, [page, fetchedFinishedProjects]);
   
   /* ------------------------ Request succses functions ----------------------- */
 

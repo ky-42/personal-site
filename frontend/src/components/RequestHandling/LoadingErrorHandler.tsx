@@ -43,7 +43,7 @@ const LoadErrorHandle = <T, >(handlingData: LoadErrorHandleProps<T>): JSX.Elemen
             handlingData.loadingEffect.effect();
           } else if (loadingCalls > 0) {
             handlingData.loadingEffect.effect();
-            setLoadingCalls(loadingCalls-1);
+            setLoadingCalls(callsLeft => callsLeft ? callsLeft-1 : undefined);
           }
         }
         break
@@ -54,7 +54,7 @@ const LoadErrorHandle = <T, >(handlingData: LoadErrorHandleProps<T>): JSX.Elemen
             handlingData.errorEffect.effect({errorString: handlingData.requestInfo.requestError});
           } else if (errorCalls > 0) {
             handlingData.errorEffect.effect({errorString: handlingData.requestInfo.requestError});
-            setErrorCalls(errorCalls-1);
+            setErrorCalls(callsLeft => callsLeft ? callsLeft-1 : undefined);
           }
         }
         break
@@ -65,7 +65,7 @@ const LoadErrorHandle = <T, >(handlingData: LoadErrorHandleProps<T>): JSX.Elemen
             handlingData.successEffect.effect({data: handlingData.requestInfo.requestedData});
           } else if (successCalls > 0) {
             handlingData.successEffect.effect({data: handlingData.requestInfo.requestedData});
-            setSuccessCalls(successCalls-1);
+            setSuccessCalls(callsLeft => callsLeft ? callsLeft-1 : undefined);
           }
         }
         break

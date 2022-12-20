@@ -73,17 +73,18 @@ const BlogList = () => {
   // Need seperate state for latest recieved for error handling reason
   const [latestRecivedBlogs, setLatestRecivedBlogs] = useState<RequestState<FullContentList>>({requestStatus: RequestStatus.Loading});
 
-  /* ------------ Data and funcs for requesting next page of blogs ------------ */
-
-  // Object passed to reuqest for proper paging of projects
-  const pageInfo: PageInfo = {
-    content_per_page: contentPerPage,
-    page,
-    show_order: listOrder.Newest  
-  };
+  /* -------------------------- Next page requesting -------------------------- */
 
   // Requests next page of blogs
   useEffect(() => {
+
+  // Object passed to request for proper paging of projects
+    const pageInfo: PageInfo = {
+      content_per_page: contentPerPage,
+      page,
+      show_order: listOrder.Newest  
+    };
+
     // Requests only new pages and the page check is need cause if
     // initial request fails the page gets set to negative one
     if (recivedBlogs[page] === undefined && page >= 0) {
@@ -96,7 +97,7 @@ const BlogList = () => {
         setLatestRecivedBlogs(value);
       });
     }
-  }, [page]);
+  }, [page, recivedBlogs]);
 
   /* ----------- Elements to deal with errors using LoadErrorHandle ----------- */
 

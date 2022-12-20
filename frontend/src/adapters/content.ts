@@ -1,6 +1,5 @@
 import axios from "axios";
 import backend_axios from ".";
-import { ContentType, FullContent } from "../types/Content";
 import { PageInfo, ContentPieceOptions, ContentAddParams, RequestState, RequestStatus, FullContentList, ContentFilter } from "../types/RequestContent";
 
 
@@ -51,7 +50,7 @@ const GetContentList = async ({page_info, content_filters}: ContentListInfo): Pr
 const ContentAdd = async ({ addContent, password }:ContentAddParams): Promise<RequestState<boolean>> => {
   try {
 
-    const response = await backend_axios.post("/content/add", addContent, {
+    await backend_axios.post("/content/add", addContent, {
       headers: {
         authorization: password,
       }
