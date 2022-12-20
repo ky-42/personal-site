@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { GetContentPiece } from "../adapters/content";
-import { useParams } from "react-router-dom";
-import { FullContent } from "../types/Content";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import ReactMarkdown from "react-markdown";
 
-const ContentViewDiv = styled.div`
+import { ContentPieceOperations } from "../adapters/content";
+import { FullContent } from "../types/Content";
+import { RequestState, RequestStatus } from "../types/RequestContent";
+import LoadErrorHandle from "../components/LoadingErrorHandler";
+import MetaData from "../components/MetaData";
+
+/* -------------------------------------------------------------------------- */
+
+const ContentViewBody = styled.main`
   margin: auto;
   max-width: 800px;
 `;
 
-const TopSection = styled.div`
-  
-`;
+/* ----------------------- Page upper section elements ---------------------- */
+
+const TopSection = styled.header``;
 
 const ContentTitle = styled.h1`
   margin-top: 28px;
@@ -30,64 +36,90 @@ const ContentDesc = styled.p`
   font-variation-settings: 'wght' 700;
 `;
 
-// const ContentTypeDiv = styled.div`
-
-// `;
+/* ----------------------- Page lower section elements ---------------------- */
 
 const LowerSection = styled.div`
   line-height: 1.5;
 `;
 
-const ContentBody = styled.p`
+const ContentBody = styled(ReactMarkdown)`
   font-size: clamp(1r05em, 4vw, 1.25rem);
 `;
+
+/* -------------------------------------------------------------------------- */
 
 const ContentView = () => {
   
   const { slug } = useParams();
   
-  const [pageContent, setPageContent] = useState<FullContent>();
-  const [createDate, setCreateDate] = useState<String>();
-  const [editDate, setEditDate] = useState<String>();
+  const [pageContent, setPageContent] = useState<RequestState<FullContent>>({requestStatus: RequestStatus.Loading});
   
+  // Needed to send users to 404 page when slug dosent exist
+  const navigate = useNavigate();
+  
+  /* ------------ Get the content peice with the slug from the url ------------ */
+
   useEffect(() => {
     if (slug !== undefined ) {
-      GetContentPiece({
+      ContentPieceOperations<FullContent>({
         slug,
         method: "GET",
-      }).then((value: FullContent) => {
-        const createDateString = new Intl.DateTimeFormat('en-US', {month: "short", day: "numeric", year: "numeric"}).format(value.base_content.created_at);
-        const editDateString = new Intl.DateTimeFormat('en-US', {month: "short", day: "numeric", year: "numeric"}).format(value.base_content.updated_at);
-        setCreateDate(createDateString);
-        if (createDateString !== editDateString) {
-          setEditDate(editDateString);
-        };
+      }).then((value: RequestState<FullContent>) => {
         setPageContent(value);
       });
     };
   }, [slug]);
-  
-  return (
-    <ContentViewDiv>
+
+  /* -------------------------------------------------------------------------- */
+
+  // What is rendered when content is gotten successfully
+  const RenderContent = ({data}: {data: FullContent}) => {
+
+    // Formated dates for creation and editing
+    const createDateString = new Intl.DateTimeFormat('en-US', {month: "short", day: "numeric", year: "numeric"}).format(data.base_content.created_at);
+    const editDateString = new Intl.DateTimeFormat('en-US', {month: "short", day: "numeric", year: "numeric"}).format(data.base_content.updated_at);
+    
+    return (
+    <ContentViewBody>
+      <MetaData 
+        title={data.base_content.title}
+        description={data.base_content.content_desc ? data.base_content.content_desc : "Error"}
+        type="article"
+      />
       <TopSection>
         <ContentTitle>
-          {pageContent?.base_content.title}
+          {data.base_content.title}
         </ContentTitle>
         <ContentDate>
-          {`Created at: ${createDate} ${editDate !== undefined ? `| Edited At: ${editDate}` : "" }`}
+          {`Created at: ${createDateString} ${editDateString !== undefined ? `| Edited At: ${editDateString}` : "" }`}
         </ContentDate>
         <ContentDesc>
-          {pageContent?.base_content.content_desc}
+          {data.base_content.content_desc}
         </ContentDesc>
       </TopSection>
       <LowerSection>
         <ContentBody>
-          <ReactMarkdown>
-            {pageContent ? pageContent?.base_content.body : ""}
-          </ReactMarkdown>
+          {data.base_content.body}
         </ContentBody>
       </LowerSection>
-    </ContentViewDiv>
+    </ContentViewBody>
+    )
+  };
+  
+  const errorEffect = ({errorString}: {errorString: string}) => {
+    if (errorString.startsWith("404")) {
+      navigate("/404");
+    };
+  };
+
+  /* -------------------------------------------------------------------------- */
+
+  return (
+    <LoadErrorHandle 
+      requestInfo={pageContent}
+      successElement={RenderContent}
+      errorEffect={{effect: errorEffect}}
+    />
   )
 }
 

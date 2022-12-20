@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
-import styled, { css } from "styled-components";
-import {CountContentType, GetContentList} from "../adapters/content";
-import {ContentType, FullContent} from "../types/Content";
-import {listOrder, RequestState, RequestStatus} from "../types/RequestContent";
+import styled, {css} from "styled-components";
+
+import {GetContentList} from "../adapters/content";
+import {ContentType} from "../types/Content";
+import {FullContentList, listOrder, PageInfo, RequestState, RequestStatus} from "../types/RequestContent";
 import PageTitle from "../components/PageTitle";
 import ContentListItem from "../components/ContentListItem";
 import MetaData from "../components/MetaData";
@@ -30,7 +31,7 @@ const ContentList = styled.section`
   }
 `;
 
-/* -------------------------------------------------------------------------- */
+/* --------------------- Button to load more and its css -------------------- */
 
 const ActiveLoadMore = css`
   color: ${props => props.theme.textColour};
@@ -58,58 +59,96 @@ const LoadMore = styled.button<{active: boolean}>`
 
 const BlogList = () => {
   
-  const content_per_page = 8;
+  const contentPerPage = 8;
+
+  /* ---------------------------------- State --------------------------------- */
   
+  // Info about pages of blogs
   const [page, setPage] = useState(0);
-  const [maxPage, setMaxPage] = useState(0);
+  const [maxPage, setMaxPage] = useState(1);
   
-  const [recivedBlogs, setRecivedBlogs] = useState<FullContent[]>([]);
-  
-  // Gets max page
+  // State for all the blogs the site has retreived
+  const [recivedBlogs, setRecivedBlogs] = useState<Record<number, FullContentList>>({});
+  // The latest set of blogs the site has retreived
+  // Need seperate state for latest recieved for error handling reason
+  const [latestRecivedBlogs, setLatestRecivedBlogs] = useState<RequestState<FullContentList>>({requestStatus: RequestStatus.Loading});
+
+  /* ------------ Data and funcs for requesting next page of blogs ------------ */
+
+  // Object passed to reuqest for proper paging of projects
+  const pageInfo: PageInfo = {
+    content_per_page: contentPerPage,
+    page,
+    show_order: listOrder.Newest  
+  };
+
+  // Requests next page of blogs
   useEffect(() => {
-    CountContentType(ContentType.Blog).then((blogCount) => {
-      // Error handling for max page count
-      switch (blogCount.requestStatus){
-        case RequestStatus.Error:
-          // TODO make notification to user that this happend
-          setMaxPage(1000);
-          break;
-        case RequestStatus.Success:
-          setMaxPage((Math.ceil(blogCount.requestedData/content_per_page)-1));
-          break;
-      }
-    });
-  }, [])
-  
-  useEffect(() => {
-    GetContentList({
-      content_per_page,
-      page,
-      show_order: listOrder.Newest,
-      content_type: ContentType.Blog
-    }).then(value => {
-      switch (value.requestStatus){
-        case RequestStatus.Error:
-          // TODO make notification to user that this happend
-          break;
-        case RequestStatus.Success:
-          setRecivedBlogs(alreadyRecivedBlogs => {return alreadyRecivedBlogs.concat(value.requestedData)});
-          break;
-      }
-    });
+    // Requests only new pages and the page check is need cause if
+    // initial request fails the page gets set to negative one
+    if (recivedBlogs[page] === undefined && page >= 0) {
+      GetContentList({
+        page_info: pageInfo,
+        content_filters: {
+          content_type: ContentType.Blog
+        }
+      }).then(value => {
+        setLatestRecivedBlogs(value);
+      });
+    }
   }, [page]);
 
-  const listFetchSuccess = (data: FullContent[]) => {
+  /* ----------- Elements to deal with errors using LoadErrorHandle ----------- */
+
+  // How to render a list of blogs
+  const RenderBlogList = ({data}: {data: FullContentList}) => {
     return (
-      <ContentList>
+      <>
         {
-          recivedBlogs.map(gotBlog => {
-            return <ContentListItem content={gotBlog} key={gotBlog.base_content.id} />;
-          })
+          data.full_content_list.map(gotBlog => {
+            return <ContentListItem
+              content={gotBlog}
+              key={gotBlog.base_content.id}
+            />
+          ;})
         }
-      </ContentList>
+      </>
     )
+  };
+
+  // Side effect of request error
+  const PageLoadErrorEffect = (errorString: {errorString: string}) => {
+    setPage(page-1)
   }
+  
+  // Side effect of request success should only run once
+  const PageLoadSuccessEffect = ({data}: {data: FullContentList}) => {
+    setMaxPage(Math.ceil(data.content_count/contentPerPage)-1);
+  }
+  
+  /* -------------------------------------------------------------------------- */
+
+  // Requests more content 
+  const loadMore = () => {
+    // TODO find way let user rerequest next page on error
+    // note that if last requested page was the last page they loadmore button wont work
+    if (page !== maxPage) {
+      if (latestRecivedBlogs.requestStatus === RequestStatus.Success) {
+        setRecivedBlogs(oldBlogs => {
+          oldBlogs[page] = latestRecivedBlogs.requestedData;
+          return oldBlogs;
+        });
+
+        setPage(page + 1);
+      } else {
+        setPage(page + 1);
+      }
+
+      setLatestRecivedBlogs({requestStatus: RequestStatus.Loading});
+    }
+  };
+
+  /* -------------------------------------------------------------------------- */
 
   return (
     <BlogListBody>
@@ -124,9 +163,28 @@ const BlogList = () => {
         Blogs
       </PageTitle>
 
-      <LoadErrorHandle requestInfo={pageFinishedProjects} successCallback={listFetchSuccess} />
+      <ContentList>
+        <>
+          {
+            Array.from(Array(Object.keys(recivedBlogs).length).keys()).map((value) => {
+              return <RenderBlogList
+                data={recivedBlogs[value]}
+                key={recivedBlogs[value].full_content_list[0].base_content.id}
+              />
+            })
+          }
+        </>
 
-      <LoadMore active={page !== maxPage} onClick={() => {if (page !== maxPage) setPage(page + 1)}}>
+        {/* If more filtering is added might need to chage call count in successEffect */}
+        <LoadErrorHandle
+          requestInfo={latestRecivedBlogs}
+          successElement={RenderBlogList}
+          successEffect={{effect: PageLoadSuccessEffect, callCount: 1}}
+          errorEffect={{effect: PageLoadErrorEffect}}
+        />
+      </ContentList>
+
+      <LoadMore active={page !== maxPage} onClick={loadMore}>
         Load More
       </LoadMore>
 

@@ -2,9 +2,9 @@ import React, {useEffect, useRef, useState} from 'react';
 import styled, { css } from "styled-components";
 import {AiFillCaretLeft} from "react-icons/ai";
 
-import {CountContentType, GetContentList, UnderDevProjects} from "../adapters/content";
-import {listOrder, RequestState, RequestStatus} from "../types/RequestContent";
-import {ContentType, FullContent} from "../types/Content";
+import {GetContentList} from "../adapters/content";
+import {FullContentList, listOrder, PageInfo, RequestState, RequestStatus} from "../types/RequestContent";
+import {ContentType, ProjectStatus} from "../types/Content";
 import PageTitle from "../components/PageTitle";
 import ContentListItem from '../components/ContentListItem';
 import LoadErrorHandle from '../components/LoadingErrorHandler';
@@ -93,20 +93,27 @@ const ProjectList = () => {
   
   // TODO Fix finished list when there are 3 items is weird and wraps early
   // event though its the same as the under dev list
+  // 
+  const contentPerPage = 6;
   
-  const content_per_page = 6;
-
   const [page, setPage] = useState(0);
   const [maxPage, setMaxPage] = useState(0);
 
-  const [underDevProjects, setUnderDevProjects] = useState<RequestState<FullContent[]>>({requestStatus: RequestStatus.Loading});
+  const [underDevProjects, setUnderDevProjects] = useState<RequestState<FullContentList>>({requestStatus: RequestStatus.Loading});
   
-  const [pageFinishedProjects, setPageFinishedProjects] = useState<RequestState<FullContent[]>>({requestStatus: RequestStatus.Loading});
-  const [fetchedFinishedProjects, setFetchedFinishedProjects] = useState<Record<number, RequestState<FullContent[]>>>({});
+  const [pageFinishedProjects, setPageFinishedProjects] = useState<RequestState<FullContentList>>({requestStatus: RequestStatus.Loading});
+  const [fetchedFinishedProjects, setFetchedFinishedProjects] = useState<Record<number, RequestState<FullContentList>>>({});
 
   // Used to scroll to top of list of projects when page changes and top
   // is out of view
   const finishedHeader = useRef<HTMLHeadingElement>(null);
+
+  // Object passed to reuqest for proper paging of projects
+  const pageInfo: PageInfo = {
+    content_per_page: contentPerPage,
+    page,
+    show_order: listOrder.Newest  
+  };
 
   // Makes sure page dosent go negative or past the max page
   const changePageNum = (change: boolean) => {
@@ -118,24 +125,19 @@ const ProjectList = () => {
     }
   }
   
+  /* ------------------- useEffect functions to reuqest data ------------------ */
+  
   // Gets under dev projects and gets max page
   useEffect(() => {
-
-    UnderDevProjects().then(value => setUnderDevProjects(value));
-
-    CountContentType(ContentType.Project).then((projectCount) => {
-      // Error handling for max page count
-      switch (projectCount.requestStatus){
-        case RequestStatus.Error:
-          // TODO make notification to user that this happend
-          setMaxPage(1000);
-          break;
-        case RequestStatus.Success:
-          setMaxPage((Math.ceil(projectCount.requestedData/content_per_page)-1));
-          break;
+    GetContentList({
+      page_info: pageInfo,
+      content_filters: {
+        content_type: ContentType.Project,
+        project_status: ProjectStatus.UnderDevelopment
       }
-    });
-
+    }). then((value) => {
+      setUnderDevProjects(value);
+    })
   }, []);
   
   // Gets the current pages finished projects
@@ -143,10 +145,11 @@ const ProjectList = () => {
     // Checks if the page the user is on was already fetched
     if (fetchedFinishedProjects[page] === undefined) {
       GetContentList({
-        content_per_page,
-        page,
-        show_order: listOrder.Newest,
-        content_type: ContentType.Project
+        page_info: pageInfo,
+        content_filters: {
+          content_type: ContentType.Project,
+          project_status: ProjectStatus.Finished
+        }
       }).then((value) => {
         // Sets fetched content to the value to show on the current page
         setPageFinishedProjects(value);
@@ -162,18 +165,28 @@ const ProjectList = () => {
     };
   }, [page]);
   
+  /* ------------------------ Request succses functions ----------------------- */
+
+  const FinishedFetchSuccess = ({data}: {data: FullContentList}) => {
+    // Use effect removes warning about setting data while still rendering
+    useEffect(() => setMaxPage(Math.ceil(data.content_count/contentPerPage)-1));
+    return listFetchSuccess({data});    
+  }
+
   // What element to show when fetch requests for projects lists succeed
-  const listFetchSuccess = (data: FullContent[]) => {
+  const listFetchSuccess = ({data}: {data: FullContentList}) => {
     return (
       <ContentList>
         {
-          data.map(gotProjects => {
+          data.full_content_list.map(gotProjects => {
             return <ContentListItem content={gotProjects} key={gotProjects.base_content.id} />
           })
         }
       </ContentList>
     );
   }
+  
+  /* -------------------------------------------------------------------------- */
   
   return (
     <ProjectListBody>
@@ -194,14 +207,14 @@ const ProjectList = () => {
           <ProjectsTypeTitle>
             Under Development
           </ProjectsTypeTitle>
-          <LoadErrorHandle requestInfo={underDevProjects} successCallback={listFetchSuccess} />
+          <LoadErrorHandle requestInfo={underDevProjects} successElement={listFetchSuccess} />
         </ProjectsTypeDiv>
 
         <ProjectsTypeDiv>
           <ProjectsTypeTitle ref={finishedHeader}>
             Finished
           </ProjectsTypeTitle>
-          <LoadErrorHandle requestInfo={pageFinishedProjects} successCallback={listFetchSuccess} />
+          <LoadErrorHandle requestInfo={pageFinishedProjects} successElement={FinishedFetchSuccess} />
         </ProjectsTypeDiv>
 
       </AllProjectsDiv>

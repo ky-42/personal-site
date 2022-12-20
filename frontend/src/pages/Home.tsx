@@ -128,7 +128,7 @@ const Home = () => {
   }, [])
   
   // Element to display when latest blog or project is successfully fetched
-  const contentFetchSuccess = (data: FullContentList): JSX.Element => {
+  const contentFetchSuccess = ({data}: {data: FullContentList}): JSX.Element => {
     if (data.content_count > 0){
       return <ContentItem content={data.full_content_list[0]} />
     }
@@ -162,10 +162,10 @@ const Home = () => {
 
       <HomeRight>
         <ContentContainer containerTitle='Latest Project' housedElement={
-          <LoadErrorHandle requestInfo={latestProjectList} successCallback={contentFetchSuccess} />
+          <LoadErrorHandle requestInfo={latestProjectList} successElement={contentFetchSuccess} />
         } />
         <ContentContainer containerTitle='Latest Blog' housedElement={
-          <LoadErrorHandle requestInfo={latestBlogList} successCallback={contentFetchSuccess} />
+          <LoadErrorHandle requestInfo={latestBlogList} successElement={contentFetchSuccess} />
         } />
         <ContentContainer containerTitle='Currently Reading' housedElement={<CurrentlyReading />}/>
       </HomeRight>

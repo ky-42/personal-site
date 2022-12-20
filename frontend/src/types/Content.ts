@@ -16,6 +16,7 @@ export enum ProjectStatus {
 /*                             Content Interfaces                             */
 /* -------------------------------------------------------------------------- */
 
+// If updating 
 
 /* ------------------ Existing/Updatable Content Interfaces ----------------- */
 
@@ -58,7 +59,7 @@ export interface NewBlog {
 }
 
 export interface NewProject {
-  current_status: string;
+  current_status: ProjectStatus;
 }
 
 export interface NewFullContent {

@@ -61,6 +61,7 @@ pub struct Project {
 // Represtent the current status of a project
 #[derive(Debug, Serialize, Deserialize, AsExpression, FromSqlRow, QueryId)]
 #[diesel(sql_type = sql_types::Projectstatus)]
+#[serde(rename_all = "snake_case")]
 pub enum CurrentStatus {
     UnderDevelopment,
     Finished

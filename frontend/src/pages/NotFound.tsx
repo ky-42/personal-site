@@ -2,12 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import PageTitle from "../components/PageTitle";
 
-const NotFoundDiv = styled.div`
-`;
+/* -------------------------------------------------------------------------- */
+
+const NotFoundDiv = styled.main``;
 
 const BodyText = styled.p`
   text-align: center;
 `;
+
+/* -------------------------------------------------------------------------- */
 
 const NotFound = () => {
   return (
