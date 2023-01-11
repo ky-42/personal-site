@@ -101,7 +101,7 @@ const Connect = () => {
       </Email>
 
       <ExternalLinks>
-        <ExternalLink LinkTo="https://github.com/PinkLittlePig" Icon={<AiFillGithub />} />
+        <ExternalLink LinkTo="https://github.com/ky-42" Icon={<AiFillGithub />} />
         <ExternalLink LinkTo="https://twitter.com/ky421_" Icon={<AiFillTwitterCircle />} />
         <ExternalLink LinkTo="https://www.linkedin.com/in/kyle-denief-132059230/" Icon={<AiFillLinkedin />} />
       </ExternalLinks>
