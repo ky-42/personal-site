@@ -219,11 +219,13 @@ const ManageContent = () => {
           
           // Sets the extra content state
           if ("blog" in value.requestedData.extra_content) {
+            setExtraContentType(ContentType.Blog);
             setBlogData({
               action: ReducerAction.Set,
               newState: value.requestedData.extra_content["blog"]
             });
           } else if ("project" in value.requestedData.extra_content) {
+            setExtraContentType(ContentType.Project);
             setProjectData({
               action: ReducerAction.Set,
               newState: value.requestedData.extra_content["project"]
