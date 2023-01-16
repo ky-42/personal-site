@@ -94,13 +94,6 @@ const projectReducer = <K extends keyof Project>(state: Project, action: SetRedu
 
 /* ----------------------------- Styled Elements ---------------------------- */
 
-const ActionButton = styled.button<{active: Boolean}>`
-  ${BasicInputStyling}
-  ${props => props.active ? ActiveButton : UnactiveButton}
-  width: 200px;
-  font-size: 16px;
-`;
-
 const ActiveButton = css`
   color: ${props => props.theme.textColour};
   border: 1px solid ${props => props.theme.highlight};
@@ -109,6 +102,27 @@ const ActiveButton = css`
 const UnactiveButton = css`
   border: 1px solid ${props => props.theme.darkTone};
   color: ${props => props.theme.lightTone};
+`;
+
+const BasicButton = styled.button`
+  ${BasicInputStyling}
+  width: 200px;
+  font-size: 16px;
+
+`;
+
+const ClickButton = styled(BasicButton)`
+  &:focus {
+    ${UnactiveButton}
+  }
+  
+  &:active {
+    ${ActiveButton}    
+  }
+`;
+
+const StateButton = styled(BasicButton)<{active: Boolean}>`
+  ${props => props.active ? ActiveButton : UnactiveButton}
 `;
 
 const InputButtonHolder = styled.div`
@@ -240,6 +254,27 @@ const ManageContent = () => {
 
   /* -------------------------------------------------------------------------- */
   
+  const clearContent = () => {
+    setBaseContentData({
+      action: ReducerAction.Set,
+      newState: defaultContent
+    });
+    
+    setExtraContentType(defaultExtraContent);
+
+    setBlogData({
+      action: ReducerAction.Set,
+      newState: defaultBlog
+    });
+    
+    setProjectData({
+      action: ReducerAction.Set,
+      newState: defaultProject
+    });
+  }
+  
+  /* -------------------------------------------------------------------------- */
+  
   return (
     <ManageContentBody>
     
@@ -253,9 +288,10 @@ const ManageContent = () => {
         </SectionTitle>
 
         <InputGroup>
-          <ActionButton active={currentAction===ActionTypes.Create} onClick={() => setCurrentAction(ActionTypes.Create)}>Create</ActionButton>
-          <ActionButton active={currentAction===ActionTypes.Update} onClick={() => setCurrentAction(ActionTypes.Update)}>Update</ActionButton>
-          <ActionButton active={currentAction===ActionTypes.Delete} onClick={() => setCurrentAction(ActionTypes.Delete)}>Delete</ActionButton>
+          <StateButton active={currentAction===ActionTypes.Create} onClick={() => setCurrentAction(ActionTypes.Create)}>Create</StateButton>
+          <StateButton active={currentAction===ActionTypes.Update} onClick={() => setCurrentAction(ActionTypes.Update)}>Update</StateButton>
+          <StateButton active={currentAction===ActionTypes.Delete} onClick={() => setCurrentAction(ActionTypes.Delete)}>Delete</StateButton>
+          <ClickButton onClick={() => clearContent()}>Clear</ClickButton>
         </InputGroup>
 
         {

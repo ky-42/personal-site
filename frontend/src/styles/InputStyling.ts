@@ -8,6 +8,7 @@ export const BasicInputStyling = css`
   border: 1px solid ${props => props.theme.darkTone};
   color: ${props => props.theme.lightTone};
   background-color: ${props => props.theme.backgroundColour};
+  max-width: 100%;
   &:focus {
     color: ${props => props.theme.textColour};
     border: 1px solid ${props => props.theme.highlight};
