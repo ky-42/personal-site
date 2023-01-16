@@ -48,5 +48,6 @@ export const InputGroup = styled.div`
   column-gap: 50px;
   justify-content: space-evenly;
   align-items: center;
+  flex-wrap: wrap;
   width: 100%;
 `;
