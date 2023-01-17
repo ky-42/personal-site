@@ -7,12 +7,12 @@ const Input = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 25px 0;
+  margin: 2.5rem 0;
 `;
 
 const InputLabel = styled.label`
   text-align: center;
-  font-size: 20px;
+  font-size: 2.0rem;
 `;
 
 /* -------------------------------------------------------------------------- */

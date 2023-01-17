@@ -7,25 +7,25 @@ import { Link } from "react-router-dom";
 
 const ContentLink = styled(Link)`
   // Margin keeps content looking more centered becuase text is left aligned
-  margin-left: clamp(10px, 5vw, 60px);
-  max-width: 500px;
+  margin-left: clamp(1.0rem, 5vw, 6.0rem);
+  max-width: 50.0rem;
   color: ${props => props.theme.textColour};
 `
 const ContentTitle = styled.h4`
-  font-size: clamp(1.3rem, 4vw, 1.6rem);
+  font-size: clamp(2.08rem, 4vw, 2.56rem);
   font-weight: normal;
   margin: 0;
 `;
 
 const ContentCreateDate = styled.p`
   color: ${props => props.theme.lightTone};
-  margin: 3px 0;
-  font-size: clamp(0.7rem, 1.875vw, 0.75rem);
+  margin: 0.3rem 0;
+  font-size: clamp(1.12rem, 1.875vw, 1.2rem);
 `;
 
 const ContentDesc = styled.p`
   margin: 0;
-  font-size: clamp(0.9rem, 2.625vw, 1.05rem);
+  font-size: clamp(1.44rem, 2.625vw, 1.68rem);
 `;
 
 /* -------------------------------------------------------------------------- */

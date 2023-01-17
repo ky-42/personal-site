@@ -10,21 +10,21 @@ const ContentItemDiv = styled(Link)`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 400px;
-  height: 140px;
-  padding: 20px;
+  max-width: 40.0rem;
+  height: 14.0rem;
+  padding: 2.0rem;
   color: ${props => props.theme.textColour};
-  outline: 2px solid ${props => props.theme.darkTone};
-  outline-offset: -1px;
+  outline: 0.2rem solid ${props => props.theme.darkTone};
+  outline-offset: -0.1rem;
   // In single column lets item grow vertically and centers it
   @media (max-width: 1000px){
     height: auto;
-    min-height: 75px;
+    min-height: 7.5rem;
     justify-content: center;
   }
 `
 const ItemTitle = styled.h4`
-  font-size: 1.25rem;
+  font-size: 2.0rem;
   font-weight: normal;
   margin: 0;
   // Keeps title from overflowing
@@ -40,13 +40,13 @@ const ItemTitle = styled.h4`
 
 const ItemDate = styled.p`
   color: ${props => props.theme.lightTone};
-  margin: 3px 0;
-  font-size: clamp(0.6rem, 2.5vw, 0.75rem);
+  margin: 0.3rem 0;
+  font-size: clamp(0.96rem, 2.5vw, 1.2rem);
 `;
 
 const ItemDesc = styled.p`
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.6rem;
   // Keeps description from overflowing
   display: -webkit-box;
   -webkit-line-clamp: 3;

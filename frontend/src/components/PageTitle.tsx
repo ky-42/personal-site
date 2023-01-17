@@ -4,11 +4,11 @@ import styled from "styled-components";
 /* -------------------------------------------------------------------------- */
 
 const PageTitleHeader = styled.header`
-  margin-top: clamp(1.3rem,  6vw, 3.75rem);
+  margin-top: clamp(2.08rem,  6vw, 6.0rem);
 `;
 
 const PageTitleText = styled.h1`
-  font-size: clamp(1.8rem, 10vw, 3.75rem);
+  font-size: clamp(2.88rem, 10vw, 6.0rem);
   text-align: center;
   margin-top: 0;
 `;

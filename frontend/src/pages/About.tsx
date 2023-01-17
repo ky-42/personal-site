@@ -14,7 +14,7 @@ const AboutBody = styled.main``;
 
 const AboutSection = styled.section`
   margin: auto;
-  max-width: 1200px;
+  max-width: 120.0rem;
 `;
 
 const AboutMeText = styled.p`
@@ -26,8 +26,8 @@ const AboutMeText = styled.p`
 const ReadingSection = styled.section``;
 
 const ReadingTitle = styled.h2`
-  margin-top: 50px;
-  font-size: clamp(1.7rem, 6vw, 2rem);
+  margin-top: 5.0rem;
+  font-size: clamp(2.72rem, 6vw, 3.2rem);
   text-align: center;
 `;
 
@@ -35,9 +35,9 @@ const BookListDiv = styled.div`
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap-reverse;
-  margin-top: 25px;
-  column-gap: 50px;
-  row-gap: 25px;
+  margin-top: 2.5rem;
+  column-gap: 5.0rem;
+  row-gap: 2.5rem;
 `;
 
 /* -------------------------------------------------------------------------- */

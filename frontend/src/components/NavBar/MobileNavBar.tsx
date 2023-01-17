@@ -18,11 +18,11 @@ const ExpandButtonDiv = styled.div`
   border: ${props => props.theme.borderSize} solid ${props => props.theme.darkTone};
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 3.2rem;
 `;
 const UpArrow = styled(IoIosArrowUp)`
   color: ${props => props.theme.lightTone};
-  font-size: 32px;
+  font-size: 3.2rem;
 `;
 
 const CloseIcon = styled(IoMdClose)`

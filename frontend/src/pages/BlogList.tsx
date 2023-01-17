@@ -20,15 +20,15 @@ const BlogListBody = styled.main`
 /* -------------------------------------------------------------------------- */
 
 const ContentList = styled.section`
-  max-width: 880px;
+  max-width: 88.0rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 30px;
-  outline: 2px solid ${props => props.theme.backgroundColour};
-  outline-offset: -1px;
+  margin-bottom: 3.0rem;
+  outline: 0.2rem solid ${props => props.theme.backgroundColour};
+  outline-offset: -0.1rem;
   @media (max-width: 1000px){
-    max-width: 440px;
+    max-width: 44.0rem;
   }
 `;
 
@@ -36,23 +36,23 @@ const ContentList = styled.section`
 
 const ActiveLoadMore = css`
   color: ${props => props.theme.textColour};
-  border: 3px solid ${props => props.theme.lightTone};
+  border: 0.3rem solid ${props => props.theme.lightTone};
   &:hover {
-    border: 3px solid ${props => props.theme.highlight};
+    border: 0.3rem solid ${props => props.theme.highlight};
   }
 `;
 
 const DeactiveLoadMore = css`
   color: ${props => props.theme.lightTone};
-  border: 3px solid ${props => props.theme.darkTone};
+  border: 0.3rem solid ${props => props.theme.darkTone};
 `;
 
 const LoadMore = styled.button<{active: boolean}>`
   ${props => props.active ? ActiveLoadMore : DeactiveLoadMore}
-  padding: 12px 45px;
+  padding: 1.2rem 4.5rem;
   display: block; 
   background-color: ${props => props.theme.backgroundColour};
-  font-size: 1rem;
+  font-size: 1.6rem;
 `;
 
 /* -------------------------------------------------------------------------- */

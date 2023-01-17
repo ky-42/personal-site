@@ -13,7 +13,7 @@ import MetaData from "../components/MetaData";
 
 const ContentViewBody = styled.main`
   margin: auto;
-  max-width: 800px;
+  max-width: 80.0rem;
 `;
 
 /* ----------------------- Page upper section elements ---------------------- */
@@ -21,9 +21,9 @@ const ContentViewBody = styled.main`
 const TopSection = styled.header``;
 
 const ContentTitle = styled.h1`
-  margin-top: 28px;
-  margin-bottom: 5px;
-  font-size: clamp(1.7rem, 9vw, 3.75rem);
+  margin-top: 2.8rem;
+  margin-bottom: 0.5rem;
+  font-size: clamp(2.72rem, 9vw, 6.0rem);
   @media (max-width: 400px){
     line-height: 160%;
   }
@@ -35,7 +35,7 @@ const ContentDate = styled.p`
 `;
 
 const ContentDesc = styled.p`
-  font-size: clamp(1.1rem, 5vw, 1.4rem);
+  font-size: clamp(1.76rem, 5vw, 2.24rem);
   font-variation-settings: 'wght' 700;
 `;
 
@@ -46,30 +46,30 @@ const LowerSection = styled.div`
 `;
 
 const ContentBody = styled(ReactMarkdown)`
-  font-size: clamp(1.05rem, 4vw, 1.25rem);
+  font-size: clamp(1.68rem, 4vw, 2.0rem);
   
   > h1 {
-    font-size: clamp(1.55rem, 7vw, 2.8rem);
+    font-size: clamp(2.48rem, 7vw, 4.48rem);
   }
 
   > h2 {
-    font-size: clamp(1.40rem, 6vw, 2.3rem);
+    font-size: clamp(2.24rem, 6vw, 3.68rem);
   }
 
   > h3 {
-    font-size: clamp(1.25rem, 5vw, 1.75rem);
+    font-size: clamp(2.0rem, 5vw, 2.8rem);
   }
 
   > h4 {
-    font-size: clamp(1.25rem, 5vw, 1.75rem);
+    font-size: clamp(2.0rem, 5vw, 2.8rem);
   }
 
   > h5 {
-    font-size: clamp(1.10rem, 4.5vw, 1.4rem);
+    font-size: clamp(1.76rem, 4.5vw, 2.24rem);
   }
 
   > h6 {
-    font-size: clamp(1.05rem, 4.25vw, 1.25rem);
+    font-size: clamp(1.68rem, 4.25vw, 2.0rem);
   }
 `;
 
