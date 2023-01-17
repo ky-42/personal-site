@@ -6,9 +6,9 @@ import styled from "styled-components";
 const SocialLink = styled.a`
   //Idk why felx is needed here but it centers
   display: flex;
-  width: 100px;
-  height: 100px;
-  border: 5px solid ${props => props.theme.lightTone};
+  width: 10.0rem;
+  height: 10.0rem;
+  border: 0.5rem solid ${props => props.theme.lightTone};
   &:hover {
     border-color: ${props => props.theme.highlight};
   }
@@ -17,7 +17,7 @@ const SocialLink = styled.a`
 const ConnectLinkDiv = styled.div`
   // Removes link colouring
   color: ${props => props.theme.textColour};
-  font-size: 3rem;
+  font-size: 4.8rem;
   // Centers icon
   display: flex;
   align-items: center;

@@ -28,29 +28,29 @@ const ContentList = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  max-width: 1320px;
+  max-width: 132.0rem;
   flex-wrap: wrap;
   // Outline covers the outline of the outside of the inside
   // elements border for effect
-  outline: 2px solid ${props => props.theme.backgroundColour};
-  outline-offset: -1px;
+  outline: 0.2rem solid ${props => props.theme.backgroundColour};
+  outline-offset: -0.1rem;
   // Changes number of columns based on screen width
   @media (max-width: 1500px){
-    max-width: 880px;
+    max-width: 88.0rem;
   }
   @media (max-width: 1000px){
-    max-width: 440px;
+    max-width: 44.0rem;
   }
 `;
 
 const ProjectsTypeTitle = styled.h2`
-  font-size: clamp(1.7rem, 6vw, 2rem);
+  font-size: clamp(2.72rem, 6vw, 3.2rem);
 `;
 
 /* ------------------- Elements for arrows to change pages ------------------ */
 
 const PageChangeDiv = styled.div`
-  margin-top: 30px;
+  margin-top: 3.0rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -77,14 +77,14 @@ const DeactiveArrow = css`
 /* -------------------------------------------------------------------------- */
 
 const Arrow = styled(AiFillCaretLeft)<{active: number, flip?: number}>`
-  font-size: 2.25rem;
+  font-size: 3.6rem;
   ${props => props.active ? ActiveArrow : DeactiveArrow}
   ${props => props.flip ? FlipCss : ""} 
 `;
 
 const PageNum = styled.p`
-  margin: 0px 20px;
-  font-size: 1.8rem;
+  margin: 0.0rem 2.0rem;
+  font-size: 2.88rem;
 `;
 
 /* -------------------------------------------------------------------------- */

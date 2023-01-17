@@ -25,7 +25,7 @@ const HoverDiv = styled.div<{active: boolean}>`
 `;
 
 const LinkText = styled.h3`
-  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  font-size: clamp(1.76rem, 2vw, 2.08rem);
   text-decoration: none;
 `;
 

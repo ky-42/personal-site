@@ -10,7 +10,7 @@ import MetaData from "../components/MetaData";
 
 const ConnectBody = styled.main`
   margin: auto;
-  max-width: 1000px;
+  max-width: 100.0rem;
 `;
 
 const BodyText = styled.p`
@@ -19,8 +19,8 @@ const BodyText = styled.p`
 
 const Email = styled.h2`
   text-align: center;
-  margin: clamp(50px, 8vw, 75px) 0px;
-  font-size: clamp(1.1rem, 6vw, 2.1rem);
+  margin: clamp(5.0rem, 8vw, 7.5rem) 0.0rem;
+  font-size: clamp(1.76rem, 6vw, 3.36rem);
   font-variation-settings: 'wght' 650;
   cursor: pointer;
 `;
@@ -30,8 +30,8 @@ const ExternalLinks = styled.section`
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  row-gap: 50px;
-  column-gap: 50px;
+  row-gap: 5.0rem;
+  column-gap: 5.0rem;
 `;
 
 /* ------------------------- Email copy notification ------------------------ */
@@ -50,15 +50,15 @@ const copyNotificationActive = css`
 const CopyNotifictionBubble = styled.div<{active: boolean}>`
   // Positioning
   position: fixed;
-  bottom: calc(${props => props.theme.navHeight} + 20px);
+  bottom: calc(${props => props.theme.navHeight} + 2.0rem);
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
 
   background-color: ${props => props.theme.backgroundColour};
   border: ${props => props.theme.lightTone} solid ${props => props.theme.borderSize};
-  border-radius: 2px;
-  padding: 5px;
+  border-radius: 0.2rem;
+  padding: 0.5rem;
   opacity: 0;
   cursor: default;
   

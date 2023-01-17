@@ -8,8 +8,8 @@ const Container = styled.div`
   flex: 0 0 1;
   flex-direction: column;
   width: 100%;
-  max-width: 550px;
-  /* margin-bottom: 15px; */
+  max-width: 55.0rem;
+  /* margin-bottom: 1.5rem; */
 `;
 
 const ContainerHeader = styled.h2`

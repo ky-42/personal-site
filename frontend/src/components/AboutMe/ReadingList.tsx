@@ -4,7 +4,7 @@ import styled from "styled-components";
 /* -------------------------- General CSS elements -------------------------- */
 
 const ListContainer = styled.div`
-  width: 480px;
+  width: 48.0rem;
   text-align: center;
 `;
 
@@ -18,7 +18,7 @@ const UnorderedReading = styled.ul`
 /* ------------------------ In reading list elements ------------------------ */
 
 const Book = styled.li`
-  margin: 10px 0;
+  margin: 1.0rem 0;
   list-style-type: none;
   // Used to repect top and bottom margin/padding 
   display: inline-block;

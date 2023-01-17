@@ -14,12 +14,12 @@ import MetaData from '../components/MetaData';
 /* -------------------------------------------------------------------------- */
 
 const HomeBody = styled.main`
-  margin: clamp(1.3rem,  6vw, 6rem) auto 0;
+  margin: clamp(2.08rem,  6vw, 9.6rem) auto 0;
   display: flex;
   flex-wrap: wrap;
   color: ${props => props.theme.textColour};
   justify-content: space-between;
-  max-width: 1400px;
+  max-width: 140.0rem;
 `;
 
 /* ------------------- Elements on left side of home page ------------------- */
@@ -29,7 +29,7 @@ const LeftPageColumn = styled.section`
   flex: 0 0 1;
   flex-direction: column;
   justify-content: center;
-  width: 500px;
+  width: 50.0rem;
   @media (max-width: 1250px) {
     // Lets left column take whole screen width when screen is to small for 2 columns
     min-width: 0;
@@ -38,18 +38,18 @@ const LeftPageColumn = styled.section`
 `;
 
 const PageTitle = styled.h1`
-  margin: 0 0 50px;
-  font-size: clamp(1.8rem, 10vw, 3.75rem);
+  margin: 0 0 5.0rem;
+  font-size: clamp(2.88rem, 10vw, 6.0rem);
 `;
 
 const IntroText = styled.p`
-  margin: 0 0 45px;
+  margin: 0 0 4.5rem;
   line-height: 1.5;
 `;
 
 // Wraper for asteroid button (below)
 const BrowserOnly = styled(BrowserView)`
-  margin-left: 4.5rem;
+  margin-left: 7.2rem;
   @media (max-width: 1250px) {
     margin-left: 0;
     align-self: center;
@@ -59,8 +59,8 @@ const BrowserOnly = styled(BrowserView)`
 // Currently does nothing cause game is not implmented
 const AsteroidsButton = styled.button`
   background-color: ${props => props.theme.backgroundColour};
-  font-size: 1rem;
-  padding: 15px 75px;
+  font-size: 1.6rem;
+  padding: 1.5rem 7.5rem;
   color:  ${props => props.theme.textColour};
   border: ${props => props.theme.borderSize} solid ${props => props.theme.lightTone};
 `;
@@ -76,12 +76,12 @@ const HomeRight = styled.div`
   @media (min-width: 1250px) {
     // Keeps right column from staying to close to the left and looking weird on wider screens
     // I need something better tho
-    margin-left: clamp(30px, 6vw, 300px);
+    margin-left: clamp(3.0rem, 6vw, 30.0rem);
   }
   @media (max-width: 1250px) {
     // For when the page uses one column instead of two
-    margin-top: 30px;
-    row-gap: 40px;
+    margin-top: 3.0rem;
+    row-gap: 4.0rem;
   }
 `;
 

@@ -18,7 +18,7 @@ import { RequestStatus } from "../types/RequestContent";
 /* -------------------------------------------------------------------------- */
 
 const ManageContentBody = styled.main`
-  max-width: 1500px;
+  max-width: 150.0rem;
 `;
 
 /* -------------------- Default values used in component -------------------- */
@@ -96,18 +96,18 @@ const projectReducer = <K extends keyof Project>(state: Project, action: SetRedu
 
 const ActiveButton = css`
   color: ${props => props.theme.textColour};
-  border: 1px solid ${props => props.theme.highlight};
+  border: 0.1rem solid ${props => props.theme.highlight};
 `;
 
 const UnactiveButton = css`
-  border: 1px solid ${props => props.theme.darkTone};
+  border: 0.1rem solid ${props => props.theme.darkTone};
   color: ${props => props.theme.lightTone};
 `;
 
 const BasicButton = styled.button`
   ${BasicInputStyling}
-  width: 200px;
-  font-size: 16px;
+  width: 20.0rem;
+  font-size: 1.6rem;
 
 `;
 
@@ -134,9 +134,9 @@ const EnterButton = styled(StyledButton)`
   align-items: center;
   justify-content: center;
   padding: 0;
-  margin-left: 10px;
-  height: 30px;
-  width: 30px;
+  margin-left: 1.0rem;
+  height: 3.0rem;
+  width: 3.0rem;
 `;
 
 /* -------------------------------------------------------------------------- */

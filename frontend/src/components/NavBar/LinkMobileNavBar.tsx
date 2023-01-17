@@ -23,7 +23,7 @@ const NavLink = styled(Link)<{active: number}>`
   vertical-align: middle;
   color: ${props => props.active ? props.theme.highlight : props.theme.textColour};
   text-decoration: ${props => props.active ? `underline ${props.theme.highlight}` : "none"};
-  font-size: 1.25rem;
+  font-size: 2.0rem;
 `;
 
 const LinkNavBar = ({className, to, title}:LinkNavBarProps) => {

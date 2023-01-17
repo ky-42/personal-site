@@ -17,20 +17,26 @@ const StyleTheme = {
   highlightDark: "#61892F",
   lightTone: "#6B6E70",
   darkTone: "#474B4F",
-  borderSize: "3px",
-  navHeight: "2.81rem"
+  borderSize: "0.3rem",
+  navHeight: "4.496rem"
 };
 
 const GlobalCSS = createGlobalStyle`
+
+  Html {
+    font-size: 10px;
+  }
+
   body{
     margin: 0;
     font-family: 'JetBrainsMono';
     color: ${StyleTheme.textColour};
-    background-color: ${StyleTheme.backgroundColour}
+    background-color: ${StyleTheme.backgroundColour};
+    font-size: 1.6rem;
   }
   
   p {
-    font-size: clamp(1rem, 4vw, 1.25rem);
+    font-size: clamp(1.6rem, 4vw, 2.0rem);
   }
 
   button {
@@ -39,19 +45,19 @@ const GlobalCSS = createGlobalStyle`
   
   h1 {
     text-decoration: underline ${StyleTheme.highlight};
-    text-underline-offset: clamp(3px, 2vw, 15px);
+    text-underline-offset: clamp(0.3rem, 2vw, 1.5rem);
     line-height: 150%;
   }
   
   h2 {
     text-decoration: underline ${StyleTheme.highlightDark};
-    text-underline-offset: 0.4rem;
+    text-underline-offset: 0.64rem;
     line-height: 155%;
   }
   
   h3 {
     text-decoration: underline ${StyleTheme.highlightDark};
-    text-underline-offset: 0.4rem;
+    text-underline-offset: 0.64rem;
     line-height: 150%;
   }
 
