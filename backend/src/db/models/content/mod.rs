@@ -105,4 +105,10 @@ mod tests {
             }
         }
     }
+    
+    impl FullContentList {
+        pub fn get_list(&self) -> &Vec<FullContent> {
+            &self.full_content_list
+        }
+    }
 }
