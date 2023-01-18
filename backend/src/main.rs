@@ -47,10 +47,13 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod tests {
+
     use super::*;
     use actix_web::test;
     use std::collections::HashMap;
     use std::sync::Once;
+    use db::models::content::extra::NewExtraContent;
+    use crate::db::models::content::FullContentList;
     // use rand::Rng;
 
     static INIT: Once = Once::new();
@@ -140,12 +143,12 @@ mod tests {
                 .configure(configs::route_config)
         ).await;
         
-        let mut added_content: HashMap<i32, db::models::content::NewFullContent> = HashMap::new();
+        let mut blogs_added: HashMap<usize, db::models::content::NewFullContent> = HashMap::new();
+        let mut projects_added: HashMap<usize, db::models::content::NewFullContent> = HashMap::new();
 
-        const CONTENT_AMOUNT: i32 = 16;
+        const CONTENT_AMOUNT: i32 = 32;
 
-        // Adds 16 pieces of content to db
-        for req_number in (0..CONTENT_AMOUNT).rev() {
+        for _ in 0..CONTENT_AMOUNT {
             let add_data = db::models::content::NewFullContent::random_content();
             let add_request = test::TestRequest::post()
                 .uri("/content/add")
@@ -156,18 +159,39 @@ mod tests {
             assert!(add_response.status().is_success());
             
             // Saves the added content to a hashmap to compare to returned content
-            added_content.insert(req_number, add_data);
+            match &add_data.new_extra_content {
+                NewExtraContent::Project(_) => projects_added.insert(projects_added.len(), add_data), 
+                NewExtraContent::Blog(_) => blogs_added.insert(blogs_added.len(), add_data), 
+            };
         }
         
-        // Todo add more requests to test other things like show order
-        let list_request_one = test::TestRequest::get()
-            .uri("/content/list?content_per_page=6&page=0&show_order=Newest")
+        // Request for the content that was just added
+        let list_request_project = test::TestRequest::get()
+            .uri("/content/list?content_per_page=6&page=0&show_order=Newest&content_type=project")
             .to_request();
-        let delete_response: Vec<db::models::content::FullContent> = test::call_and_read_body_json(&app, list_request_one).await;
-        assert_eq!(delete_response.get(0).unwrap().base_content.get_slug(), added_content.get(&0).unwrap().new_base_content.get_slug());
-        assert_eq!(delete_response.get(5).unwrap().base_content.get_slug(), added_content.get(&5).unwrap().new_base_content.get_slug());
+        let list_request_project_two = test::TestRequest::get()
+            .uri("/content/list?content_per_page=6&page=1&show_order=Newest&content_type=project")
+            .to_request();
+        let list_request_blog = test::TestRequest::get()
+            .uri("/content/list?content_per_page=6&page=0&show_order=Newest&content_type=blog")
+            .to_request();
+        let list_request_blog_two = test::TestRequest::get()
+            .uri("/content/list?content_per_page=6&page=1&show_order=Newest&content_type=blog")
+            .to_request();
+        let projects_returned: FullContentList = test::call_and_read_body_json(&app, list_request_project).await;
+        let blogs_returned: FullContentList = test::call_and_read_body_json(&app, list_request_blog).await;
+        let projects_returned_two: FullContentList = test::call_and_read_body_json(&app, list_request_project_two).await;
+        let blogs_returned_two: FullContentList = test::call_and_read_body_json(&app, list_request_blog_two).await;
 
-        for value in added_content.values() {
+        // Checks content recived above vs what was added
+        assert_eq!(projects_returned.get_list().get(2).unwrap().base_content.get_slug(), projects_added.get(&(projects_added.len() - 3)).unwrap().new_base_content.get_slug());
+        assert_eq!(projects_returned_two.get_list().get(2).unwrap().base_content.get_slug(), projects_added.get(&(projects_added.len() - 9)).unwrap().new_base_content.get_slug());
+        assert_eq!(blogs_returned.get_list().get(2).unwrap().base_content.get_slug(), blogs_added.get(&(blogs_added.len() - 3)).unwrap().new_base_content.get_slug());
+        assert_eq!(blogs_returned_two.get_list().get(2).unwrap().base_content.get_slug(), blogs_added.get(&(blogs_added.len() - 9)).unwrap().new_base_content.get_slug());
+        assert_eq!(projects_returned.get_list().len(), 6);
+
+        // Deletes all added content
+        for value in projects_added.values().chain(blogs_added.values()) {
             let delete_request = test::TestRequest::delete()
                 .uri(&format!("/content/{}", value.new_base_content.get_slug()))
                 .insert_header(("Authorization", admin_info.admin_password.to_owned()))
@@ -206,7 +230,7 @@ mod tests {
         for req_number in (0..add_amount).rev() {
             let add_data = db::models::content::NewFullContent::random_content();
             let add_request = test::TestRequest::post()
-                .uri("/api/content/add")
+                .uri("/content/add")
                 .set_json(&add_data)
                 .insert_header(("Authorization", admin_info.admin_password.to_owned()))
                 .to_request();
