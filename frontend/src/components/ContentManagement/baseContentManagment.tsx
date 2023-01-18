@@ -1,15 +1,22 @@
-
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import { Content } from "../../types/Content";
-import { InputGroup, LongTextInput, ShortTextInput } from "./InputElements";
+import { InputGroup, LongTextInput, ShortTextInput, StateButton } from "./InputElements";
 import InputArea from "./InputArea";
 import { ReducerAction, SetReducer, UpdateReducer } from "../../types/ManageContent";
+import ContentBody from "../ContentBody";
 
-/* -------------------------------------------------------------------------- */
+/* ---------------------------- Styled Components --------------------------- */
 
 const BaseContentManagmentArea = styled.div``;
+
+const BodyPreview = styled(ContentBody)`
+  margin-top: 2rem;
+  max-width: 120.0rem;
+  width: 80%;
+  border: 0.1rem solid ${props => props.theme.darkTone};
+`;
 
 /* -------------------------------------------------------------------------- */
 
@@ -22,7 +29,9 @@ interface baseContentManagmentProps {
 
 // Form part for inputing the data about the base content
 const BaseContentManagment = ({baseContentData, setBaseContentData}: baseContentManagmentProps) => {
-  
+
+  const [viewPreview, setViewPreview] = useState(false);
+
   return (
     <BaseContentManagmentArea>
       <InputGroup>
@@ -93,6 +102,22 @@ const BaseContentManagment = ({baseContentData, setBaseContentData}: baseContent
         />
       }
     />
+    
+    <InputArea 
+      lableText={"Content Body Preview"}
+      InputElement={
+      <>
+        <StateButton active={viewPreview} onClick={() => setViewPreview(!viewPreview)}>View Body Preview</StateButton>
+        {
+          viewPreview && 
+          <BodyPreview>
+            {baseContentData.body}
+          </BodyPreview>
+        }
+      </>
+      }
+    />
+
     </BaseContentManagmentArea>
   )
 }

@@ -1,5 +1,36 @@
-import styled from "styled-components";
-import { BasicInputStyling } from "../../styles/InputStyling";
+import styled, { css } from "styled-components";
+
+/* ------------------------------ Input Styling ----------------------------- */
+
+export const BasicInputStyling = css`
+  font-size: 1.3rem;
+  padding: 0.4rem 1.0rem 0.5rem 1.0rem;
+  margin: 0.8rem 0 0 0;
+  border-radius: 0.5rem;
+  border: 0.1rem solid ${props => props.theme.darkTone};
+  color: ${props => props.theme.lightTone};
+  background-color: ${props => props.theme.backgroundColour};
+  max-width: 100%;
+  &:focus {
+    color: ${props => props.theme.textColour};
+    border: 0.1rem solid ${props => props.theme.highlight};
+    outline: none;
+  }
+`;
+
+const ActiveButton = css`
+  color: ${props => props.theme.textColour};
+  border: 0.1rem solid ${props => props.theme.highlight};
+`;
+
+const UnactiveButton = css`
+  border: 0.1rem solid ${props => props.theme.darkTone};
+  color: ${props => props.theme.lightTone};
+  &:focus {
+    border: 0.1rem solid ${props => props.theme.darkTone};
+    color: ${props => props.theme.lightTone};
+  }
+`;
 
 /* ----------------------------- Input elements ----------------------------- */
 
@@ -31,6 +62,36 @@ export const StyledButton = styled.button`
     border: 0.1rem solid ${props => props.theme.darkTone};
     color: ${props => props.theme.lightTone};
   }
+`;
+
+export const BasicButton = styled.button`
+  ${BasicInputStyling}
+  width: 20.0rem;
+  font-size: 1.6rem;
+`;
+
+export const ClickButton = styled(BasicButton)`
+  &:focus {
+    ${UnactiveButton}
+  }
+  
+  &:active {
+    ${ActiveButton}    
+  }
+`;
+
+export const StateButton = styled(BasicButton)<{active: Boolean}>`
+  ${props => props.active ? ActiveButton : UnactiveButton}
+`;
+
+export const EnterButton = styled(StyledButton)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin-left: 1.0rem;
+  height: 3.0rem;
+  width: 3.0rem;
 `;
 
 /* ------------------ Input element organizers and wrappers ----------------- */
