@@ -5,14 +5,13 @@ import PageTitle from "../components/PageTitle";
 import { ActionTypes, ReducerAction, SetReducer, UpdateReducer } from "../types/ManageContent";
 import { Blog, Content, ContentType, FullContent, Project, ProjectStatus } from "../types/Content";
 import InputArea from "../components/ContentManagement/InputArea";
-import { DropDown, InputGroup, InputSection, SectionTitle, ShortTextInput, StyledButton } from "../components/ContentManagement/InputElements";
+import { ClickButton, DropDown, EnterButton, InputGroup, InputSection, SectionTitle, ShortTextInput, StateButton, StyledButton } from "../components/ContentManagement/InputElements";
 import ProjectManagment from "../components/ContentManagement/ProjectManagment";
 import BlogManagment from "../components/ContentManagement/BlogManagment";
 import BaseContentManagment from "../components/ContentManagement/baseContentManagment";
 import { ContentAdd, ContentPieceOperations } from "../adapters/content";
 import { FullToNewFull } from "../types/HelperFuncs";
 import { AiOutlineRight } from "react-icons/ai";
-import { BasicInputStyling } from "../styles/InputStyling";
 import { RequestStatus } from "../types/RequestContent";
 
 /* -------------------------------------------------------------------------- */
@@ -94,49 +93,8 @@ const projectReducer = <K extends keyof Project>(state: Project, action: SetRedu
 
 /* ----------------------------- Styled Elements ---------------------------- */
 
-const ActiveButton = css`
-  color: ${props => props.theme.textColour};
-  border: 0.1rem solid ${props => props.theme.highlight};
-`;
-
-const UnactiveButton = css`
-  border: 0.1rem solid ${props => props.theme.darkTone};
-  color: ${props => props.theme.lightTone};
-`;
-
-const BasicButton = styled.button`
-  ${BasicInputStyling}
-  width: 20.0rem;
-  font-size: 1.6rem;
-
-`;
-
-const ClickButton = styled(BasicButton)`
-  &:focus {
-    ${UnactiveButton}
-  }
-  
-  &:active {
-    ${ActiveButton}    
-  }
-`;
-
-const StateButton = styled(BasicButton)<{active: Boolean}>`
-  ${props => props.active ? ActiveButton : UnactiveButton}
-`;
-
 const InputButtonHolder = styled.div`
   display: flex;
-`;
-
-const EnterButton = styled(StyledButton)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin-left: 1.0rem;
-  height: 3.0rem;
-  width: 3.0rem;
 `;
 
 /* -------------------------------------------------------------------------- */
@@ -322,6 +280,7 @@ const ManageContent = () => {
       </InputSection>
 
       <InputSection>
+
         <SectionTitle>
           Content Data
         </SectionTitle>
