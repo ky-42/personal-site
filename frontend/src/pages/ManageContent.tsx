@@ -1,5 +1,5 @@
 import React, { useReducer, useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 import PageTitle from "../components/PageTitle";
 import { ActionTypes, ReducerAction, SetReducer, UpdateReducer } from "../types/ManageContent";
