@@ -100,6 +100,10 @@ const ProjectList = () => {
   const [maxPage, setMaxPage] = useState(0);
 
   const [underDevProjects, setUnderDevProjects] = useState<RequestState<FullContentList>>({requestStatus: RequestStatus.Loading});
+  // Needed cause no depedencies for under dev useEffect and
+  // no clear thing to add there so this will reload the page
+  // for under dev
+  const [underDevReload, setUnderDevReload] = useState(false);
   
   const [pageFinishedProjects, setPageFinishedProjects] = useState<RequestState<FullContentList>>({requestStatus: RequestStatus.Loading});
   const [fetchedFinishedProjects, setFetchedFinishedProjects] = useState<Record<number, RequestState<FullContentList>>>({});
@@ -135,7 +139,7 @@ const ProjectList = () => {
     }).then((value) => {
       setUnderDevProjects(value);
     })
-  }, []);
+  }, [underDevReload]);
   
   // Gets the current pages finished projects
   useEffect(() => {
@@ -168,14 +172,13 @@ const ProjectList = () => {
   
   /* ------------------------ Request succses functions ----------------------- */
 
-  const FinishedFetchSuccess = ({data}: {data: FullContentList}) => {
-    // Use effect removes warning about setting data while still rendering
-    useEffect(() => setMaxPage(Math.ceil(data.content_count/contentPerPage)-1));
-    return listFetchSuccess({data});    
-  }
+  // Side effect of request success should only run once and for finished projects
+  const PageLoadSuccessEffect = ({data}: {data: FullContentList}) => {
+    setMaxPage(Math.ceil(data.content_count/contentPerPage)-1);
+  };
 
   // What element to show when fetch requests for projects lists succeed
-  const listFetchSuccess = ({data}: {data: FullContentList}) => {
+  const FinishedFetchSuccess = ({data}: {data: FullContentList}) => {
     return (
       <ContentList>
         {
@@ -185,7 +188,22 @@ const ProjectList = () => {
         }
       </ContentList>
     );
-  }
+  };
+  
+  /* ------------------------- Request error functions ------------------------ */
+  // Function reload current page of projects for there respective sections
+  
+  const FinishedPageRetry = () => {
+    // Works cause this is watched by useEffect
+    setFetchedFinishedProjects((state) => {
+      delete state[page];
+      return {...state};
+    });
+  };
+
+  const UnderDevRetry = () => {
+    setUnderDevReload(!underDevReload);
+  };
   
   /* -------------------------------------------------------------------------- */
   
@@ -208,14 +226,23 @@ const ProjectList = () => {
           <ProjectsTypeTitle>
             Under Development
           </ProjectsTypeTitle>
-          <LoadErrorHandle requestInfo={underDevProjects} successElement={listFetchSuccess} />
+          <LoadErrorHandle
+            requestInfo={underDevProjects}
+            successElement={FinishedFetchSuccess}
+            retryFunc={UnderDevRetry}
+          />
         </ProjectsTypeDiv>
 
         <ProjectsTypeDiv>
           <ProjectsTypeTitle ref={finishedHeader}>
             Finished
           </ProjectsTypeTitle>
-          <LoadErrorHandle requestInfo={pageFinishedProjects} successElement={FinishedFetchSuccess} />
+          <LoadErrorHandle
+            requestInfo={pageFinishedProjects}
+            successElement={FinishedFetchSuccess}
+            successEffect={{effect: PageLoadSuccessEffect, callCount: 1}}
+            retryFunc={FinishedPageRetry}
+          />
         </ProjectsTypeDiv>
 
       </AllProjectsDiv>
