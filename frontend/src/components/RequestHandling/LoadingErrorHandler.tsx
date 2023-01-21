@@ -12,6 +12,8 @@ interface stateEffect<T extends Function> {
   callCount?: number
 }
 
+//TODO document API for this element
+
 // Parameters to the component below
 // ____Element parameters are component function that will be returned when the specified state is active
 // ____Effect are side effect function to call when the specified state is active
@@ -19,8 +21,9 @@ interface LoadErrorHandleProps<T> {
   requestInfo: RequestState<T>
   successElement?: (data: {data: T}) => JSX.Element,
   successEffect?: stateEffect<(data: {data: T}) => void>,
-  errorElement?: (errorString: {errorString: string}) => JSX.Element,
+  errorElement?: (errorString: {errorString: string, retryFunc?: () => void}) => JSX.Element,
   errorEffect?: stateEffect<(errorString: {errorString: string}) => void>,
+  retryFunc?: () => void,
   loadingElement?: () => JSX.Element,
   loadingEffect?: stateEffect<() => void>,
   placeHolders?: boolean
@@ -104,11 +107,11 @@ const LoadErrorHandle = <T, >(handlingData: LoadErrorHandleProps<T>): JSX.Elemen
       // if now will return placeholder or nothing
       if (handlingData.errorElement !== undefined) {
         let ErrorElement = handlingData.errorElement;
-        return <ErrorElement errorString={handlingData.requestInfo.requestError} />;
+        return <ErrorElement errorString={handlingData.requestInfo.requestError} retryFunc={handlingData.retryFunc} />;
       }
 
       if (handlingData.placeHolders === undefined ||  handlingData.placeHolders === true) {
-        return <ErrorDisplay errorString={handlingData.requestInfo.requestError} />;
+        return <ErrorDisplay errorString={handlingData.requestInfo.requestError} retryFunc={handlingData.retryFunc} />;
       }
 
       return <></>;

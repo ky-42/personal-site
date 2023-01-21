@@ -3,22 +3,49 @@ import styled from "styled-components";
 
 /* -------------------------------------------------------------------------- */
 
+const ErrorDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const ErrorText = styled.p`
   text-align: center;
+`;
+
+const RetryButton = styled.button`
+  padding: 0.7rem 2.5rem;
+  display: block; 
+  background-color: ${props => props.theme.backgroundColour};
+  font-size: 1.6rem;
+  color: ${props => props.theme.textColour};
+  border: 0.3rem solid ${props => props.theme.lightTone};
+  &:hover {
+    border: 0.3rem solid ${props => props.theme.highlight};
+  }
 `;
 
 /* -------------------------------------------------------------------------- */
 
 interface ErrorDisplayProps {
-  errorString: String
+  errorString: String,
+  retryFunc?: () => void
 }
 
-const ErrorDisplay = ({errorString}: ErrorDisplayProps) => {
+const ErrorDisplay = ({errorString, retryFunc}: ErrorDisplayProps) => {
   // What to display when a request returns an error
   return(
-    <ErrorText>
-      {errorString}
-    </ErrorText>
+    <ErrorDiv>
+      <ErrorText>
+        {errorString}
+      </ErrorText>
+      {
+        retryFunc !== undefined &&
+        <RetryButton onClick={retryFunc}>
+          Retry
+        </RetryButton>
+      }
+    </ErrorDiv>
   )
 }
 
