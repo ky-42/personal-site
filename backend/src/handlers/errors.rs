@@ -6,6 +6,7 @@ use actix_web::{
 use derive_more::Display;
 use diesel;
 use r2d2;
+use validator::ValidationErrors;
 
 /* -------------------------------------------------------------------------- */
 
@@ -21,7 +22,9 @@ pub enum AppError {
     #[display(fmt = "You are not the site admin")]
     NotAdmin,
     #[display(fmt = "No admin password is set")]
-    NoAdmin
+    NoAdmin,
+    #[display(fmt = "Content did not pass validation. Some values in your data are not valid")]
+    ContentValidationError
 }
 
 // Makes content errors returnable by an actix web handler
@@ -43,6 +46,7 @@ impl ResponseError for AppError {
             AppError::WebBlockError => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::NotAdmin => StatusCode::UNAUTHORIZED,
             AppError::NoAdmin => StatusCode::UNAUTHORIZED,
+            AppError::ContentValidationError => StatusCode::BAD_REQUEST,
         }
     }
 }
@@ -71,5 +75,11 @@ impl From<diesel::result::Error> for AppError {
             diesel::result::Error::NotFound => AppError::ContentNotFound,
             _ => AppError::DbError,
         }
+    }
+}
+
+impl From<ValidationErrors> for AppError {
+    fn from(_validation_error: ValidationErrors) -> Self {
+        AppError::ContentValidationError
     }
 }
