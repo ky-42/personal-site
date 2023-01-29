@@ -8,7 +8,7 @@ import InputArea from "../components/ContentManagement/InputArea";
 import { ClickButton, DropDown, EnterButton, InputGroup, InputSection, SectionTitle, ShortTextInput, StateButton, StyledButton } from "../components/ContentManagement/InputElements";
 import ProjectManagment from "../components/ContentManagement/ProjectManagment";
 import BlogManagment from "../components/ContentManagement/BlogManagment";
-import BaseContentManagment from "../components/ContentManagement/baseContentManagment";
+import BaseContentManagment from "../components/ContentManagement/BaseContentManagment";
 import { ContentAdd, ContentPieceOperations } from "../adapters/content";
 import { FullToNewFull } from "../types/HelperFuncs";
 import { AiOutlineRight } from "react-icons/ai";
@@ -108,6 +108,10 @@ const ManageContent = () => {
   const [baseContentData, setBaseContentData] = useReducer(contentReducer, defaultContent);
   const [blogData, setBlogData] = useReducer(blogReducer, defaultBlog);
   const [projectData, setProjectData] = useReducer(projectReducer, defaultProject);
+  
+  // Key sting type in the record will be keys of content, blog, or project
+  // Done this way because we dont need all keys from those types in the object
+  const [dataErrors, setDataErrors] = useState<Record<string, string>>({});
   
   // Slug to be updated or deleted
   const [modifySlug, setModifySlug] = useState("");
