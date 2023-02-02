@@ -18,9 +18,21 @@ export const BasicInputStyling = css`
   }
 `;
 
+// Styling for text relating to and error
+export const ErrorTextStyling = css`
+  color: ${props => props.theme.errorColour};
+  &:focus {
+    color: ${props => props.theme.errorColour};
+  }
+  &:active {
+    color: ${props => props.theme.errorColour};
+  }
+`;
+
 const ActiveButton = css`
-  color: ${props => props.theme.textColour};
-  border: 0.1rem solid ${props => props.theme.highlight};
+  /* Important needed to overide any focus styles */
+  color: ${props => props.theme.textColour} !important;
+  border: 0.1rem solid ${props => props.theme.highlight} !important;
 `;
 
 const UnactiveButton = css`

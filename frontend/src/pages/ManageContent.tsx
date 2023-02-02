@@ -1,22 +1,24 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useRef, useState } from "react";
 import styled from "styled-components";
+import { AiOutlineRight } from "react-icons/ai";
 
 import PageTitle from "../components/PageTitle";
 import { ActionTypes, ReducerAction, SetReducer, UpdateReducer } from "../types/ManageContent";
-import { Blog, Content, ContentType, FullContent, Project, ProjectStatus } from "../types/Content";
+import { Blog, Content, ContentType, FullContent, NewFullContent, Project, ProjectStatus } from "../types/Content";
 import InputArea from "../components/ContentManagement/InputArea";
 import { ClickButton, DropDown, EnterButton, InputGroup, InputSection, SectionTitle, ShortTextInput, StateButton, StyledButton } from "../components/ContentManagement/InputElements";
 import ProjectManagment from "../components/ContentManagement/ProjectManagment";
+import BaseContentManagment from "../components/ContentManagement/BaseContentManagment";
 import BlogManagment from "../components/ContentManagement/BlogManagment";
-import BaseContentManagment from "../components/ContentManagement/baseContentManagment";
 import { ContentAdd, ContentPieceOperations } from "../adapters/content";
-import { FullToNewFull } from "../types/HelperFuncs";
-import { AiOutlineRight } from "react-icons/ai";
+import { blogToNew, contentToNew, projectToNew } from "../types/HelperFuncs";
 import { RequestStatus } from "../types/RequestContent";
+import { validateBlog, validateContent, validateProject } from "../components/ContentManagement/InputValidation";
 
 /* -------------------------------------------------------------------------- */
 
 const ManageContentBody = styled.main`
+  margin: auto;
   max-width: 150.0rem;
 `;
 
@@ -109,6 +111,13 @@ const ManageContent = () => {
   const [blogData, setBlogData] = useReducer(blogReducer, defaultBlog);
   const [projectData, setProjectData] = useReducer(projectReducer, defaultProject);
   
+  // Key in the record will be keys of content, blog, or project
+  // Done this way because we dont need all keys from those types in the object
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  // Needed so when there are validation errors page can scroll to top
+  const pageTop = useRef<HTMLHeadingElement>(null);
+  
   // Slug to be updated or deleted
   const [modifySlug, setModifySlug] = useState("");
   
@@ -120,24 +129,50 @@ const ManageContent = () => {
   
   // How to submit the form
   const onSubmit = () => {
-  
-    // Sets up extra content data to be put into FullContent object
-    var extraData: FullContent["extra_content"] = {"blog": blogData};
+    
+    /* ---------- Validates data and sets up data to be sent in request --------- */
+    
+    let newValidationErrors = {}; 
+    
+    let baseNewData = contentToNew(baseContentData);
+    validateContent(baseNewData, newValidationErrors);
+    let baseData = {...baseContentData, ...baseNewData};
 
+    // Sets up extra content data objects
+    let extraData: FullContent["extra_content"];
+    let extraNewData: NewFullContent["new_extra_content"];
+    
     switch (extraContentType) {
+      case ContentType.Blog:
+        extraNewData = {"blog": blogToNew(blogData)};
+        validateBlog(extraNewData.blog, newValidationErrors);
+        extraData = {"blog": {...blogData, ...extraNewData["blog"]}};
+        break;
+        
       case ContentType.Project:
-        extraData = {"project": projectData};
+        extraNewData = {"project": projectToNew(projectData)};
+        validateProject(extraNewData.project, newValidationErrors);
+        extraData = {"project": {...projectData, ...extraNewData["project"]}};
         break; 
     }
+
+    setValidationErrors(newValidationErrors);
+    
+    // If there are errors scroll to top stop request
+    if (Object.keys(newValidationErrors).length !== 0) {
+      pageTop.current?.scrollIntoView();
+      return;
+    }
+
+    /* -------------------------------------------------------------------------- */
     
     switch (currentAction) {
       case ActionTypes.Create:
 
-        // Converts the full content object to a new full content object
-        const addContent = FullToNewFull({
-          base_content: baseContentData,
-          extra_content: extraData
-        });
+        const addContent = {
+          new_base_content: baseNewData,
+          new_extra_content: extraNewData
+        };
 
         ContentAdd({
           addContent,
@@ -153,7 +188,7 @@ const ManageContent = () => {
           method: "PUT",
           password: serverPassword,
           updated_content: {
-            base_content: baseContentData,
+            base_content: baseData,
             extra_content: extraData
           }
         })
@@ -235,6 +270,7 @@ const ManageContent = () => {
   
   return (
     <ManageContentBody>
+      <div ref={pageTop}></div>
     
       <PageTitle>
         Manage Content
@@ -285,7 +321,7 @@ const ManageContent = () => {
           Content Data
         </SectionTitle>
         
-        <BaseContentManagment baseContentData={baseContentData} setBaseContentData={setBaseContentData} />
+        <BaseContentManagment baseContentData={baseContentData} setBaseContentData={setBaseContentData} validationErrors={validationErrors} />
 
       </InputSection>
       
@@ -310,11 +346,11 @@ const ManageContent = () => {
         
         {
           extraContentType === ContentType.Blog &&
-          <BlogManagment blogData={blogData} setBlogData={setBlogData} />
+          <BlogManagment blogData={blogData} setBlogData={setBlogData} validationErrors={validationErrors} />
         }
         {
           extraContentType === ContentType.Project &&
-          <ProjectManagment projectData={projectData} setProjectData={setProjectData} />
+          <ProjectManagment projectData={projectData} setProjectData={setProjectData} validationErrors={validationErrors} />
         }
 
       </InputSection>
