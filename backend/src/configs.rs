@@ -1,6 +1,6 @@
 // For route config
 use crate::handlers::content;
-use actix_web::web;
+use actix_web::{web};
 
 // For CORS config
 use actix_cors::Cors;
@@ -28,15 +28,15 @@ pub fn route_config(cfg: &mut web::ServiceConfig) {
 
 // CORS settings for app
 pub fn cors_config() -> actix_cors::Cors {
-  Cors::default()
-    .allowed_origin_fn(|origin, _| {
-      // Allows any origin from any subdomin on a specified URL set in .env
-      origin.as_bytes().ends_with(
-        env::var("URL")
-          .expect("Please set URL in .env")
-          .as_bytes()
-      )
+    Cors::default()
+        .allowed_origin_fn(|origin, _| {
+            // Allows any origin from any subdomin on a specified URL set in .env
+            origin.as_bytes().ends_with(
+            env::var("URL")
+                .expect("Please set URL in .env")
+                .as_bytes()
+          )
     })
-    .allow_any_method()
+    .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
     .allow_any_header()
 }

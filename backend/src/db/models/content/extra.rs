@@ -1,8 +1,9 @@
-use super::{ContentType, base::Content};
+use super::{ContentType, base::Content, deserialize_helpers::empty_vec_as_none};
 use crate::schema::{blog, project, sql_types};
 use diesel::{expression::AsExpression, pg::{Pg, PgValue}, serialize::{self, ToSql, Output, IsNull}, deserialize::{self, FromSql, FromSqlRow}};
 use serde::{self, Deserialize, Serialize};
 use std::io::Write;
+use validator::Validate;
 
 /* -------------------------- Extra content stores -------------------------- */
 // Used to store any peice of extra content under
@@ -15,11 +16,29 @@ pub enum ExtraContent {
     Project(Project),
 }
 
+impl Validate for ExtraContent {
+    fn validate(&self) -> Result<(), validator::ValidationErrors> {
+        match self {
+            ExtraContent::Blog(blog_data) => blog_data.validate(),
+            ExtraContent::Project(project_data) => project_data.validate(),
+        }
+    }
+}
+
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "lowercase")]
 pub enum NewExtraContent {
     Blog(NewBlog),
     Project(NewProject),
+}
+
+impl Validate for NewExtraContent {
+    fn validate(&self) -> Result<(), validator::ValidationErrors> {
+        match self {
+            NewExtraContent::Blog(new_blog_data) => new_blog_data.validate(),
+            NewExtraContent::Project(new_project_data) => new_project_data.validate(),
+        }
+    }
 }
 
 /* -------------------------- Extra content models -------------------------- */
@@ -28,27 +47,29 @@ pub enum NewExtraContent {
 // a complete peice of content
 
 
-#[derive(Insertable, Deserialize, Serialize, Debug)]
+#[derive(Insertable, Deserialize, Serialize, Validate, Debug)]
 #[diesel(table_name = blog)]
 pub struct NewBlog {
+    #[serde(deserialize_with = "empty_vec_as_none")]
     tags: Option<Vec<String>>,
 }
 
-#[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Debug)]
+#[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Validate, Debug)]
 #[diesel(table_name = blog, treat_none_as_null = true, belongs_to(Content, foreign_key = id ))]
 pub struct Blog {
     id: i32,
+    #[serde(deserialize_with = "empty_vec_as_none")]
     tags: Option<Vec<Option<String>>>,
     content_type: ContentType,
 }
 
-#[derive(Insertable, Deserialize, Serialize, Debug)]
+#[derive(Insertable, Deserialize, Serialize, Validate, Debug)]
 #[diesel(table_name = project)]
 pub struct NewProject {
     current_status: CurrentStatus,
 }
 
-#[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Debug)]
+#[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Validate, Debug)]
 #[diesel(table_name = project, belongs_to(Content, foreign_key = id ))]
 pub struct Project {
     id: i32,

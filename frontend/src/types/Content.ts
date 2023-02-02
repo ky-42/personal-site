@@ -16,7 +16,7 @@ export enum ProjectStatus {
 /*                             Content Interfaces                             */
 /* -------------------------------------------------------------------------- */
 
-// If updating update to new content helper and the validation methods when they are added
+// If updating also update content helpers and validation functions
 
 /* ------------------ Existing/Updatable Content Interfaces ----------------- */
 

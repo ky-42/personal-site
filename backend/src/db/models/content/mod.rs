@@ -1,7 +1,9 @@
 use crate::schema::sql_types;
+use super::deserialize_helpers;
 use serde::{self, Deserialize, Serialize};
 use diesel::{expression::AsExpression, pg::{Pg, PgValue}, serialize::{self, ToSql, Output, IsNull}, deserialize::{self, FromSql, FromSqlRow}};
 use std::io::Write;
+use validator::Validate;
 
 /* -------------------------------------------------------------------------- */
 
@@ -14,15 +16,19 @@ pub mod ops;
 // of content with the specific values of the type
 // of the piece of content (The extra content)
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Validate, Debug)]
 pub struct FullContent {
+    #[validate]
     pub base_content: base::Content,
+    #[validate]
     pub extra_content: extra::ExtraContent,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Validate, Debug)]
 pub struct NewFullContent {
+    #[validate]
     pub new_base_content: base::NewContent,
+    #[validate]
     pub new_extra_content: extra::NewExtraContent,
 }
 

@@ -6,6 +6,7 @@ use crate::db::{
 };
 use actix_web::{web, HttpResponse};
 use serde::{Deserialize, Serialize};
+use validator::Validate;
 
 /* -------------------------------------------------------------------------- */
 /*                         Responder Specific Structs                         */
@@ -63,13 +64,15 @@ pub async fn view_content(
 // not just the updated properties 
 pub async fn update_content(
     db_pool: web::Data<DbPool>,
-    _content_info: web::Path<ContentSlug>,
+    _old_slug: web::Path<ContentSlug>,
     update_info: web::Json<FullContent>,
     _: AuthUser,
 ) -> Result<HttpResponse, AppError> {
+    let update_data = update_info.into_inner();
+    update_data.validate()?;
     web::block(move || {
         let mut db_conn = db_pool.get()?;
-        update_info.into_inner().update(&mut db_conn)
+        update_data.update(&mut db_conn)
     })
     .await??;
 
@@ -100,9 +103,11 @@ pub async fn add_content(
     add_info: web::Json<NewFullContent>,
     _: AuthUser,
 ) -> Result<HttpResponse, AppError> {
+    let add_data = add_info.into_inner();
+    add_data.validate()?; 
     web::block(move || {
         let mut db_conn = db_pool.get()?;
-        add_info.into_inner().add(&mut db_conn)
+        add_data.add(&mut db_conn)
     })
     .await??;
 

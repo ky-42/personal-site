@@ -1,5 +1,7 @@
 use super::ContentType;
+use super::deserialize_helpers::empty_string_as_none;
 use crate::schema::content;
+use validator::Validate;
 use serde::{self, Deserialize, Serialize};
 use chrono::{DateTime, Utc};
 
@@ -12,25 +14,33 @@ The content table sores values that all connent
 will have no matter what type of content it is 
 */
 
-#[derive(Insertable, Deserialize, Serialize, Debug)]
+#[derive(Insertable, Deserialize, Serialize, Validate, Debug)]
 #[diesel(table_name = content)]
 pub struct NewContent {
     content_type: ContentType,
+    #[validate(length(min = 1))]
     slug: String,
+    #[validate(length(min = 1))]
     title: String,
+    #[serde(deserialize_with = "empty_string_as_none")]
     content_desc: Option<String>,
+    #[validate(length(min = 1))]
     body: String,
 }
 
-#[derive(Queryable, AsChangeset, Identifiable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, AsChangeset, Identifiable, Serialize, Deserialize, Validate, Debug)]
 #[diesel(table_name = content)]
 #[diesel(treat_none_as_null = true)]
 pub struct Content {
     id: i32,
     content_type: ContentType,
+    #[validate(length(min = 1))]
     slug: String,
+    #[validate(length(min = 1))]
     title: String,
+    #[serde(deserialize_with = "empty_string_as_none")]
     content_desc: Option<String>,
+    #[validate(length(min = 1))]
     body: String,
     created_at: DateTime<Utc>,
     updated_at: DateTime<Utc>,

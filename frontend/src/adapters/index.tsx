@@ -8,7 +8,7 @@ const backend_axios = axios.create({
 
 // Converts dates in recived data from backend
 backend_axios.interceptors.response.use(originalResponse => {
-  handleDates(originalResponse.data);
+  handleDatesAndNull(originalResponse.data);
   return originalResponse;
 })
 
@@ -27,7 +27,7 @@ function isIsoDateString(value: any): boolean {
   return value && typeof value === "string" && isoDateFormat.test(value);
 }
 
-const handleDates = (body: any) => {
+const handleDatesAndNull = (body: any) => {
   if (body === null || body === undefined || typeof body !== "object") {
     return body;
   };
@@ -35,7 +35,8 @@ const handleDates = (body: any) => {
   for (const key of Object.keys(body)) {
     const value = body[key];
     if (isIsoDateString(value)) body[key] = parseISO(value);
-    else if (typeof value === "object") handleDates(value);
+    if (value === null) body[key] = undefined;
+    else if (typeof value === "object") handleDatesAndNull(value);
   }
 }
 
