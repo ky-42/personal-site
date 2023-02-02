@@ -16,6 +16,7 @@ const StyleTheme = {
   highlight: "#86C232",
   highlightDark: "#61892F",
   lightTone: "#6B6E70",
+  errorColour: "#ff0033",
   darkTone: "#474B4F",
   borderSize: "0.3rem",
   navHeight: "4.496rem"

@@ -16,16 +16,19 @@ interface projectManagmentProps {
   projectData: Project,
   setProjectData: React.Dispatch<
     SetReducer<Project> | UpdateReducer<Project, keyof Project>
-  >
+  >,
+  // Possiable errors in an input with key being feild and value being error message
+  validationErrors: Record<string, string>
 }
 
 // Form part for inputing data about the project specific parts of content
-const ProjectManagment = ({projectData, setProjectData}: projectManagmentProps) => {
+const ProjectManagment = ({projectData, setProjectData, validationErrors}: projectManagmentProps) => {
   
   return (
     <ProjectManagmentArea>
       <InputArea
         lableText={"Project Status"}
+        error={validationErrors["current_status"]}
         InputElement={
           <DropDown
             value={projectData.current_status}

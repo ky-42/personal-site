@@ -10,13 +10,20 @@ import { PageInfo, ContentPieceOptions, ContentAddParams, RequestState, RequestS
 const ContentPieceOperations = async <FetchType>(params: ContentPieceOptions): Promise<RequestState<FetchType>> => {
   try {
 
+    let headers: Record<string, string> = {};
+    
+    if (params.password) {
+      headers["authorization"] = params.password
+    } if (params.updated_content) {
+      headers['Content-Type'] = 'application/json';
+    }
+
     const response = await backend_axios.request<FetchType>({
       url: `/content/${params.slug}`,
       method: params.method,
-      data: params.updated_content,
-      headers: params.password ? {
-        authorization: params.password
-      } : undefined
+      // Done with JSON.stringify so undefined can be converted to null when serializing
+      data: JSON.stringify(params.updated_content, (_, v) => v === undefined ? null : v),
+      headers
     });
 
     return {requestStatus: RequestStatus.Success, requestedData: response.data};
@@ -49,10 +56,14 @@ const GetContentList = async ({page_info, content_filters}: ContentListInfo): Pr
 
 const ContentAdd = async ({ addContent, password }:ContentAddParams): Promise<RequestState<boolean>> => {
   try {
+    
+    // Done with JSON.stringify so undefined can be converted to null when serializing
+    const addContentJson = JSON.stringify(addContent, (_, v) => v === undefined ? null : v);
 
-    await backend_axios.post("/content/add", addContent, {
+    await backend_axios.post("/content/add", addContentJson, {
       headers: {
         authorization: password,
+        'Content-Type': 'application/json'
       }
     });
     

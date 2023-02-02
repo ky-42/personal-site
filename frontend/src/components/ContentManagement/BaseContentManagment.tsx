@@ -24,11 +24,13 @@ interface baseContentManagmentProps {
   baseContentData: Content,
   setBaseContentData: React.Dispatch<
     SetReducer<Content> | UpdateReducer<Content, keyof Content>
-  >
+  >,
+  // Possiable errors in an input with key being feild and value being error message
+  validationErrors: Record<string, string>
 }
 
 // Form part for inputing the data about the base content
-const BaseContentManagment = ({baseContentData, setBaseContentData}: baseContentManagmentProps) => {
+const BaseContentManagment = ({baseContentData, setBaseContentData, validationErrors}: baseContentManagmentProps) => {
 
   const [viewPreview, setViewPreview] = useState(false);
 
@@ -37,6 +39,7 @@ const BaseContentManagment = ({baseContentData, setBaseContentData}: baseContent
       <InputGroup>
         <InputArea
           lableText={"Title"}
+          error={validationErrors["title"]}
           InputElement={
             <ShortTextInput
               type="text"
@@ -54,6 +57,7 @@ const BaseContentManagment = ({baseContentData, setBaseContentData}: baseContent
           
         <InputArea
           lableText={"Slug"}
+          error={validationErrors["slug"]}
           InputElement={
             <ShortTextInput
               type="text"
@@ -71,10 +75,11 @@ const BaseContentManagment = ({baseContentData, setBaseContentData}: baseContent
 
         <InputArea
           lableText={"Description"}
+          error={validationErrors["content_desc"]}
           InputElement={
             <ShortTextInput
               type="text"
-              value={baseContentData.content_desc}
+              value={baseContentData.content_desc || ""}
               onChange={
                 e => setBaseContentData({
                   action: ReducerAction.Update,
@@ -89,6 +94,7 @@ const BaseContentManagment = ({baseContentData, setBaseContentData}: baseContent
 
     <InputArea
       lableText={"Content Body (Markdown)"}
+      error={validationErrors["body"]}
       InputElement={
         <LongTextInput
           value={baseContentData.body}

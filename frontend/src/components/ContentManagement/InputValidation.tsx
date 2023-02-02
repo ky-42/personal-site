@@ -1,33 +1,8 @@
-import { NewContent, NewBlog, NewProject, Content } from "../../types/Content";
-
-type abc =
-    {type: "content", data: NewContent} |
-    {type: "blog", data: NewBlog} |
-    {type: "project", data: NewProject};
+import { NewContent, NewBlog, NewProject } from "../../types/Content";
 
 
-export const validate = <T extends abc,>({type, data}: T): typeof data | Record<string, string> => {
-    let validationErrors: Record<string, string> = {};
-
-    switch (type) {
-        case "content":
-            validateContent(data, validationErrors);
-            break
-        case "blog":
-            validateBlog(data, validationErrors);
-            break
-        case "project":
-            validateProject(data, validationErrors);
-            break
-    }
-    
-    if (validationErrors.length) {
-        return validationErrors;
-    }
-    
-    return data;
-}
-const validateContent = (data: NewContent, validationErrors: Record<string, string>) => {
+// Ensures that data in a content object is valid
+export const validateContent = (data: NewContent, validationErrors: Record<string, string>) => {
     let key: keyof NewContent;
     for (key in data) {
         if (!emptyToUndefined(data[key])) {
@@ -42,7 +17,8 @@ const validateContent = (data: NewContent, validationErrors: Record<string, stri
     }
 }
 
-const validateBlog = (data: NewBlog, validationErrors: Record<string, string>) => {
+// Ensures that data in a blog object is valid
+export const validateBlog = (data: NewBlog, validationErrors: Record<string, string>) => {
     let key: keyof NewBlog;
     for (key in data) {
         if (!emptyToUndefined(data[key])) {
@@ -57,7 +33,8 @@ const validateBlog = (data: NewBlog, validationErrors: Record<string, string>) =
     }
 }
 
-const validateProject = (data: NewProject, validationErrors: Record<string, string>) => {
+// Ensures that data in a project object is valid
+export const validateProject = (data: NewProject, validationErrors: Record<string, string>) => {
     let key: keyof NewProject;
     for (key in data) {
         if (!emptyToUndefined(data[key])) {
@@ -72,6 +49,7 @@ const validateProject = (data: NewProject, validationErrors: Record<string, stri
     }
 }
 
+// Converts empty values to undefined
 const emptyToUndefined = (value: any): true | undefined => {
     if (value === undefined) {
         return undefined;
