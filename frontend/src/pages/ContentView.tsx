@@ -107,7 +107,7 @@ const ContentView = () => {
   
   const errorEffect = ({errorString}: {errorString: string}) => {
     if (errorString.startsWith("404")) {
-      navigate("/404");
+      navigate("/404", {replace: true});
     };
   };
 
