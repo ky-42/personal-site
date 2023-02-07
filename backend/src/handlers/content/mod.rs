@@ -68,8 +68,10 @@ pub async fn update_content(
     update_info: web::Json<FullContent>,
     _: AuthUser,
 ) -> Result<HttpResponse, AppError> {
-    let update_data = update_info.into_inner();
+    let mut update_data = update_info.into_inner();
     update_data.validate()?;
+    // Sets new edit date
+    update_data.base_content.update_edit_at();
     web::block(move || {
         let mut db_conn = db_pool.get()?;
         update_data.update(&mut db_conn)
