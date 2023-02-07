@@ -3,7 +3,7 @@ use super::deserialize_helpers::empty_string_as_none;
 use crate::schema::content;
 use validator::Validate;
 use serde::{self, Deserialize, Serialize};
-use chrono::{DateTime, Utc};
+use chrono::{self, DateTime, Utc};
 
 
 /* --------------------------- Base content models -------------------------- */
@@ -55,6 +55,10 @@ impl Content {
     
     pub fn get_content_type(&self) -> &super::ContentType {
         &self.content_type
+    }
+    
+    pub fn update_edit_at(&mut self) -> () {
+        self.updated_at = chrono::offset::Utc::now();
     }
 }
 
