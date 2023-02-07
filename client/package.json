@@ -1,6 +1,6 @@
 {
-  "name": "frontend",
-  "version": "0.6.1",
+  "name": "client",
+  "version": "0.7.0",
   "private": true,
   "proxy": "http://127.0.0.1:8080/",
   "dependencies": {
