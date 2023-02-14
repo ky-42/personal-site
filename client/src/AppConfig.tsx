@@ -1,9 +1,9 @@
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { BrowserRouter } from "react-router-dom";
-import useWindowSize from "react-use/lib/useWindowSize";
 import MobileContext from "./contexts/Mobile";
 import Routing from "./Routing";
 import { HelmetProvider } from "react-helmet-async";
+import useWindowSize from "./hooks/useWindowSize";
 
 // Size in px at which site starts using mobile features
 const MobileWidth = 700; 

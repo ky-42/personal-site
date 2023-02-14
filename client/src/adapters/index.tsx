@@ -3,7 +3,7 @@ import { parseISO } from "date-fns";
 
 // Sets the base url for all backend requests
 const backend_axios = axios.create({
-  baseURL: process.env.REACT_APP_API_URL
+  // baseURL: process.env.REACT_APP_API_URL
 })
 
 // Converts dates in recived data from backend

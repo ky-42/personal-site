@@ -15,7 +15,7 @@ const MetaData = ({title, description, type}: MetaDataProps) => {
       {/* ------------------------- Standard metadata tags ------------------------- */}
       <title>{title}</title>
       <meta name="description" content={description} />
-      <meta name="author" content={process.env.REACT_APP_AUTHOR_NAME} />
+      {/* <meta name="author" content={process.env.REACT_APP_AUTHOR_NAME} /> */}
 
       {/* ------------------------ Open graph metadata tags ------------------------ */}
       <meta property="og:type" content={type} />
@@ -24,7 +24,7 @@ const MetaData = ({title, description, type}: MetaDataProps) => {
       <meta property="og:locale" content="en_US" />
 
       {/* ------------------------------ Twitter tags ------------------------------ */}
-      <meta name="twitter:creator" content={process.env.REACT_APP_AUTHOR_NAME} />
+      {/* <meta name="twitter:creator" content={process.env.REACT_APP_AUTHOR_NAME} /> */}
       <meta name="twitter:card" content={type} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
