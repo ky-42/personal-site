@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserView } from 'react-device-detect';
 import styled from 'styled-components';
 
