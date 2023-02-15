@@ -1,0 +1,50 @@
+{
+    "name": "",
+    "productionUrl": "",
+    "analytics": {
+
+    },
+    "colours": {
+        "textColour": "#FFFFFF",
+        "backgroundColour": "#222629",
+        "highlight": "#86C232",
+        "highlightDark": "#61892F",
+        "lightTone": "#6B6E70",
+        "darkTone": "#474B4F",
+        "errorColour": "#FF0033"
+    },
+    "currentlyReading": {
+        "name": "",
+        "author": ""
+    },
+    "pages": {
+        "home": {
+            "mainParagraph": ""
+        },
+        "connect": {
+            "mainParagraph": "",
+            "email": "",
+            "links": [
+                {
+                    "name": "",
+                    "url": ""
+                }
+            ]
+        },
+        "about": {
+            "mainParagraph": "",
+            "toRead": [
+                {
+                    "name": "",
+                    "author": ""
+                }
+            ],
+            "finishedReading": [
+                {
+                    "name": "",
+                    "author": ""
+                }
+            ]
+        }
+    }
+}

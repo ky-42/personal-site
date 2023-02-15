@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 
 import CurrentlyReading from "../components/ContentShow/CurrentlyReading";
-import PageTitle from "../components/PageTitle";
+import PageTitle from "../components/Shared/PageTitle";
 import ReadingList from "../components/AboutMe/ReadingList";
-import MetaData from "../components/MetaData";
+import MetaData from "../components/Shared/MetaData";
 
 /* -------------------------------------------------------------------------- */
 

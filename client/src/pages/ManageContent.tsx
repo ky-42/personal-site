@@ -2,7 +2,7 @@ import React, { useReducer, useRef, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineRight } from "react-icons/ai";
 
-import PageTitle from "../components/PageTitle";
+import PageTitle from "../components/Shared/PageTitle";
 import { ActionTypes, ReducerAction, SetReducer, UpdateReducer } from "../types/ManageContent";
 import { Blog, Content, ContentType, FullContent, NewFullContent, Project, ProjectStatus } from "../types/Content";
 import InputArea from "../components/ContentManagement/InputArea";

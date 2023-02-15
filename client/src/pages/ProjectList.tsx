@@ -5,10 +5,10 @@ import {AiFillCaretLeft} from "react-icons/ai";
 import {GetContentList} from "../adapters/content";
 import {FullContentList, listOrder, RequestState, RequestStatus} from "../types/RequestContent";
 import {ContentType, ProjectStatus} from "../types/Content";
-import PageTitle from "../components/PageTitle";
+import PageTitle from "../components/Shared/PageTitle";
 import ContentListItem from '../components/ContentShow/ContentListItem';
 import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
-import MetaData from '../components/MetaData';
+import MetaData from '../components/Shared/MetaData';
 
 /* -------------------------------------------------------------------------- */
 

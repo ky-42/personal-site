@@ -1,11 +1,11 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import PageConfig from "./PageConfig";
-import * as Pages from "./pages/PagesExport";
+import PageConfig from "./config/PageConfig";
+import * as Pages from "./pages/_PagesExport";
 
 const Routing = () => {
   return (
-    // TODO create loading page that will only show if loading takes a certain amount of time
+    // TODO create loading pag<></>how if loading takes a certain amount of time
     <React.Suspense fallback={<></>}>
       <Routes>
         <Route path="/" element={<PageConfig />}>

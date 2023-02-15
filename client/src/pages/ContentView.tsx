@@ -6,8 +6,8 @@ import { ContentPieceOperations } from "../adapters/content";
 import { FullContent } from "../types/Content";
 import { RequestState, RequestStatus } from "../types/RequestContent";
 import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
-import MetaData from "../components/MetaData";
-import ContentBody from "../components/ContentBody";
+import MetaData from "../components/Shared/MetaData";
+import ContentBody from "../components/Shared/ContentBody";
 
 /* -------------------------------------------------------------------------- */
 

@@ -1,2 +1,5 @@
 
-## How to use content.toml
+### Supported links on connect
+- Github
+- LinkedIn
+- Twitter

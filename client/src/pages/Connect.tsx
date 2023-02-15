@@ -2,9 +2,9 @@ import { useState } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { AiFillGithub, AiFillTwitterCircle, AiFillLinkedin } from "react-icons/ai";
 
-import PageTitle from "../components/PageTitle";
+import PageTitle from "../components/Shared/PageTitle";
 import ExternalLink from "../components/Connect/ExternalLink";
-import MetaData from "../components/MetaData";
+import MetaData from "../components/Shared/MetaData";
 
 /* -------------------------------------------------------------------------- */
 

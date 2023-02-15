@@ -9,7 +9,7 @@ import ContentItem from "../components/Home/ContentItem";
 import { RequestState, listOrder, RequestStatus, PageInfo, ContentFilter, FullContentList } from "../types/RequestContent";
 import CurrentlyReading from '../components/ContentShow/CurrentlyReading';
 import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
-import MetaData from '../components/MetaData';
+import MetaData from '../components/Shared/MetaData';
 
 /* -------------------------------------------------------------------------- */
 

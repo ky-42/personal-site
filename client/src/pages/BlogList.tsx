@@ -4,9 +4,9 @@ import styled, {css} from "styled-components";
 import {GetContentList} from "../adapters/content";
 import {ContentType} from "../types/Content";
 import {FullContentList, listOrder, PageInfo, RequestState, RequestStatus} from "../types/RequestContent";
-import PageTitle from "../components/PageTitle";
+import PageTitle from "../components/Shared/PageTitle";
 import ContentListItem from "../components/ContentShow/ContentListItem";
-import MetaData from "../components/MetaData";
+import MetaData from "../components/Shared/MetaData";
 import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
 
 /* -------------------------------------------------------------------------- */

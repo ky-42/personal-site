@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
-import NavBar from "./components/NavBar/NavBar";
+import NavBar from "../components/NavBar/NavBar";
 import { Outlet, useLocation } from "react-router-dom";
 
 // Where all content will be displayed does not include nav bar

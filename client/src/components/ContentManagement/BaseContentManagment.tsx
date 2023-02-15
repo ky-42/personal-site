@@ -5,7 +5,7 @@ import { Content } from "../../types/Content";
 import { InputGroup, LongTextInput, ShortTextInput, StateButton } from "./InputElements";
 import InputArea from "./InputArea";
 import { ReducerAction, SetReducer, UpdateReducer } from "../../types/ManageContent";
-import ContentBody from "../ContentBody";
+import ContentBody from "../Shared/ContentBody";
 
 /* ---------------------------- Styled Components --------------------------- */
 

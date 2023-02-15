@@ -1,5 +1,5 @@
 import React from 'react';
-import AppConfig from './AppConfig';
+import AppConfig from './config/AppConfig';
 
 function App() {
   return (
