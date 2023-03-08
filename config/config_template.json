@@ -1,0 +1,66 @@
+
+{
+    "name": "",
+    "productionClientUrl": "",
+    "productionServerUrl": "",
+    "metaData": {
+        "description": "",
+        "analytics": {
+            "dataDomain": "",
+            "analyticsSrc": ""
+        }
+    },
+    "colours": {
+        "textColour": "",
+        "backgroundColour": "",
+        "highlight": "",
+        "highlightDark": "",
+        "lightTone": "",
+        "darkTone": "",
+        "errorColour": ""
+    },
+    "currentlyReading": {
+        "name": "",
+        "author": "",
+        "dateStarted": ""        
+    },
+    "pages": {
+        "home": {
+            "description": "",
+            "mainParagraph": ""
+        },
+        "connect": {
+            "description": "",
+            "mainParagraph": "",
+            "email": "",
+            "links": [
+                {
+                    "name": "",
+                    "url": ""
+                }
+            ]
+        },
+        "about": {
+            "description": "",
+            "mainParagraph": "",
+            "toRead": [
+                {
+                    "name": "",
+                    "author": ""
+                }
+            ],
+            "finishedReading": [
+                {
+                    "name": "",
+                    "author": ""
+                }
+            ]
+        },
+        "blogList": {
+            "description": ""
+        },
+        "projectList": {
+            "description": ""
+        }
+    }
+}
