@@ -15,9 +15,9 @@ Feel free to reach out if you have any questions! Also you can host the site wit
   - [x] Markdown support in blogs and projects
   - [x] Add support to update blog and project specific data
   - [x] SEO
-- [ ] 0.7.0
+- [x] 0.7.0
   - [x] Better content managment page
-  - [ ] Better support for personalizing the site so others can host and extend
+  - [x] Better support for personalizing the site so others can host and extend
 - [ ] 0.8.0
   - [ ] Support for linking blogs to others in a series
   - [ ] Support for linking blogs to others in a dev blog format
