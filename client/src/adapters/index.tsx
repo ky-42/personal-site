@@ -1,9 +1,11 @@
 import axios from "axios";
 import { parseISO } from "date-fns";
 
+import jsonConfig from "@config/config.json";
+
 // Sets the base url for all backend requests
 const backend_axios = axios.create({
-  // baseURL: process.env.REACT_APP_API_URL
+  baseURL: import.meta.env.DEV ? "http://localhost:8080" : jsonConfig.productionServerUrl
 })
 
 // Converts dates in recived data from backend
@@ -13,7 +15,6 @@ backend_axios.interceptors.response.use(originalResponse => {
 })
 
 export default backend_axios;
-
 
 // --------------------------------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------

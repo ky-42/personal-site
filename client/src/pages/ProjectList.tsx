@@ -10,6 +10,8 @@ import ContentListItem from '../components/ContentShow/ContentListItem';
 import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
 import MetaData from '../components/Shared/MetaData';
 
+import jsonConfig from '@config/config.json';
+
 /* -------------------------------------------------------------------------- */
 
 const ProjectListBody = styled.main``;
@@ -182,9 +184,13 @@ const ProjectList = () => {
     return (
       <ContentList>
         {
-          data.full_content_list.map(gotProjects => {
-            return <ContentListItem content={gotProjects} key={gotProjects.base_content.id} />
-          })
+          // Makes sure there are projects to display
+          data.content_count > 0 ?
+            data.full_content_list.map(gotProjects => {
+              return <ContentListItem content={gotProjects} key={gotProjects.base_content.id} />
+            })
+          :
+            <p>No Projects</p>
         }
       </ContentList>
     );
@@ -212,7 +218,7 @@ const ProjectList = () => {
     
       <MetaData
         title="My Projects | Kyle Denief"
-        description="A list of my projects! Some are finished and some arn't"
+        description={jsonConfig.pages.blogList.description}
         type="website"
       />
 

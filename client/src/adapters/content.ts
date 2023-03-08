@@ -42,14 +42,15 @@ interface ContentListInfo {
 
 const GetContentList = async ({page_info, content_filters}: ContentListInfo): Promise<RequestState<FullContentList>> => {
   try {
-
+    
     const response = await backend_axios.get<FullContentList>("/content/list", {
       params: {...page_info, ...content_filters}
     });
-
+    
     return {requestStatus: RequestStatus.Success, requestedData: response.data};
 
   } catch (err) {
+    console.log(err);
     return HandleAxiosError(err);
   }
 };
@@ -78,7 +79,11 @@ const ContentAdd = async ({ addContent, password }:ContentAddParams): Promise<Re
 
 const HandleAxiosError = (err: any): RequestState<any> => {
   if (axios.isAxiosError(err)) {
-    return {requestStatus: RequestStatus.Error, requestError: `${err.response?.status}: ${err.response?.statusText}`};
+    if (err.response?.status && err.response?.statusText) {
+      return {requestStatus: RequestStatus.Error, requestError: `${err.response?.status}: ${err.response?.statusText}`};
+    } else {
+      return {requestStatus: RequestStatus.Error, requestError: 'It worked on my machine mostly'};
+    }
   };
   return {requestStatus: RequestStatus.Error, requestError: "It worked on my machine"};
 };

@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
+import jsonConfig from "@config/config.json";
+
 /* -------------------------------------------------------------------------- */
 
 const CurrentlyReadingBody = styled.article`
@@ -30,12 +32,12 @@ const CurrentlyReading = () => {
   return(
     <CurrentlyReadingBody>
       <BookTitle>
-      The Pragmatic Programmer,
-      <br />
-      David Thomas & Andrew Hunt
+        {jsonConfig.currentlyReading.name},
+        <br />
+        {jsonConfig.currentlyReading.author}
       </BookTitle>
       <StartedDate>
-        Started: Dec. 11, 2022  
+        Started: {jsonConfig.currentlyReading.dateStarted}
       </StartedDate>
     </CurrentlyReadingBody>
   )

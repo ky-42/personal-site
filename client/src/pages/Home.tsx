@@ -11,6 +11,8 @@ import CurrentlyReading from '../components/ContentShow/CurrentlyReading';
 import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
 import MetaData from '../components/Shared/MetaData';
 
+import jsonConfig from '@config/config.json';
+
 /* -------------------------------------------------------------------------- */
 
 const HomeBody = styled.main`
@@ -132,24 +134,24 @@ const Home = () => {
     if (data.content_count > 0){
       return <ContentItem content={data.full_content_list[0]} />
     }
-    return <p>No new content</p>
+    return <p>No Content</p>
   }
-
+  
   return (
     <HomeBody>
 
       <MetaData
-        title="Kyle Denief"
-        description="Hi I'm Kyle Denief a university student and self taught programmer. Check out my latest project or blog if that interests you and have a good day!"
+        title={jsonConfig.name}
+        description={jsonConfig.pages.home.description}
         type="website"
       />
 
       <LeftPageColumn>
         <PageTitle>
-          Hi! I'm<br />Kyle Denief
+          Hi! I'm<br />{jsonConfig.name}
         </PageTitle>
         <IntroText>
-          I am a full-stack web developer with a strong foundation in front-end and back-end development, skilled in Python, TypeScript, and Rust. Self-taught and driven by a passion for computers and technology, I am continually improving my skills. I am currently enrolled in a computer science degree program at Memorial University of Newfoundland, where I aim to hone my abilities.
+          {jsonConfig.pages.home.mainParagraph}
         </IntroText>
 
         {/* Button to start asteroids game (only works on desktop) */}

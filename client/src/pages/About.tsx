@@ -6,6 +6,8 @@ import PageTitle from "../components/Shared/PageTitle";
 import ReadingList from "../components/AboutMe/ReadingList";
 import MetaData from "../components/Shared/MetaData";
 
+import jsonConfig from '@config/config.json';
+
 /* -------------------------------------------------------------------------- */
 
 const AboutBody = styled.main``;
@@ -45,36 +47,19 @@ const BookListDiv = styled.div`
 const About = () => {
   
   // Lists of books to be displayed
-  const FinishedReading = [
-    "Jim Henson: The Biography, Brian Jones",
-    "Atomic Habits, James Clear",
-    "The Wealthy Barber, David Chilton",
-    "What Color is Your Parachute?, Richard Bolles",
-    "Everyday Hockey Heroes, Bob McKenzie & Jim Lang",
-    "Splinter of the Mind's Eye, Alan Dean Foster",
-    "Business Adventures, John Brooks",
-    "Nineteen Eighty-Four, George Orwell",
-    "The Kite Runner, Khaled Hosseini",
-    "Ready Player Two, Ernest Cline",
-    "Ready Player One, Ernest Cline",
-    "Armada, Ernest Cline",
-    "Python Crash Course, Eric Matthes"
-  ];
+  const FinishedReading = jsonConfig.pages.about.finishedReading.map(v => {
+    return v.name + ", " + v.author
+  });
 
-  const ToRead = [
-    "The Pragmatic Programmer: Your Journey To Mastery, Andrew Hunt & David Thomas",
-    "How Not to Be Wrong, Jordan Ellenberg",
-    "Perilous Bounty, Tom Philpott",
-    "Red Rising, Pierce Brown",
-    "Structures: Or Why Things Don't Fall Down, J. E. Gordon",
-    "Blackwater: The Rise of the World's Most Powerful Mercenary Army, Jeremy Scahill",
-  ]
+  const ToRead = jsonConfig.pages.about.toRead.map(v => {
+    return v.name + ", " + v.author
+  });
 
   return (
     <AboutBody>
       <MetaData
-        title="About Me | Kyle Denief"
-        description="Hi I'm Kyle Denief I'm a university student at Memorial University of Newfoundland and I'm a programmer!"
+        title={`About Me | ${jsonConfig.name}`}
+        description={jsonConfig.pages.about.description}
         type="website"
       />
 
@@ -83,7 +68,7 @@ const About = () => {
           About Me
         </PageTitle>
         <AboutMeText>
-          As a first-year computer science student at Memorial University of Newfoundland, I am highly motivated to learn and excel in the field of technology. In addition to my coursework, I have self-taught myself a range of programming languages and technologies, including Python, TypeScript, SQL, Docker, Git, Rust, and Linux. I have also gained experience with popular web development frameworks such as React, Flask, and Actix Web. My passion for computers and technology has driven me to continually improve my skills and knowledge. I am proud to have had numerous academic achievements, including winning high school subject awards, being on the honor roll, and receiving a scholarship from the James R. Hoffa Memorial Scholarship Fund. Outside of my studies, I enjoy reading, sports, and fishing. I have played a variety of sports throughout my life, including hockey, baseball, and basketball. I am excited to see where my studies and self-learning will take me in the future.
+          {jsonConfig.pages.about.mainParagraph} 
         </AboutMeText>
       </AboutSection>
 

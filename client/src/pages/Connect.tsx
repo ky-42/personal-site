@@ -6,6 +6,8 @@ import PageTitle from "../components/Shared/PageTitle";
 import ExternalLink from "../components/Connect/ExternalLink";
 import MetaData from "../components/Shared/MetaData";
 
+import jsonConfig from '@config/config.json';
+
 /* -------------------------------------------------------------------------- */
 
 const ConnectBody = styled.main`
@@ -33,6 +35,14 @@ const ExternalLinks = styled.section`
   row-gap: 5.0rem;
   column-gap: 5.0rem;
 `;
+
+/* -------------------------- Icons from link types ------------------------- */
+
+const iconMatch = {
+  'github': <AiFillGithub />,
+  'twitter': <AiFillTwitterCircle />,
+  'linkedin': <AiFillLinkedin />
+}
 
 /* ------------------------- Email copy notification ------------------------ */
 
@@ -76,21 +86,21 @@ const Connect = () => {
   return (
     <ConnectBody>
       <MetaData
-        title="Connect With Me | Kyle Denief"
-        description="Hi I'm Kyle Denief if you want to chat the best way to contact me is email!"
+        title={`Connect With Me | ${jsonConfig.name}`}
+        description={jsonConfig.pages.connect.description}
         type="website"
       />
     
       <PageTitle>
-        Connect With Me        
+        Connect With Me
       </PageTitle>
       <BodyText>
-      Hi! Thanks for your interest in connecting with me. I am open to communication for any reason, and I welcome the opportunity to have a conversation. You can reach me on LinkedIn, Twitter, or GitHub, but for the quickest response, please email me at,
+        {jsonConfig.pages.connect.mainParagraph}
       </BodyText>
 
       <Email onClick={() => {
         // Copies email and sets state
-        navigator.clipboard.writeText("ky42@protonmail.com");
+        navigator.clipboard.writeText(jsonConfig.pages.connect.email);
         setCopyNotification(true);
         // Sets timer to change state when animation is finished
         if (!copyNotification) {
@@ -101,9 +111,12 @@ const Connect = () => {
       </Email>
 
       <ExternalLinks>
-        <ExternalLink LinkTo="https://github.com/ky-42" Icon={<AiFillGithub />} />
-        <ExternalLink LinkTo="https://twitter.com/ky421_" Icon={<AiFillTwitterCircle />} />
-        <ExternalLink LinkTo="https://www.linkedin.com/in/kyle-denief-132059230/" Icon={<AiFillLinkedin />} />
+        {
+          // Adds any number of links defined in config.json
+          jsonConfig.pages.connect.links.map(linkData => {
+            return <ExternalLink LinkTo={linkData.url} Icon={iconMatch[linkData.name as keyof typeof iconMatch]} />;
+          })
+        }
       </ExternalLinks>
 
       {/* Copy notification element */}

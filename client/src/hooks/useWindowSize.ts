@@ -1,5 +1,6 @@
 import react, { useEffect, useState } from "react";
 
+// Hook to keep track of window size changes
 const useWindowSize = () => {
     const [currentSize, setCurrentSize] = useState({
         "width": window.innerWidth,

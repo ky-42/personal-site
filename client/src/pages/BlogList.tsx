@@ -9,6 +9,8 @@ import ContentListItem from "../components/ContentShow/ContentListItem";
 import MetaData from "../components/Shared/MetaData";
 import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
 
+import jsonConfig from '@config/config.json';
+
 /* -------------------------------------------------------------------------- */
 
 const BlogListBody = styled.main`
@@ -106,12 +108,16 @@ const BlogList = () => {
     return (
       <>
         {
-          data.full_content_list.map(gotBlog => {
-            return <ContentListItem
-              content={gotBlog}
-              key={gotBlog.base_content.id}
-            />
-          ;})
+          // Makes sure there are blogs to display 
+          data.content_count > 0 ?
+            data.full_content_list.map(gotBlog => {
+              return <ContentListItem
+                content={gotBlog}
+                key={gotBlog.base_content.id}
+              />
+            ;})
+          :
+            <p>No Blogs</p>
         }
       </>
     )
@@ -156,7 +162,7 @@ const BlogList = () => {
 
       <MetaData
         title="Blogs | Kyle Denief"
-        description="A list of the blogs I've created. Most are about my experiences programming but theres a little bit of everything!"
+        description={jsonConfig.pages.blogList.description}
         type="website"
       />
 

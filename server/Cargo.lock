@@ -264,28 +264,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
-name = "backend"
-version = "0.6.2"
-dependencies = [
- "actix-cors",
- "actix-http",
- "actix-web",
- "chrono",
- "derive_more",
- "diesel",
- "diesel_migrations",
- "dotenv",
- "env_logger",
- "lipsum",
- "log",
- "r2d2",
- "rand",
- "serde",
- "serde_json",
- "validator",
-]
-
-[[package]]
 name = "base64"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1241,6 +1219,28 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
+]
+
+[[package]]
+name = "server"
+version = "0.7.0"
+dependencies = [
+ "actix-cors",
+ "actix-http",
+ "actix-web",
+ "chrono",
+ "derive_more",
+ "diesel",
+ "diesel_migrations",
+ "dotenv",
+ "env_logger",
+ "lipsum",
+ "log",
+ "r2d2",
+ "rand",
+ "serde",
+ "serde_json",
+ "validator",
 ]
 
 [[package]]
