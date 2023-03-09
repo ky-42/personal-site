@@ -1,0 +1,2 @@
+ALTER TABLE project ADD COLUMN github_link TEXT;
+ALTER TABLE project ADD COLUMN url TEXT;

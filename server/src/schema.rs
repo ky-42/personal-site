@@ -16,8 +16,9 @@ diesel::table! {
 
     blog (id) {
         id -> Int4,
-        tags -> Nullable<Array<Nullable<Text>>>,
         content_type -> Contenttype,
+        related_project_id -> Nullable<Int4>,
+        devblog_id -> Nullable<Int4>,
     }
 }
 
@@ -38,6 +39,13 @@ diesel::table! {
 }
 
 diesel::table! {
+    devblog (id) {
+        id -> Int4,
+        title -> Text,
+    }
+}
+
+diesel::table! {
     use diesel::sql_types::*;
     use super::sql_types::Projectstatus;
     use super::sql_types::Contenttype;
@@ -46,11 +54,36 @@ diesel::table! {
         id -> Int4,
         current_status -> Projectstatus,
         content_type -> Contenttype,
+        github_link -> Nullable<Text>,
+        url -> Nullable<Text>,
     }
 }
+
+diesel::table! {
+    tag (id) {
+        id -> Int4,
+        tag_title -> Text,
+    }
+}
+
+diesel::table! {
+    tag_link (id) {
+        id -> Int4,
+        blog_id -> Int4,
+        tag_id -> Int4,
+    }
+}
+
+diesel::joinable!(blog -> devblog (id));
+diesel::joinable!(blog -> project (id));
+diesel::joinable!(tag_link -> blog (id));
+diesel::joinable!(tag_link -> tag (id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     blog,
     content,
+    devblog,
     project,
+    tag,
+    tag_link,
 );

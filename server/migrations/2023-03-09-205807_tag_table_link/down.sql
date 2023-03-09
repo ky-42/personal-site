@@ -1,0 +1,4 @@
+ALTER TABLE blog ADD COLUMN tags TEXT[];
+
+DROP TABLE tag_link;
+DROP TABLE tag;
