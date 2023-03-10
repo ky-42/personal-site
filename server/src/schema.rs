@@ -56,6 +56,7 @@ diesel::table! {
         content_type -> Contenttype,
         github_link -> Nullable<Text>,
         url -> Nullable<Text>,
+        start_date -> Nullable<Timestamptz>,
     }
 }
 
