@@ -1,6 +1,6 @@
 use diesel::{
     prelude::*,
-    insert_into,
+    insert_into
 };
 
 use crate::{handlers::{errors::AppError, route_data::{self, ShowOrder}}, db::models::content::FullContent};
@@ -114,6 +114,12 @@ impl super::FullContent {
 
 /* -------------------------------------------------------------------------- */
 
+/* -------------------------------- IMPORTANT ------------------------------- */
+// I am aware just how bad the following code is. Alot of code is repeated
+// in 4 places which is just terible. I tried to fix this but it was difficult
+// to deal with diesel. If anyone wants to try to fix this please do so. Anyways
+// I really do realize how bad this is!
+
 impl super::FullContentList {
     pub fn list(
         page_info: route_data::PageInfo,
@@ -137,11 +143,6 @@ impl super::FullContentList {
                     .filter(content::content_type.eq(super::ContentType::Blog))
                     .into_boxed();
 
-                // Filters by tag
-                if let Some(tag) = &filters.blog_tag {
-                    blog_list = blog_list.filter(blog::tags.contains(vec![tag]));
-                };
-                
                 // Does paging of query
                 blog_list = blog_list
                     .limit(page_info.content_per_page)
@@ -151,6 +152,7 @@ impl super::FullContentList {
                 blog_list = match page_info.show_order {
                     ShowOrder::Newest => blog_list.order_by(content::created_at.desc()),
                     ShowOrder::Oldest => blog_list.order_by(content::created_at.asc()),
+                    _ => blog_list.order_by(content::created_at.desc())
                 };
             
                 // Runs query to get the list of blogs 
@@ -201,6 +203,8 @@ impl super::FullContentList {
                 project_list = match page_info.show_order {
                     ShowOrder::Newest => project_list.order_by(content::created_at.desc()),
                     ShowOrder::Oldest => project_list.order_by(content::created_at.asc()),
+                    ShowOrder::ProjectStartNewest => project_list.order_by(project::start_date.desc()),
+                    ShowOrder::ProjectStartOldest => project_list.order_by(project::start_date.asc())
                 };
             
                 // Runs query to get the list of projects 
@@ -243,15 +247,10 @@ impl super::FullContentList {
                 use crate::schema::blog;
 
                 // Creates inital joined query with blog table and content table
-                let mut blog_list = content::table
+                let blog_list = content::table
                     .inner_join(blog::table.on(blog::id.eq(content::id)))
                     .filter(content::content_type.eq(super::ContentType::Blog))
                     .into_boxed();
-
-                // Filters by blog tag
-                if let Some(tag) = &filters.blog_tag {
-                    blog_list = blog_list.filter(blog::tags.contains(vec![tag]));
-                };
                 
                 // Get and return the count of the query
                 Ok(blog_list.count().get_result(db_conn)?)
@@ -275,6 +274,132 @@ impl super::FullContentList {
                 // Get and return the count of the query
                 Ok(project_list.count().get_result(db_conn)?)
             }
+        }
+    }
+}
+
+/* ----------------------------- Tag Operations ----------------------------- */
+
+
+mod tag_ops {
+    use super::*;
+    use crate::{schema::tag, db::models::content::extra::Tag};
+
+    trait TagString {
+        fn to_tag(self, blog_id: i32, db_conn: &mut PgConnection) -> Result<(), AppError>;
+        fn remove_tag(self, blog_id: i32, db_conn: &mut PgConnection) -> Result<usize, AppError>;
+        fn get_tag(self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError>; 
+        fn search_tag(self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError>;
+    }
+
+    impl TagString for String {
+        fn to_tag(
+            self,
+            blog_id: i32,
+            db_conn: &mut PgConnection
+        ) -> Result<(), AppError> {
+            insert_into(tag::table)
+                .values((tag::title.eq(self), tag::blog_id.eq(blog_id)))
+                .execute(db_conn)?;
+
+            Ok(())
+        }
+    
+        fn remove_tag(
+            self,
+            blog_id: i32,
+            db_conn: &mut PgConnection
+        ) -> Result<usize, AppError> {
+            Ok(diesel::delete(tag::table.filter(tag::title.eq(self).and(tag::blog_id.eq(blog_id)))).execute(db_conn)?)
+        }
+        
+        fn get_tag(self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError> {
+            Ok(tag::table
+                .filter(tag::title.ilike(self))
+                .get_results::<Tag>(db_conn)?)
+        }
+        
+        fn search_tag(self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError> {
+            Ok(tag::table
+                .filter(tag::title.ilike(format!("{}{}{}", "%", self, "%")))
+                .get_results::<Tag>(db_conn)?)
+        }
+    }
+
+    impl Tag {
+        fn remove_tags(
+            blog_id: i32,
+            db_conn: &mut PgConnection
+        ) -> Result<usize, AppError> {
+            Ok(diesel::delete(tag::table.filter(tag::blog_id.eq(blog_id))).execute(db_conn)?)
+        }
+        
+        fn add_tags(
+            tag_strings: Vec<String>,
+            blog_id: i32,
+            db_conn: &mut PgConnection
+        ) -> Result<(), AppError> {
+            for string_tag in tag_strings {
+                string_tag.to_tag(blog_id, db_conn)?;
+            }        
+            
+            Ok(())
+        }
+    }
+}
+
+/* --------------------------- Devblog Operations --------------------------- */
+
+mod devblog_ops {
+    use super::*;
+    use crate::{schema::devblog, db::models::content::extra::{Devblog, NewDevblog}};
+    trait DevblogString {
+        fn get_devblog(self, db_conn: &mut PgConnection) -> Result<Devblog, AppError>;
+        fn search_title(self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError>;
+    }
+    
+    impl DevblogString for String {
+        fn get_devblog(self, db_conn: &mut PgConnection) -> Result<Devblog, AppError> {
+            Ok(devblog::table
+                .filter(devblog::title.eq(self))
+                .get_result(db_conn)?)
+        }
+        
+        fn search_title(self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError> {
+            Ok(devblog::table
+                .filter(devblog::title.ilike(format!("{}{}{}", "%", self, "%")))
+                .get_results::<Devblog>(db_conn)?)
+        }
+    }
+    
+    impl NewDevblog {
+        fn add (
+            &self,
+            db_conn: &mut PgConnection
+        ) -> Result<i32, AppError> {
+            let results: i32 = insert_into(devblog::table)
+                .values(self)
+                .returning(devblog::id)
+                .get_result(db_conn)?;
+
+            Ok(results)
+        }
+    }
+    
+    impl Devblog {
+        fn delete (
+            title: String,
+            db_conn: &mut PgConnection
+        ) -> Result<usize, AppError> {
+            Ok(diesel::delete(devblog::table.filter(devblog::title.eq(title))).execute(db_conn)?)
+        }
+        
+        fn update(
+            &self,
+            db_conn: &mut PgConnection
+        ) -> Result<(), AppError> {
+            self.save_changes::<Devblog>(db_conn)?;
+            Ok(())
         }
     }
 }

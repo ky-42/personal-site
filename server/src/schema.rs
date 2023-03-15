@@ -63,22 +63,14 @@ diesel::table! {
 diesel::table! {
     tag (id) {
         id -> Int4,
-        tag_title -> Text,
-    }
-}
-
-diesel::table! {
-    tag_link (id) {
-        id -> Int4,
         blog_id -> Int4,
-        tag_id -> Int4,
+        title -> Text,
     }
 }
 
 diesel::joinable!(blog -> devblog (id));
 diesel::joinable!(blog -> project (id));
-diesel::joinable!(tag_link -> blog (id));
-diesel::joinable!(tag_link -> tag (id));
+diesel::joinable!(tag -> blog (blog_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     blog,
@@ -86,5 +78,4 @@ diesel::allow_tables_to_appear_in_same_query!(
     devblog,
     project,
     tag,
-    tag_link,
 );

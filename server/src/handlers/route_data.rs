@@ -11,6 +11,8 @@ pub struct DbRows {
 pub enum ShowOrder {
     Newest,
     Oldest,
+    ProjectStartNewest,
+    ProjectStartOldest
 }
 
 #[derive(Deserialize, Debug)]

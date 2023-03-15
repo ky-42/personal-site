@@ -1,19 +1,11 @@
 CREATE TABLE tag (
     id SERIAL PRIMARY KEY,
-    tag_title TEXT NOT NULL
-);
-
-CREATE TABLE tag_link (
-    id SERIAL PRIMARY KEY,
     blog_id INTEGER NOT NULL,
-    tag_id INTEGER NOT NULL,
-    CONSTRAINT blog_tags_link FOREIGN KEY (id)
+    title TEXT NOT NULL,
+    CONSTRAINT blog_tag_link FOREIGN KEY (blog_id)
         REFERENCES blog (id)
             ON DELETE CASCADE,
-    CONSTRAINT tag_tags_link FOREIGN KEY (id)
-        REFERENCES tag (id)
-            ON DELETE CASCADE
+    CONSTRAINT unique_blog_tag UNIQUE (blog_id, title)
 );
-
 
 ALTER TABLE blog DROP COLUMN tags;

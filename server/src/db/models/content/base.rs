@@ -29,8 +29,7 @@ pub struct NewContent {
 }
 
 #[derive(Queryable, AsChangeset, Identifiable, Serialize, Deserialize, Validate, Debug)]
-#[diesel(table_name = content)]
-#[diesel(treat_none_as_null = true)]
+#[diesel(table_name = content, treat_none_as_null = true)]
 pub struct Content {
     id: i32,
     content_type: ContentType,
