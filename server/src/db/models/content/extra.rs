@@ -122,6 +122,12 @@ pub struct Devblog {
     title: String
 }
 
+impl Devblog {
+    pub fn get_id(&self) -> i32 {
+        self.id
+    }
+}
+
 /* ---------------------------- Models data types --------------------------- */
 
 // Represtent the current status of a project

@@ -53,8 +53,8 @@ pub struct ContentFilter {
     content_type: ContentType,
     project_status: Option<extra::CurrentStatus>,
     blog_tag: Option<String>,
-    search: Option<String>,
-    devblog_id: Option<i32>
+    devblog_id: Option<i32>,
+    search: Option<String>
 }
 
 /* ---------------------------- Models data types --------------------------- */

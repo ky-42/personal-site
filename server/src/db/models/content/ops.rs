@@ -5,6 +5,7 @@ use diesel::{
 
 use crate::{handlers::{errors::AppError, route_data::{self, ShowOrder}}, db::models::content::FullContent};
 use super::{base, extra};
+use devblog_ops::DevblogString;
 
 /* -------------------------------------------------------------------------- */
 
@@ -154,13 +155,58 @@ impl super::FullContentList {
                     ShowOrder::Oldest => blog_list.order_by(content::created_at.asc()),
                     _ => blog_list.order_by(content::created_at.desc())
                 };
+
+                // Returns list of blogs that have the same devblog assosication
+                if let Some(devblog_id) = filters.devblog_id {
+                    blog_list = blog_list.filter(blog::devblog_id.eq(devblog_id));
+                };
+                
+                // TODO Need to test this
+                // Gets all blogs with a specific tag
+                if let Some(tag_title) = &filters.blog_tag {
+                    use crate::schema::tag;
+                    
+                    let sub_query = tag::table
+                        .select(0.into_sql::<diesel::sql_types::Integer>())
+                        .filter(tag::blog_id.eq(blog::id))
+                        .filter(tag::title.eq(tag_title));
+
+                    blog_list = blog_list.filter(diesel::dsl::exists(sub_query));
+                };
+                
+                // Searches tags, devblogs, title, and description that look like a term
+                // This is very basic search and could most definitly be improved 
+                if let Some(search_term) = &filters.search {
+                    use crate::schema::tag;
+                    let assosiated_devblogs = search_term.search_devblogs(db_conn)?;
+                    
+                    let mut devblog_ids: Vec<i32> = vec![];
+                    
+                    for devblog_obj in assosiated_devblogs {
+                        devblog_ids.push(devblog_obj.get_id());
+                    };
+                    
+                    blog_list = blog_list.filter(blog::devblog_id.eq_any(devblog_ids));
+                    
+                    let tag_sub_query = tag::table
+                        .select(0.into_sql::<diesel::sql_types::Integer>())
+                        .filter(tag::blog_id.eq(blog::id))
+                        .filter(tag::title.ilike(format!("{}{}{}", "%", search_term, "%")));
+
+                    blog_list = blog_list.or_filter(diesel::dsl::exists(tag_sub_query));
+                    
+                    blog_list = blog_list
+                        .or_filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
+                        .or_filter(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")));
+                    
+                };
             
                 // Runs query to get the list of blogs 
                 let list: Vec<(base::Content, extra::Blog)> = blog_list.load::<(base::Content, extra::Blog)>(db_conn)?;
                 
                 // Combines the base content and the blog content into one stuct
                 // and puts it in a list
-                let mut full_content_list:Vec<FullContent> = Vec::new();
+                let mut full_content_list: Vec<FullContent> = Vec::new();
 
                 for content_item in list {
                     full_content_list.push(
@@ -188,11 +234,6 @@ impl super::FullContentList {
                     .filter(content::content_type.eq(super::ContentType::Project))
                     .into_boxed();
 
-                // Filters by project status
-                if let Some(status) = &filters.project_status {
-                    project_list = project_list.filter(project::current_status.eq(status));
-                };
-                
                 // Changes order of project returned
                 project_list = project_list
                     .limit(page_info.content_per_page)
@@ -205,6 +246,18 @@ impl super::FullContentList {
                     ShowOrder::Oldest => project_list.order_by(content::created_at.asc()),
                     ShowOrder::ProjectStartNewest => project_list.order_by(project::start_date.desc()),
                     ShowOrder::ProjectStartOldest => project_list.order_by(project::start_date.asc())
+                };
+
+                // Filters by project status
+                if let Some(status) = &filters.project_status {
+                    project_list = project_list.filter(project::current_status.eq(status));
+                };
+                
+                // Searches projects based on title and description
+                if let Some(search_term) = &filters.search {
+                    project_list = project_list
+                        .filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
+                        .or_filter(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")));
                 };
             
                 // Runs query to get the list of projects 
@@ -247,11 +300,56 @@ impl super::FullContentList {
                 use crate::schema::blog;
 
                 // Creates inital joined query with blog table and content table
-                let blog_list = content::table
+                let mut blog_list = content::table
                     .inner_join(blog::table.on(blog::id.eq(content::id)))
                     .filter(content::content_type.eq(super::ContentType::Blog))
                     .into_boxed();
                 
+                // Returns list of blogs that have the same devblog assosication
+                if let Some(devblog_id) = filters.devblog_id {
+                    blog_list = blog_list.filter(blog::devblog_id.eq(devblog_id));
+                };
+                
+                // TODO Need to test this
+                // Gets all blogs with a specific tag
+                if let Some(tag_title) = &filters.blog_tag {
+                    use crate::schema::tag;
+                    
+                    let sub_query = tag::table
+                        .select(0.into_sql::<diesel::sql_types::Integer>())
+                        .filter(tag::blog_id.eq(blog::id))
+                        .filter(tag::title.eq(tag_title));
+
+                    blog_list = blog_list.filter(diesel::dsl::exists(sub_query));
+                };
+                
+                // Searches tags, devblogs, title, and description that look like a term
+                // This is very basic search and could most definitly be improved 
+                if let Some(search_term) = &filters.search {
+                    use crate::schema::tag;
+                    let assosiated_devblogs = search_term.search_devblogs(db_conn)?;
+                    
+                    let mut devblog_ids: Vec<i32> = vec![];
+                    
+                    for devblog_obj in assosiated_devblogs {
+                        devblog_ids.push(devblog_obj.get_id());
+                    };
+                    
+                    blog_list = blog_list.filter(blog::devblog_id.eq_any(devblog_ids));
+                    
+                    let tag_sub_query = tag::table
+                        .select(0.into_sql::<diesel::sql_types::Integer>())
+                        .filter(tag::blog_id.eq(blog::id))
+                        .filter(tag::title.ilike(format!("{}{}{}", "%", search_term, "%")));
+
+                    blog_list = blog_list.or_filter(diesel::dsl::exists(tag_sub_query));
+                    
+                    blog_list = blog_list
+                        .or_filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
+                        .or_filter(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")));
+                    
+                };
+
                 // Get and return the count of the query
                 Ok(blog_list.count().get_result(db_conn)?)
                 
@@ -271,6 +369,13 @@ impl super::FullContentList {
                     project_list = project_list.filter(project::current_status.eq(status));
                 };
                 
+                // Searches projects based on title and description
+                if let Some(search_term) = &filters.search {
+                    project_list = project_list
+                        .filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
+                        .or_filter(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")));
+                };
+
                 // Get and return the count of the query
                 Ok(project_list.count().get_result(db_conn)?)
             }
@@ -285,16 +390,16 @@ mod tag_ops {
     use super::*;
     use crate::{schema::tag, db::models::content::extra::Tag};
 
-    trait TagString {
-        fn to_tag(self, blog_id: i32, db_conn: &mut PgConnection) -> Result<(), AppError>;
-        fn remove_tag(self, blog_id: i32, db_conn: &mut PgConnection) -> Result<usize, AppError>;
-        fn get_tag(self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError>; 
-        fn search_tag(self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError>;
+    pub trait TagString {
+        fn to_tag(&self, blog_id: i32, db_conn: &mut PgConnection) -> Result<(), AppError>;
+        fn remove_tag(&self, blog_id: i32, db_conn: &mut PgConnection) -> Result<usize, AppError>;
+        fn get_tags(&self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError>; 
+        fn search_tag(&self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError>;
     }
 
     impl TagString for String {
         fn to_tag(
-            self,
+            &self,
             blog_id: i32,
             db_conn: &mut PgConnection
         ) -> Result<(), AppError> {
@@ -306,20 +411,20 @@ mod tag_ops {
         }
     
         fn remove_tag(
-            self,
+            &self,
             blog_id: i32,
             db_conn: &mut PgConnection
         ) -> Result<usize, AppError> {
             Ok(diesel::delete(tag::table.filter(tag::title.eq(self).and(tag::blog_id.eq(blog_id)))).execute(db_conn)?)
         }
         
-        fn get_tag(self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError> {
+        fn get_tags(&self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError> {
             Ok(tag::table
                 .filter(tag::title.ilike(self))
                 .get_results::<Tag>(db_conn)?)
         }
         
-        fn search_tag(self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError> {
+        fn search_tag(&self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError> {
             Ok(tag::table
                 .filter(tag::title.ilike(format!("{}{}{}", "%", self, "%")))
                 .get_results::<Tag>(db_conn)?)
@@ -353,19 +458,19 @@ mod tag_ops {
 mod devblog_ops {
     use super::*;
     use crate::{schema::devblog, db::models::content::extra::{Devblog, NewDevblog}};
-    trait DevblogString {
-        fn get_devblog(self, db_conn: &mut PgConnection) -> Result<Devblog, AppError>;
-        fn search_title(self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError>;
+    pub trait DevblogString {
+        fn get_devblog(&self, db_conn: &mut PgConnection) -> Result<Devblog, AppError>;
+        fn search_devblogs(&self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError>;
     }
     
     impl DevblogString for String {
-        fn get_devblog(self, db_conn: &mut PgConnection) -> Result<Devblog, AppError> {
+        fn get_devblog(&self, db_conn: &mut PgConnection) -> Result<Devblog, AppError> {
             Ok(devblog::table
                 .filter(devblog::title.eq(self))
                 .get_result(db_conn)?)
         }
         
-        fn search_title(self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError> {
+        fn search_devblogs(&self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError> {
             Ok(devblog::table
                 .filter(devblog::title.ilike(format!("{}{}{}", "%", self, "%")))
                 .get_results::<Devblog>(db_conn)?)
