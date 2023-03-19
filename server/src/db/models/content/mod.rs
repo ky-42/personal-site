@@ -52,6 +52,8 @@ pub enum ContentOrder {
 pub struct ContentFilter {
     content_type: ContentType,
     project_status: Option<extra::CurrentStatus>,
+    // Id for project to get blogs of 
+    project_blogs: Option<i32>,
     blog_tag: Option<String>,
     devblog_id: Option<i32>,
     search: Option<String>

@@ -43,6 +43,24 @@ impl super::NewFullContent {
 /* -------------------------------------------------------------------------- */
 
 impl super::FullContent {
+    
+    pub fn id_to_slug(
+        id: i32,
+        db_conn: &mut PgConnection
+    ) -> Result<String, AppError> {
+        use crate::schema::content;
+
+        Ok(content::table.find(id).select(content::slug).first(db_conn)?)
+    }
+
+    pub fn slug_to_id(
+        slug: &String,
+        db_conn: &mut PgConnection        
+    ) -> Result<i32, AppError> {
+        use crate::schema::content;
+
+        Ok(content::table.filter(content::slug.eq(slug)).select(content::id).first(db_conn)?)
+    }
 
     pub fn update(
         self,
@@ -155,9 +173,14 @@ impl super::FullContentList {
                     ShowOrder::Oldest => blog_list.order_by(content::created_at.asc()),
                     _ => blog_list.order_by(content::created_at.desc())
                 };
+                
+                // Get blogs only related to a certain project
+                if let Some(project_id) = &filters.project_blogs {
+                    blog_list = blog_list.filter(blog::related_project_id.eq(project_id));
+                }
 
                 // Returns list of blogs that have the same devblog assosication
-                if let Some(devblog_id) = filters.devblog_id {
+                if let Some(devblog_id) = &filters.devblog_id {
                     blog_list = blog_list.filter(blog::devblog_id.eq(devblog_id));
                 };
                 
@@ -178,6 +201,9 @@ impl super::FullContentList {
                 // This is very basic search and could most definitly be improved 
                 if let Some(search_term) = &filters.search {
                     use crate::schema::tag;
+                    
+                    // Searches for devblogs for term and if found adds blogs under
+                    // the devblog to results
                     let assosiated_devblogs = search_term.search_devblogs(db_conn)?;
                     
                     let mut devblog_ids: Vec<i32> = vec![];
@@ -188,6 +214,7 @@ impl super::FullContentList {
                     
                     blog_list = blog_list.filter(blog::devblog_id.eq_any(devblog_ids));
                     
+                    // Checks for tags that match search and are assosiated with blog
                     let tag_sub_query = tag::table
                         .select(0.into_sql::<diesel::sql_types::Integer>())
                         .filter(tag::blog_id.eq(blog::id))
@@ -198,6 +225,16 @@ impl super::FullContentList {
                     blog_list = blog_list
                         .or_filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
                         .or_filter(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")));
+                    
+                    // Checks projects for matching search and if project is related to
+                    // any blogs adds those to the search results
+                    let matching_project_ids: Vec<i32> = content::table
+                        .filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
+                        .or_filter(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")))
+                        .select(content::id)
+                        .get_results(db_conn)?;
+                    
+                    blog_list = blog_list.or_filter(blog::related_project_id.eq_any(matching_project_ids));
                     
                 };
             
@@ -305,8 +342,13 @@ impl super::FullContentList {
                     .filter(content::content_type.eq(super::ContentType::Blog))
                     .into_boxed();
                 
+                // Get blogs only related to a certain project
+                if let Some(project_id) = &filters.project_blogs {
+                    blog_list = blog_list.filter(blog::related_project_id.eq(project_id));
+                }
+
                 // Returns list of blogs that have the same devblog assosication
-                if let Some(devblog_id) = filters.devblog_id {
+                if let Some(devblog_id) = &filters.devblog_id {
                     blog_list = blog_list.filter(blog::devblog_id.eq(devblog_id));
                 };
                 
@@ -327,6 +369,9 @@ impl super::FullContentList {
                 // This is very basic search and could most definitly be improved 
                 if let Some(search_term) = &filters.search {
                     use crate::schema::tag;
+                    
+                    // Searches for devblogs for term and if found adds blogs under
+                    // the devblog to results
                     let assosiated_devblogs = search_term.search_devblogs(db_conn)?;
                     
                     let mut devblog_ids: Vec<i32> = vec![];
@@ -337,6 +382,7 @@ impl super::FullContentList {
                     
                     blog_list = blog_list.filter(blog::devblog_id.eq_any(devblog_ids));
                     
+                    // Checks for tags that match search and are assosiated with blog
                     let tag_sub_query = tag::table
                         .select(0.into_sql::<diesel::sql_types::Integer>())
                         .filter(tag::blog_id.eq(blog::id))
@@ -347,6 +393,16 @@ impl super::FullContentList {
                     blog_list = blog_list
                         .or_filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
                         .or_filter(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")));
+                    
+                    // Checks projects for matching search and if project is related to
+                    // any blogs adds those to the search results
+                    let matching_project_ids: Vec<i32> = content::table
+                        .filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
+                        .or_filter(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")))
+                        .select(content::id)
+                        .get_results(db_conn)?;
+                    
+                    blog_list = blog_list.or_filter(blog::related_project_id.eq_any(matching_project_ids));
                     
                 };
 
@@ -364,7 +420,7 @@ impl super::FullContentList {
                     .filter(content::content_type.eq(super::ContentType::Project))
                     .into_boxed();
 
-                // Filter by project status
+                // Filters by project status
                 if let Some(status) = &filters.project_status {
                     project_list = project_list.filter(project::current_status.eq(status));
                 };
@@ -390,63 +446,37 @@ mod tag_ops {
     use super::*;
     use crate::{schema::tag, db::models::content::extra::Tag};
 
-    pub trait TagString {
-        fn to_tag(&self, blog_id: i32, db_conn: &mut PgConnection) -> Result<(), AppError>;
-        fn remove_tag(&self, blog_id: i32, db_conn: &mut PgConnection) -> Result<usize, AppError>;
-        fn get_tags(&self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError>; 
-        fn search_tag(&self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError>;
-    }
-
-    impl TagString for String {
-        fn to_tag(
-            &self,
-            blog_id: i32,
-            db_conn: &mut PgConnection
-        ) -> Result<(), AppError> {
-            insert_into(tag::table)
-                .values((tag::title.eq(self), tag::blog_id.eq(blog_id)))
-                .execute(db_conn)?;
-
-            Ok(())
-        }
-    
-        fn remove_tag(
-            &self,
-            blog_id: i32,
-            db_conn: &mut PgConnection
-        ) -> Result<usize, AppError> {
-            Ok(diesel::delete(tag::table.filter(tag::title.eq(self).and(tag::blog_id.eq(blog_id)))).execute(db_conn)?)
-        }
-        
-        fn get_tags(&self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError> {
-            Ok(tag::table
-                .filter(tag::title.ilike(self))
-                .get_results::<Tag>(db_conn)?)
-        }
-        
-        fn search_tag(&self, db_conn: &mut PgConnection) -> Result<Vec<Tag>, AppError> {
-            Ok(tag::table
-                .filter(tag::title.ilike(format!("{}{}{}", "%", self, "%")))
-                .get_results::<Tag>(db_conn)?)
-        }
-    }
-
     impl Tag {
-        fn remove_tags(
+        pub fn get_blogs_tags(
+            blog_id: i32,
+            db_conn: &mut PgConnection
+        ) -> Result<Vec<Tag>, AppError> {
+            Ok(tag::table.filter(tag::blog_id.eq(blog_id)).get_results(db_conn)?)
+        }
+
+        pub fn remove_tags(
             blog_id: i32,
             db_conn: &mut PgConnection
         ) -> Result<usize, AppError> {
             Ok(diesel::delete(tag::table.filter(tag::blog_id.eq(blog_id))).execute(db_conn)?)
         }
         
-        fn add_tags(
-            tag_strings: Vec<String>,
+        pub fn add_tags(
+            tag_strings: &Vec<String>,
             blog_id: i32,
             db_conn: &mut PgConnection
         ) -> Result<(), AppError> {
+            let mut intertable_values = vec![];
+            
             for string_tag in tag_strings {
-                string_tag.to_tag(blog_id, db_conn)?;
-            }        
+                intertable_values.push(
+                    (tag::blog_id.eq(blog_id), tag::title.eq(string_tag))
+                );
+            }
+            
+            insert_into(tag::table)
+                .values(intertable_values)
+                .execute(db_conn)?;
             
             Ok(())
         }
@@ -455,9 +485,11 @@ mod tag_ops {
 
 /* --------------------------- Devblog Operations --------------------------- */
 
-mod devblog_ops {
+pub mod devblog_ops {
+    use chrono::{DateTime, Utc};
+
     use super::*;
-    use crate::{schema::devblog, db::models::content::extra::{Devblog, NewDevblog}};
+    use crate::{schema::devblog, db::models::content::extra::{Devblog, NewDevblog}, handlers::route_data::SurroundingBlogs};
     pub trait DevblogString {
         fn get_devblog(&self, db_conn: &mut PgConnection) -> Result<Devblog, AppError>;
         fn search_devblogs(&self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError>;
@@ -478,7 +510,7 @@ mod devblog_ops {
     }
     
     impl NewDevblog {
-        fn add (
+        pub fn add (
             &self,
             db_conn: &mut PgConnection
         ) -> Result<i32, AppError> {
@@ -491,20 +523,69 @@ mod devblog_ops {
         }
     }
     
+
     impl Devblog {
-        fn delete (
+        pub fn delete (
             title: String,
             db_conn: &mut PgConnection
         ) -> Result<usize, AppError> {
             Ok(diesel::delete(devblog::table.filter(devblog::title.eq(title))).execute(db_conn)?)
         }
         
-        fn update(
+        pub fn update(
             &self,
             db_conn: &mut PgConnection
         ) -> Result<(), AppError> {
             self.save_changes::<Devblog>(db_conn)?;
             Ok(())
+        }
+        
+
+        pub fn get_surrounding_blogs(
+            devblog_id: i32,
+            blog_slug: String,
+            // How many content peice to show in each direction
+            direction_count: i64,
+            db_conn: &mut PgConnection
+        ) -> Result<SurroundingBlogs, AppError> {
+            use crate::schema::{blog, content};
+            
+            let compare_date: DateTime<Utc> = content::table
+                .filter(content::slug.eq(blog_slug))
+                .select(content::created_at)
+                .first(db_conn)?;
+            
+            // Uses the date to order the devblogs and gets blogs published before and after
+            // the given blog
+            let before_results: Vec<(base::Content, extra::Blog)> = content::table
+                .inner_join(blog::table.on(blog::id.eq(content::id)))
+                .filter(blog::devblog_id.eq(devblog_id))
+                .filter(content::created_at.lt(compare_date))
+                .limit(direction_count)
+                .order_by(content::created_at.desc())
+                .load::<(base::Content, extra::Blog)>(db_conn)?;
+
+            let after_results: Vec<(base::Content, extra::Blog)> = content::table
+                .inner_join(blog::table.on(blog::id.eq(content::id)))
+                .filter(blog::devblog_id.eq(devblog_id))
+                .filter(content::created_at.gt(compare_date))
+                .limit(direction_count)
+                .order_by(content::created_at.asc())
+                .load::<(base::Content, extra::Blog)>(db_conn)?;
+            
+            // Puts data in FullContent then in SurroundingBlogs
+            Ok(SurroundingBlogs {
+                before_blogs: before_results.into_iter().map(|content_blog| {
+                    FullContent {
+                        base_content: content_blog.0,
+                        extra_content: extra::ExtraContent::Blog(content_blog.1) }
+                }).collect(),
+                after_blogs: after_results.into_iter().map(|content_blog| {
+                    FullContent {
+                        base_content: content_blog.0,
+                        extra_content: extra::ExtraContent::Blog(content_blog.1) }
+                }).collect()
+            })
         }
     }
 }
