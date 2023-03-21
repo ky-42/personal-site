@@ -3,6 +3,7 @@ CREATE TABLE devblog (
     title TEXT UNIQUE NOT NULL
 );
 
+-- Adds the ability to link blogs to a devblog
 ALTER TABLE blog ADD COLUMN devblog_id INTEGER;
 ALTER TABLE blog
     ADD CONSTRAINT devblog_blog_link FOREIGN KEY (id)

@@ -88,22 +88,28 @@ pub struct Project {
     start_date: Option<DateTime<Utc>>
 }
 
+impl Blog {
+    pub fn get_id(&self) -> i32 {
+        self.id
+    }
+}
+
+impl Project {
+    pub fn get_id(&self) -> i32 {
+        self.id
+    }
+}
+
 /* --------------------------- Content extenstions -------------------------- */
+// Extra details the connect with peice of content
 
-// #[derive(Insertable, Serialize, Deserialize, Validate, Debug)]
-// #[diesel(table_name = tag)]
-// pub struct NewTag {
-//     blog_id: i32,
-//     #[validate(length(min = 1))]
-//     tag_title: String,
-// }
-
-#[derive(Queryable, Identifiable, Serialize, Deserialize, Validate, Debug)]
+// No NewTag structure becuase its a simple data type that is unlikely to change
+// and it made adding multiple tags easier I do recognize the inconsistency 
+#[derive(Queryable, Identifiable, Serialize, Deserialize, Debug)]
 #[diesel(table_name = tag, belongs_to(Blog, foreign_key = blog_id ))]
 pub struct Tag {
     id: i32,
     blog_id: i32,
-    #[validate(length(min = 1))]
     title: String
 }
 
@@ -129,6 +135,7 @@ impl Devblog {
 }
 
 /* ---------------------------- Models data types --------------------------- */
+// Data that is used in a db model
 
 // Represtent the current status of a project
 #[derive(Debug, Serialize, Deserialize, AsExpression, FromSqlRow, QueryId)]
@@ -160,21 +167,7 @@ impl FromSql<sql_types::Projectstatus, Pg> for CurrentStatus {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-
-impl Blog {
-    pub fn get_id(&self) -> i32 {
-        self.id
-    }
-}
-
-impl Project {
-    pub fn get_id(&self) -> i32 {
-        self.id
-    }
-}
-
-/* -------------------------------------------------------------------------- */
+/* ---------------------- Extra content auto generation --------------------- */
 
 #[cfg(test)]
 pub mod tests {

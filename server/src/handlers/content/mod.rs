@@ -1,8 +1,5 @@
 use super::{errors::AppError, extractors::AuthUser, route_data::*};
-use crate::db::{
-    models::content::{ FullContent, NewFullContent, FullContentList, ContentFilter, extra::{Tag, Devblog, NewDevblog}, ops::devblog_ops::DevblogString},
-    DbPool,
-};
+use crate::db::{models::content::{ FullContent, NewFullContent, FullContentList, ContentFilter, extra::{Tag, Devblog, NewDevblog}, ops::devblog_ops::DevblogString}, DbPool};
 use actix_web::{web, HttpResponse};
 use validator::Validate;
 
@@ -19,7 +16,11 @@ pub async fn list_content(
 ) -> Result<web::Json<FullContentList>, AppError> {
     let fetched_content_list: FullContentList = web::block(move || {
         let mut db_conn = db_pool.get()?;
-        FullContentList::list(page_info.into_inner(), query_filters.into_inner(), &mut db_conn)
+        FullContentList::list(
+            page_info.into_inner(),
+            query_filters.into_inner(),
+            &mut db_conn
+        )
     })
     .await??;
 
@@ -45,9 +46,10 @@ pub async fn view_content(
     Ok(web::Json(fetched_content))
 }
 
+// Gets a peice of content given id instead of slug
 pub async fn view_from_id(
     db_pool: web::Data<DbPool>,
-    content_id: web::Path<ContentId>,
+    content_id: web::Path<IdStruct>,
 ) -> Result<web::Json<FullContent>, AppError> {
     let fetched_content: FullContent = web::block(move || {
         let mut db_conn = db_pool.get()?;
@@ -210,7 +212,7 @@ pub async fn get_devblog(
 // Given a blog gets next and previous blogs in devlog
 pub async fn get_surrounding_blogs(
     db_pool: web::Data<DbPool>,
-    surrounding_data: web::Query<SurroundingData>,
+    surrounding_data: web::Query<GetSurroundingData>,
 ) -> Result<web::Json<SurroundingBlogs>, AppError> {
     let request_data = surrounding_data.into_inner();
 

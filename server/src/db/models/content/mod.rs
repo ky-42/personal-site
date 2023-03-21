@@ -13,9 +13,8 @@ pub mod ops;
 
 /* ----------------- Models for a complete piece of content ----------------- */
 // Used to combine the base values for a peice
-// of content with the specific values of the type
-// of the piece of content (The extra content)
-
+// of content with the data specific to the type of content
+//
 #[derive(Serialize, Deserialize, Validate, Debug)]
 pub struct FullContent {
     #[validate]
@@ -59,7 +58,7 @@ pub struct ContentFilter {
     search: Option<String>
 }
 
-/* ---------------------------- Models data types --------------------------- */
+/* ---------------------------- Model data types ---------------------------- */
 // Data types used by both base and extra content
 
 // Represents the type of the content and therefore what extra

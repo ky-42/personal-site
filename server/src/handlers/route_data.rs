@@ -2,8 +2,8 @@ use serde::{self, Deserialize, Serialize};
 
 use crate::db::models::content::FullContent;
 
-// Data used in routes to extract data from request and return data to requester
 /* -------------------------------------------------------------------------- */
+// Data used in routes to extract data from request and return data to requester
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct DbRows {
@@ -52,7 +52,7 @@ pub struct CountReturn {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct ContentId {
+pub struct IdStruct {
     pub id: i32
 }
 
@@ -67,7 +67,7 @@ pub struct DevblogTitle {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct SurroundingData {
+pub struct GetSurroundingData {
     pub devblog_id: i32,
     pub blog_slug: String,
     pub direction_count: i64,

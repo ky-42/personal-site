@@ -1,8 +1,4 @@
-use diesel::{
-    prelude::*,
-    insert_into
-};
-
+use diesel::{prelude::*, insert_into};
 use crate::{handlers::{errors::AppError, route_data::{self, ShowOrder}}, db::models::content::FullContent};
 use super::{base, extra};
 use devblog_ops::DevblogString;
@@ -83,11 +79,11 @@ impl super::FullContent {
         delete_slug: String,
         db_conn: &mut PgConnection
     ) -> Result<usize, AppError>{
-        // Reutrns number of rows effected
-        use crate::schema::content::dsl::*;
+        use crate::schema::content;
 
         // Extra content should casscade delete on deltetion of base content
-        Ok(diesel::delete(content.filter(slug.eq(delete_slug))).execute(db_conn)?)
+        // Reutrns number of rows effected
+        Ok(diesel::delete(content::table.filter(content::slug.eq(delete_slug))).execute(db_conn)?)
     } 
 
     pub fn view(
@@ -134,7 +130,7 @@ impl super::FullContent {
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------- IMPORTANT ------------------------------- */
-// I am aware just how bad the following code is. Alot of code is repeated
+// I am aware just how bad the following code is. A lot of code is repeated
 // in 4 places which is just terible. I tried to fix this but it was difficult
 // to deal with diesel. If anyone wants to try to fix this please do so. Anyways
 // I really do realize how bad this is!
@@ -441,12 +437,12 @@ impl super::FullContentList {
 
 /* ----------------------------- Tag Operations ----------------------------- */
 
-
 mod tag_ops {
     use super::*;
     use crate::{schema::tag, db::models::content::extra::Tag};
 
     impl Tag {
+        // Gets tags related to blogs
         pub fn get_blogs_tags(
             blog_id: i32,
             db_conn: &mut PgConnection
@@ -454,6 +450,7 @@ mod tag_ops {
             Ok(tag::table.filter(tag::blog_id.eq(blog_id)).get_results(db_conn)?)
         }
 
+        // Removes all tags related to a blog
         pub fn remove_tags(
             blog_id: i32,
             db_conn: &mut PgConnection
@@ -461,6 +458,7 @@ mod tag_ops {
             Ok(diesel::delete(tag::table.filter(tag::blog_id.eq(blog_id))).execute(db_conn)?)
         }
         
+        // Adds list of tags to a blog
         pub fn add_tags(
             tag_strings: &Vec<String>,
             blog_id: i32,
@@ -468,6 +466,7 @@ mod tag_ops {
         ) -> Result<(), AppError> {
             let mut intertable_values = vec![];
             
+            // Creates an array of objects that can be inserted in to the tags table
             for string_tag in tag_strings {
                 intertable_values.push(
                     (tag::blog_id.eq(blog_id), tag::title.eq(string_tag))
@@ -486,22 +485,24 @@ mod tag_ops {
 /* --------------------------- Devblog Operations --------------------------- */
 
 pub mod devblog_ops {
-    use chrono::{DateTime, Utc};
-
     use super::*;
+    use chrono::{DateTime, Utc};
     use crate::{schema::devblog, db::models::content::extra::{Devblog, NewDevblog}, handlers::route_data::SurroundingBlogs};
+
     pub trait DevblogString {
         fn get_devblog(&self, db_conn: &mut PgConnection) -> Result<Devblog, AppError>;
         fn search_devblogs(&self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError>;
     }
     
     impl DevblogString for String {
+        // Gets a devlog object based of string assumed to be title
         fn get_devblog(&self, db_conn: &mut PgConnection) -> Result<Devblog, AppError> {
             Ok(devblog::table
                 .filter(devblog::title.eq(self))
                 .get_result(db_conn)?)
         }
         
+        // Looks and returns devlog objects based of string assumed to be title
         fn search_devblogs(&self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError> {
             Ok(devblog::table
                 .filter(devblog::title.ilike(format!("{}{}{}", "%", self, "%")))
@@ -523,7 +524,6 @@ pub mod devblog_ops {
         }
     }
     
-
     impl Devblog {
         pub fn delete (
             title: String,
@@ -539,8 +539,8 @@ pub mod devblog_ops {
             self.save_changes::<Devblog>(db_conn)?;
             Ok(())
         }
-        
 
+        // Gets the next and previous blogs in a devblog series
         pub fn get_surrounding_blogs(
             devblog_id: i32,
             blog_slug: String,

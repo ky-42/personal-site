@@ -8,4 +8,6 @@ CREATE TABLE tag (
     CONSTRAINT unique_blog_tag UNIQUE (blog_id, title)
 );
 
+-- As new tags will be in a seperate table this can be delete
+-- no attempt was made to migrate this data as it wasnt used anywere before
 ALTER TABLE blog DROP COLUMN tags;

@@ -5,12 +5,11 @@ use validator::Validate;
 use serde::{self, Deserialize, Serialize};
 use chrono::{self, DateTime, Utc};
 
-
 /* --------------------------- Base content models -------------------------- */
 
 /*
 Models for the content table
-The content table sores values that all connent
+The content table stores values that all connent
 will have no matter what type of content it is 
 */
 
@@ -45,8 +44,6 @@ pub struct Content {
     updated_at: DateTime<Utc>,
 }
 
-/* -------------------------------------------------------------------------- */
-
 impl Content {
     pub fn get_id(&self) -> i32 {
         self.id
@@ -61,7 +58,7 @@ impl Content {
     }
 }
 
-/* -------------------------------------------------------------------------- */
+/* ------------------------- Content auto generation ------------------------ */
 
 #[cfg(test)]
 pub mod tests {
