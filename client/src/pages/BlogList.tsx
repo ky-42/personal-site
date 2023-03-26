@@ -34,6 +34,48 @@ const ContentList = styled.section`
   }
 `;
 
+/* -------------------------------------------------------------------------- */
+
+const ShowOptions = styled.div`
+  display: flex;
+  column-gap: 2rem;
+  max-width: 70rem;
+  width: 100%;
+`;
+
+const SearchBar = styled.input`
+  width: 100%;
+  background-color: ${props => props.theme.backgroundColour};
+  color: ${props => props.theme.textColour};    
+  font-size: 1.5rem;
+  padding: 0.4rem;
+  margin-bottom: 5rem;
+  border: 0;
+  border-bottom: 0.2rem solid ${props => props.theme.lightTone};
+  &:placeholder {
+    color: ${props => props.theme.lightTone};    
+  }
+  &:focus {
+    color: ${props => props.theme.textColour};
+    background-color: ${props => props.theme.darkTone};
+    border: 0;
+    outline: 0;
+    border-bottom: 0.2rem solid ${props => props.theme.highlight};
+  }
+`;
+
+const DropDown = styled.select`
+  height: 3.2rem;
+  background-color: ${props => props.theme.backgroundColour};
+  font-size: 1.5rem;
+  color: ${props => props.theme.textColour};
+  border: 0;
+  &:focus {
+    border: 0;
+    outline: 0;
+  }
+`;
+
 /* --------------------- Button to load more and its css -------------------- */
 
 const ActiveLoadMore = css`
@@ -53,8 +95,8 @@ const LoadMore = styled.button<{active: boolean}>`
   ${props => props.active ? ActiveLoadMore : DeactiveLoadMore}
   padding: 1.2rem 4.5rem;
   display: block; 
-  background-color: ${props => props.theme.backgroundColour};
   font-size: 1.6rem;
+  background-color: ${props => props.theme.backgroundColour};
 `;
 
 /* -------------------------------------------------------------------------- */
@@ -74,6 +116,9 @@ const BlogList = () => {
   // The latest set of blogs the site has retreived
   // Need seperate state for latest recieved for error handling reason
   const [latestRecivedBlogs, setLatestRecivedBlogs] = useState<RequestState<FullContentList>>({requestStatus: RequestStatus.Loading});
+  
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showOrder, setShowOrder] = useState(listOrder.Newest);
 
   /* -------------------------- Next page requesting -------------------------- */
 
@@ -169,6 +214,21 @@ const BlogList = () => {
       <PageTitle>
         Blogs
       </PageTitle>
+      
+      <ShowOptions>
+        <SearchBar
+          placeholder="Search"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+        />
+        <DropDown 
+          value={showOrder}
+          onChange={e => setShowOrder(e.target.value as listOrder)}
+        >
+          <option value={listOrder.Newest} >Newest</option>
+          <option value={listOrder.Oldest}>Oldest</option>
+        </DropDown>
+      </ShowOptions>
 
       <ContentList>
         <>
