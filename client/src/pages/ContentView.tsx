@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import styled from "styled-components";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import styled, { css } from "styled-components";
 
-import { ContentPieceOperations } from "../adapters/content";
-import { FullContent } from "../types/Content";
+import { ContentOperations, TagOperations } from "../adapters/content";
+import { FullContent, Tag } from "../types/Content";
 import { RequestState, RequestStatus } from "../types/RequestContent";
 import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
 import MetaData from "../components/Shared/MetaData";
@@ -39,6 +39,33 @@ const ContentDesc = styled.p`
   font-variation-settings: 'wght' 700;
 `;
 
+/* ------------------------------ Project data ------------------------------ */
+
+const OptionalProjectData = styled.div`
+  display: flex;
+`;
+
+const LinkStyle = css`
+  color: ${props => props.theme.textColour};
+`;
+
+const ExternalLink = styled.a`
+`;
+
+const InternalLink = styled(Link)`
+  
+`;
+
+/* -------------------------------- Blog data ------------------------------- */
+
+const TagDiv = styled.div`
+  display: flex;
+`;
+
+const TagItem = styled(Link)`
+  
+`;
+
 /* ----------------------- Page lower section elements ---------------------- */
 
 const LowerSection = styled.div`
@@ -53,6 +80,11 @@ const ContentView = () => {
   
   const [pageContent, setPageContent] = useState<RequestState<FullContent>>({requestStatus: RequestStatus.Loading});
   
+  const [isBlog, setIsBlog] = useState(false);
+  const [blogTags, setBlogTags] = useState<RequestState<Tag[]>>({requestStatus: RequestStatus.Loading});
+  const [previousSlug, setPreviousSlug] = useState<undefined | string>();
+  const [nextSlug, setnextSlug] = useState<undefined | string>();
+  
   // Needed to send users to 404 page when slug dosent exist
   const navigate = useNavigate();
   
@@ -60,16 +92,30 @@ const ContentView = () => {
 
   useEffect(() => {
     if (slug !== undefined ) {
-      ContentPieceOperations<FullContent>({
+      ContentOperations.get_content({
         slug,
-        method: "GET",
       }).then((value: RequestState<FullContent>) => {
         setPageContent(value);
       });
     };
   }, [slug]);
+  
+  useEffect(() => {
+    if (isBlog === true) {
+    }
+  }, [isBlog]);
 
   /* -------------------------------------------------------------------------- */
+  
+  const successEffect = ({data}: {data: FullContent}) => {
+    if (data.base_content.content_type === "blog") {
+      setIsBlog(true);
+
+      TagOperations.get_blog_tags({blog_slug: data.base_content.slug}).then((value: RequestState<Tag[]>) => {
+        setBlogTags(value);
+      });
+    };
+  }
 
   // What is rendered when content is gotten successfully
   const RenderContent = ({data}: {data: FullContent}) => {
@@ -117,6 +163,7 @@ const ContentView = () => {
     <LoadErrorHandle 
       requestInfo={pageContent}
       successElement={RenderContent}
+      successEffect={{effect: successEffect}}
       errorEffect={{effect: errorEffect}}
     />
   )
