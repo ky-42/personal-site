@@ -116,6 +116,10 @@ export const SectionTitle = styled.h2`
   text-align: center;
 `;
 
+export const SmallSectionTitle = styled.h3`
+  text-align: center;
+`;
+
 export const InputGroup = styled.div`
   display: flex;
   column-gap: 5.0rem;

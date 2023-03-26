@@ -4,16 +4,17 @@ import { AiOutlineRight } from "react-icons/ai";
 
 import PageTitle from "../components/Shared/PageTitle";
 import { ActionTypes, ReducerAction, SetReducer, UpdateReducer } from "../types/ManageContent";
-import { Blog, Content, ContentType, FullContent, NewFullContent, Project, ProjectStatus } from "../types/Content";
+import { Blog, Content, ContentType, Devblog, FullContent, NewFullContent, Project, ProjectStatus } from "../types/Content";
 import InputArea from "../components/ContentManagement/InputArea";
-import { ClickButton, DropDown, EnterButton, InputGroup, InputSection, SectionTitle, ShortTextInput, StateButton, StyledButton } from "../components/ContentManagement/InputElements";
+import { ClickButton, DropDown, EnterButton, InputGroup, InputSection, SectionTitle, ShortTextInput, SmallSectionTitle, StateButton, StyledButton } from "../components/ContentManagement/InputElements";
 import ProjectManagment from "../components/ContentManagement/ProjectManagment";
 import BaseContentManagment from "../components/ContentManagement/BaseContentManagment";
 import BlogManagment from "../components/ContentManagement/BlogManagment";
-import { ContentAdd, ContentPieceOperations } from "../adapters/content";
+import { ContentOperations } from "../adapters/content";
 import { blogToNew, contentToNew, projectToNew } from "../types/HelperFuncs";
 import { RequestStatus } from "../types/RequestContent";
 import { validateBlog, validateContent, validateProject } from "../components/ContentManagement/InputValidation";
+import DevblogManagement from "../components/ContentManagement/DevblogManagement";
 
 /* -------------------------------------------------------------------------- */
 
@@ -40,13 +41,17 @@ const defaultContent: Content = {
 const defaultBlog: Blog = {
   id: 0,
   content_type: ContentType.Blog,
-  tags: []
 }
 
 const defaultProject: Project = {
   id: 0,
   content_type: ContentType.Project,
   current_status: ProjectStatus.UnderDevelopment
+}
+
+const defaultDevblog: Devblog = {
+  id: 0,
+  title: ""  
 }
 
 /* ---------------------------- Reducer function ---------------------------- */
@@ -93,6 +98,19 @@ const projectReducer = <K extends keyof Project>(state: Project, action: SetRedu
   }
 };
 
+const devblogReducer = <K extends keyof Devblog>(state: Devblog, action: SetReducer<Devblog> | UpdateReducer<Devblog, K>) => {
+  switch (action.action) {
+    case ReducerAction.Update:
+      var newState = {...state};
+      newState[action.field] = action.value;
+
+      return newState;
+    
+    case ReducerAction.Set:
+      return action.newState;
+  }
+};
+
 /* ----------------------------- Styled Elements ---------------------------- */
 
 const InputButtonHolder = styled.div`
@@ -106,10 +124,13 @@ const ManageContent = () => {
   // Action to be performed on server
   const [currentAction, setCurrentAction] = useState(ActionTypes.Create);
   
-  // Form state
+  // Content form state
   const [baseContentData, setBaseContentData] = useReducer(contentReducer, defaultContent);
   const [blogData, setBlogData] = useReducer(blogReducer, defaultBlog);
   const [projectData, setProjectData] = useReducer(projectReducer, defaultProject);
+  
+  // Devblog form state
+  const [devblogData, setDevblogData] = useReducer(devblogReducer, defaultDevblog);
   
   // Key in the record will be keys of content, blog, or project
   // Done this way because we dont need all keys from those types in the object
@@ -119,7 +140,7 @@ const ManageContent = () => {
   const pageTop = useRef<HTMLHeadingElement>(null);
   
   // Slug to be updated or deleted
-  const [modifySlug, setModifySlug] = useState("");
+  const [modifyItem, setModifyItem] = useState("");
   
   const [extraContentType, setExtraContentType] = useState(defaultExtraContent);
   
@@ -155,7 +176,7 @@ const ManageContent = () => {
         extraData = {"project": {...projectData, ...extraNewData["project"]}};
         break; 
     }
-
+    
     setValidationErrors(newValidationErrors);
     
     // If there are errors scroll to top stop request
@@ -163,7 +184,7 @@ const ManageContent = () => {
       pageTop.current?.scrollIntoView();
       return;
     }
-
+    
     /* -------------------------------------------------------------------------- */
     
     switch (currentAction) {
@@ -174,7 +195,7 @@ const ManageContent = () => {
           new_extra_content: extraNewData
         };
 
-        ContentAdd({
+        ContentOperations.add_content({
           addContent,
           password: serverPassword
         });
@@ -182,10 +203,8 @@ const ManageContent = () => {
         break;
 
       case ActionTypes.Update:
-
-        ContentPieceOperations({
-          slug: modifySlug,
-          method: "PUT",
+        ContentOperations.update_content({
+          slug: modifyItem,
           password: serverPassword,
           updated_content: {
             base_content: baseData,
@@ -197,9 +216,8 @@ const ManageContent = () => {
 
       case ActionTypes.Delete:
 
-        ContentPieceOperations({
-          slug: modifySlug,
-          method: "DELETE",
+        ContentOperations.delete_content({
+          slug: modifyItem,
           password: serverPassword
         });
 
@@ -211,9 +229,8 @@ const ManageContent = () => {
   
   // Loads the content to be updated or deleted
   const loadOldContent = () => {
-    ContentPieceOperations<FullContent>({
-      slug: modifySlug,
-      method: "GET"
+    ContentOperations.get_content({
+      slug: modifyItem
     }).then((value) => {
       switch (value.requestStatus) {
         // TODO add success messages and error handling
@@ -268,53 +285,8 @@ const ManageContent = () => {
   
   /* -------------------------------------------------------------------------- */
   
-  return (
-    <ManageContentBody>
-      <div ref={pageTop}></div>
-    
-      <PageTitle>
-        Manage Content
-      </PageTitle>
-      
-      <InputSection>
-        <SectionTitle>
-          Action
-        </SectionTitle>
-
-        <InputGroup>
-          <StateButton active={currentAction===ActionTypes.Create} onClick={() => setCurrentAction(ActionTypes.Create)}>Create</StateButton>
-          <StateButton active={currentAction===ActionTypes.Update} onClick={() => setCurrentAction(ActionTypes.Update)}>Update</StateButton>
-          <StateButton active={currentAction===ActionTypes.Delete} onClick={() => setCurrentAction(ActionTypes.Delete)}>Delete</StateButton>
-          <ClickButton onClick={() => clearContent()}>Clear</ClickButton>
-        </InputGroup>
-
-        {
-          (currentAction === ActionTypes.Update || currentAction === ActionTypes.Delete) &&
-          <InputGroup>
-            <InputArea
-              lableText={"Slug To " + currentAction + " (Enter to load data)"}
-              InputElement={
-                <InputButtonHolder>
-                  <ShortTextInput
-                    type="text"
-                    value={modifySlug}
-                    onChange={
-                      e => setModifySlug(e.target.value)
-                    }
-                  />
-                  <EnterButton 
-                    onClick={loadOldContent}
-                  >
-                    <AiOutlineRight />
-                  </EnterButton>
-                </InputButtonHolder>
-              }
-            />
-          </InputGroup>
-        }
-
-      </InputSection>
-
+  let ContentManagerForm = (
+    <>
       <InputSection>
 
         <SectionTitle>
@@ -354,7 +326,111 @@ const ManageContent = () => {
         }
 
       </InputSection>
+    </>
+  );
+  
+  let DevblogManagerForm = (
+    <InputSection>
+
+      <SectionTitle>
+        Devblog Data
+      </SectionTitle>
       
+      <DevblogManagement devblogData={devblogData} setDevblogData={setDevblogData} validationErrors={validationErrors} />
+
+    </InputSection>
+  );
+  
+  let CurrentForm;
+
+  if (
+    currentAction === ActionTypes.Create ||
+    currentAction === ActionTypes.Update ||
+    currentAction === ActionTypes.Delete
+  ) {
+    CurrentForm = ContentManagerForm;
+  } else if (
+    currentAction === ActionTypes.DevblogCreate ||
+    currentAction === ActionTypes.DevblogUpdate ||
+    currentAction === ActionTypes.DevblogDelete
+  ) {
+    CurrentForm = DevblogManagerForm;
+  }
+
+  /* -------------------------------------------------------------------------- */
+  
+  return (
+    <ManageContentBody>
+      <div ref={pageTop}></div>
+    
+      <PageTitle>
+        Manage Content
+      </PageTitle>
+      
+      <InputSection>
+        <SectionTitle>
+          Action
+        </SectionTitle>
+
+        <InputGroup>
+          <SmallSectionTitle>Content Operations</SmallSectionTitle>
+          <InputGroup>
+            <StateButton active={currentAction===ActionTypes.Create} onClick={() => setCurrentAction(ActionTypes.Create)}>Create</StateButton>
+            <StateButton active={currentAction===ActionTypes.Update} onClick={() => setCurrentAction(ActionTypes.Update)}>Update</StateButton>
+            <StateButton active={currentAction===ActionTypes.Delete} onClick={() => setCurrentAction(ActionTypes.Delete)}>Delete</StateButton>
+          </InputGroup>
+          <SmallSectionTitle>Devblog Operations</SmallSectionTitle>
+          <InputGroup>
+            <StateButton active={currentAction===ActionTypes.DevblogCreate} onClick={() => setCurrentAction(ActionTypes.DevblogCreate)}>Create Devblog</StateButton>
+            <StateButton active={currentAction===ActionTypes.DevblogUpdate} onClick={() => setCurrentAction(ActionTypes.DevblogUpdate)}>Update Devblog</StateButton>
+            <StateButton active={currentAction===ActionTypes.DevblogDelete} onClick={() => setCurrentAction(ActionTypes.DevblogDelete)}>Delete Devblog</StateButton>
+          </InputGroup>
+          <SmallSectionTitle>Form Operations</SmallSectionTitle>
+          <InputGroup>
+            <ClickButton onClick={() => clearContent()}>Clear Form</ClickButton>
+          </InputGroup>
+        </InputGroup>
+
+        {
+          (
+            currentAction === ActionTypes.Update ||
+            currentAction === ActionTypes.Delete ||
+            currentAction === ActionTypes.DevblogUpdate ||
+            currentAction === ActionTypes.DevblogDelete
+          ) &&
+          <InputGroup>
+            <InputArea
+              lableText={
+                currentAction === ActionTypes.Update || currentAction === ActionTypes.Delete ?
+                `Slug To ${currentAction} (Enter to load data)` :
+                `Devblog Title To ${currentAction.split(" ").splice(-1)} (Enter to load data)`
+              }
+              InputElement={
+                <InputButtonHolder>
+                  <ShortTextInput
+                    type="text"
+                    value={modifyItem}
+                    onChange={
+                      e => setModifyItem(e.target.value)
+                    }
+                  />
+                  <EnterButton 
+                    onClick={loadOldContent}
+                  >
+                    <AiOutlineRight />
+                  </EnterButton>
+                </InputButtonHolder>
+              }
+            />
+          </InputGroup>
+        }
+
+      </InputSection>
+      
+      {
+        CurrentForm
+      }
+
       <InputSection>
       
         <SectionTitle>

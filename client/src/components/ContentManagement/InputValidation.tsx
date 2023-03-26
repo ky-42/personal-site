@@ -22,13 +22,7 @@ export const validateBlog = (data: NewBlog, validationErrors: Record<string, str
     let key: keyof NewBlog;
     for (key in data) {
         if (!emptyToUndefined(data[key])) {
-            if (
-                key === "tags"
-            ) {
-                data[key] = undefined;
-            } else {
-                validationErrors[key] = "Value needed";                
-            }
+            data[key] = undefined;
         }
     }
 }
@@ -39,9 +33,11 @@ export const validateProject = (data: NewProject, validationErrors: Record<strin
     for (key in data) {
         if (!emptyToUndefined(data[key])) {
             if (
-                false
+                key === "url" || 
+                key === "github_link" ||
+                key === "start_date" 
             ) {
-                // data[key] = undefined;
+                data[key] = undefined;
             } else {
                 validationErrors[key] = "Value needed";                
             }

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import styled, {css} from "styled-components";
 
-import {GetContentList} from "../adapters/content";
+import { ContentOperations } from "../adapters/content";
 import {ContentType} from "../types/Content";
 import {FullContentList, listOrder, PageInfo, RequestState, RequestStatus} from "../types/RequestContent";
 import PageTitle from "../components/Shared/PageTitle";
@@ -90,7 +90,7 @@ const BlogList = () => {
     // Requests only new pages and the page check is need cause if
     // initial request fails the page gets set to negative one
     if (recivedBlogs[page] === undefined && page >= 0) {
-      GetContentList({
+      ContentOperations.get_content_list({
         page_info: pageInfo,
         content_filters: {
           content_type: ContentType.Blog
