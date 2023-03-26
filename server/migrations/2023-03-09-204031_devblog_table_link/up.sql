@@ -6,6 +6,6 @@ CREATE TABLE devblog (
 -- Adds the ability to link blogs to a devblog
 ALTER TABLE blog ADD COLUMN devblog_id INTEGER;
 ALTER TABLE blog
-    ADD CONSTRAINT devblog_blog_link FOREIGN KEY (id)
+    ADD CONSTRAINT devblog_blog_link FOREIGN KEY (devblog_id)
         REFERENCES devblog (id)
             ON DELETE SET NULL;

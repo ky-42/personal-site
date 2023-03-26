@@ -58,7 +58,6 @@ pub fn cors_config() -> actix_cors::Cors {
     Cors::default()
         .allowed_origin_fn(|origin, _| {
             // Allows any origin from any subdomin on a specified URL set in .env
-            log::info!("{}", origin.to_str().expect("no"));
             origin.as_bytes().ends_with(
             env::var("URL")
                 .expect("Please set URL in .env")

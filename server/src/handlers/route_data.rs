@@ -10,12 +10,6 @@ pub struct DbRows {
     pub rows_effected: i32
 }
 
-#[derive(Serialize, Debug)]
-pub struct SurroundingBlogs {
-    pub before_blogs: Vec<FullContent>, 
-    pub after_blogs: Vec<FullContent>
-}
-
 #[derive(Deserialize, Debug)]
 pub enum ShowOrder {
     Newest,
@@ -71,4 +65,10 @@ pub struct GetSurroundingData {
     pub devblog_id: i32,
     pub blog_slug: String,
     pub direction_count: i64,
+}
+
+#[derive(Serialize, Debug)]
+pub struct SurroundingBlogs {
+    pub before_blogs: Vec<FullContent>, 
+    pub after_blogs: Vec<FullContent>
 }
