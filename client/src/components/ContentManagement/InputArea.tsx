@@ -15,6 +15,7 @@ const InputLabel = styled.label<{error: boolean}>`
   text-align: center;
   font-size: 2.0rem;
   ${props => props.error ? ErrorTextStyling : null};
+  margin-bottom: 0.8rem;
 `;
 
 const ErrorText = styled.label`
