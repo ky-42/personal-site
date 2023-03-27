@@ -7,6 +7,8 @@ import { ReducerAction, SetReducer, UpdateReducer } from "../../types/ManageCont
 import InputArea from "./InputArea";
 import { AiOutlineRight } from "react-icons/ai";
 import Tag from "./Tag";
+import { ContentOperations, DevblogOperations } from "../../adapters/content";
+import { RequestStatus } from "../../types/RequestContent";
 
 /* ---------------------------- Styled Components --------------------------- */
 
@@ -39,18 +41,63 @@ interface blogManagmentProps {
   setBlogData: React.Dispatch<
     SetReducer<Blog> | UpdateReducer<Blog, keyof Blog>
   >,
+  tags: Set<string>,
+  setTags: React.Dispatch<React.SetStateAction<Set<string>>>,
   // Possible errors in an input with key being feild and value being error message
   validationErrors: Record<string, string>
 }
 
 // Form part for inputing data about the blog specific parts of content
-const BlogManagment = ({blogData, setBlogData, validationErrors}: blogManagmentProps) => {
+const BlogManagment = ({blogData, setBlogData, tags, setTags, validationErrors}: blogManagmentProps) => {
   
-  // Needs to be moves to parent
-  const [tags, setTags] = React.useState<Set<string>>(new Set());
-  
+  // State for current tag being typed
   const [currentTag, setCurrentTag] = React.useState<string>("");
   
+  // State for current slug or title being typed
+  const [projectSlug, setProjectSlug] = React.useState<string>("");
+  const [devblogTitle, setDevblogTitle] = React.useState<string>("");
+  
+  /* ------------------------------- Id Requests ------------------------------ */
+
+  // Request content with a slug and sets proejctId if successful
+  const getProjectId = (slug: string) => {
+    ContentOperations.get_content({slug: slug}).then(content => {
+      switch (content.requestStatus) {
+        case RequestStatus.Success:
+          setBlogData({
+            action: ReducerAction.Update,
+            field: "related_project_id",
+            value: content.requestedData.base_content.id
+          });
+          break;
+        default:
+          console.log("Error getting project id");
+          // TODO add error handling
+      }
+    });
+  }
+  
+  // Request content with a title and sets devblogId if successful
+  const getDevblogId = (title: string) => {
+    DevblogOperations.get_devblog_object({title: title}).then(devblog => {
+      switch (devblog.requestStatus) {
+        case RequestStatus.Success:
+          setBlogData({
+            action: ReducerAction.Update,
+            field: "devblog_id",
+            value: devblog.requestedData.id
+          })
+          break;
+        default:
+          console.log("Error getting devblog id");
+          // TODO add error handling
+      }
+    })
+  }
+  
+  /* -------------------------------------------------------------------------- */
+
+  // Removes tag from tags set state
   const removeTag = (tag: string) => {
     setTags(current => {current.delete(tag); return new Set(current);});
   }
@@ -79,7 +126,7 @@ const BlogManagment = ({blogData, setBlogData, validationErrors}: blogManagmentP
             <br />
             <TagsList>
               {Array.from(tags).map(tag => {
-                return <Tag tagString={tag} removeTag={removeTag} />
+                return <Tag tagString={tag} removeTag={removeTag} key={tag} />
               })}
             </TagsList>
           </div>
@@ -94,19 +141,23 @@ const BlogManagment = ({blogData, setBlogData, validationErrors}: blogManagmentP
             <InputButtonHolder>
               <ShortTextInput
                 type="text"
-                // value={}
-                // onChange={}
+                value={projectSlug}
+                onChange={e => setProjectSlug(e.target.value)}
               />
               <EnterButton 
-                // onClick={}
+                onClick={() => {getProjectId(projectSlug); setProjectSlug("")}}
               >
                 <AiOutlineRight />
               </EnterButton>
             </InputButtonHolder>
             <InputButtonHolder>
-              <IdHolder>{`Id of Related Project: ${1}`}</IdHolder>
+              <IdHolder>{`Id of Related Project: ${blogData.related_project_id}`}</IdHolder>
               <TextButton 
-                // onClick={}
+                onClick={() => setBlogData({
+                  action: ReducerAction.Update,
+                  field: "related_project_id",
+                  value: undefined
+                })}
               >
                 Clear
               </TextButton>
@@ -123,19 +174,23 @@ const BlogManagment = ({blogData, setBlogData, validationErrors}: blogManagmentP
             <InputButtonHolder>
               <ShortTextInput
                 type="text"
-                // value={}
-                // onChange={}
+                value={devblogTitle}
+                onChange={e => setDevblogTitle(e.target.value)}
               />
               <EnterButton 
-                // onClick={}
+                onClick={() => {getDevblogId(devblogTitle); setDevblogTitle("")}}
               >
                 <AiOutlineRight />
               </EnterButton>
             </InputButtonHolder>
             <InputButtonHolder>
-              <IdHolder>{`Id of Devblog: ${1}`}</IdHolder>
+              <IdHolder>{`Id of Devblog: ${blogData.devblog_id}`}</IdHolder>
               <TextButton 
-                // onClick={}
+                onClick={() => setBlogData({
+                  action: ReducerAction.Update,
+                  field: "devblog_id",
+                  value: undefined
+                })}
               >
                 Clear
               </TextButton>

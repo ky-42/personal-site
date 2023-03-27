@@ -129,8 +129,8 @@ export const TagOperations = {
 
 /* ----------------------- Devblog Operation Adapters ----------------------- */
 
-const DevblogOperations = {
-  "get_devlog_object": async (params: DevblogTitle): Promise<RequestState<Devblog>> => {
+export const DevblogOperations = {
+  "get_devblog_object": async (params: DevblogTitle): Promise<RequestState<Devblog>> => {
     return await GeneralOperation<Devblog>({
       url: `/devblog/${params.title}`,
       method: "GET",
@@ -146,7 +146,7 @@ const DevblogOperations = {
     }); 
   }, 
 
-  "add_devlog": async (params: DevblogAddInfo): Promise<RequestState<boolean>> => {
+  "add_devblog": async (params: DevblogAddInfo): Promise<RequestState<boolean>> => {
     let response = await GeneralOperation<boolean>({
       url: "/devblog/add",
       method: "POST",

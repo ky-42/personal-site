@@ -54,7 +54,7 @@ const ProjectManagment = ({projectData, setProjectData, validationErrors}: proje
             <ShortTextInput
               type="text"
               placeholder="https://github.com/ky-42/personal-site"
-              value={projectData.github_link}
+              value={projectData.github_link ? projectData.github_link : ""}
               onChange={
                 e => setProjectData({
                   action: ReducerAction.Update,
@@ -73,7 +73,7 @@ const ProjectManagment = ({projectData, setProjectData, validationErrors}: proje
             <ShortTextInput
               type="text"
               placeholder="https://kyledenief.me/"
-              value={projectData.url}
+              value={projectData.url ? projectData.url : ""}
               onChange={
                 e => setProjectData({
                   action: ReducerAction.Update,

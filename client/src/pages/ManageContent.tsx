@@ -127,6 +127,9 @@ const ManageContent = () => {
   const [projectData, setProjectData] = useReducer(projectReducer, defaultProject);
   
   const [extraContentType, setExtraContentType] = useState(defaultExtraContent);
+  
+  // Tags for blog
+  const [tags, setTags] = useState<Set<string>>(new Set());
 
   // Devblog form state
   const [devblogData, setDevblogData] = useReducer(devblogReducer, defaultDevblog);
@@ -311,7 +314,7 @@ const ManageContent = () => {
         
         {
           extraContentType === ContentType.Blog &&
-          <BlogManagment blogData={blogData} setBlogData={setBlogData} validationErrors={validationErrors} />
+          <BlogManagment blogData={blogData} setBlogData={setBlogData} tags={tags} setTags={setTags} validationErrors={validationErrors} />
         }
         {
           extraContentType === ContentType.Project &&
