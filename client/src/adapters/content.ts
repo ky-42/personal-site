@@ -1,7 +1,7 @@
 import axios from "axios";
 import backend_axios from ".";
 import { Blog, Devblog, FullContent, NewDevblog, Tag } from "../types/Content";
-import { ContentAddParams, RequestState, RequestStatus, FullContentList, ContentSlug, ContentListInfo, ContentUpdateInfo, ContentPassword, BlogSlug, TagAddInfo, BlogSlugPassword, DevblogTitle, SurroundingData, SurroundingBlogs, DevblogAddInfo, DevblogUpdateInfo } from "../types/RequestContent";
+import { ContentAddParams, RequestState, RequestStatus, FullContentList, ContentSlug, ContentListInfo, ContentUpdateInfo, ContentPassword, BlogSlug, TagAddInfo, BlogSlugPassword, DevblogTitle, SurroundingData, SurroundingBlogs, DevblogAddInfo, DevblogUpdateInfo, DevblogPassword } from "../types/RequestContent";
 
 /* ---------- General operation adapter for all backend operations ---------- */
 
@@ -108,7 +108,9 @@ export const TagOperations = {
         "authorization": params.password,
         "Content-Type": "application/json"
       },
-      data: params.tags
+      data: {
+        tags: params.tags
+      }
     });
     if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
     return response;
@@ -174,11 +176,13 @@ export const DevblogOperations = {
     return response;
   },
 
-  "delete_devblog": async (params: DevblogTitle): Promise<RequestState<boolean>> => {
+  "delete_devblog": async (params: DevblogPassword): Promise<RequestState<boolean>> => {
     let response = await GeneralOperation<boolean>({
       url: `/devblog/${params.title}`,
       method: "DELETE",
-      headers: {}
+      headers: {
+        "authorization": params.password
+      }
     });
     if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
     return response;

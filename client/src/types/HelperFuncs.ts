@@ -1,4 +1,4 @@
-import { Blog, Content, NewContent, FullContent, NewBlog, NewFullContent, NewProject, Project } from "./Content";
+import { Blog, Content, NewContent, FullContent, NewBlog, NewFullContent, NewProject, Project, Devblog, NewDevblog } from "./Content";
 
 // Converts a full content object to a new full content object
 // Basically it will remove all data thats added by the backend
@@ -33,5 +33,12 @@ export const blogToNew = (blogData: Blog): NewBlog => {
 // Converts Project type to NewProject
 export const projectToNew = (projectData: Project): NewProject => {
   let {id: r1, content_type: r2, ...extraRemoved} = projectData;
+  return extraRemoved;
+}
+
+/* -------------------------------------------------------------------------- */
+  
+export const devblogToNew = (devblogData: Devblog): NewDevblog => {
+  let {id: r1, ...extraRemoved} = devblogData;
   return extraRemoved;
 }

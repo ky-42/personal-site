@@ -148,7 +148,7 @@ pub async fn get_tags(
 pub async fn add_tags(
     db_pool: web::Data<DbPool>,
     blog_add_slug: web::Path<ContentSlug>,
-    tags_list: web::Data<TagsToAdd>,
+    tags_list: web::Json<TagsToAdd>,
     _: AuthUser
 ) -> Result<HttpResponse, AppError> {
      web::block(move || {

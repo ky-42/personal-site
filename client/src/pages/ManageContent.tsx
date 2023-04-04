@@ -1,19 +1,19 @@
-import React, { useReducer, useRef, useState } from "react";
+import { useReducer, useRef, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineRight } from "react-icons/ai";
 
 import PageTitle from "../components/Shared/PageTitle";
 import { ActionTypes, ReducerAction, SetReducer, UpdateReducer } from "../types/ManageContent";
-import { Blog, Content, ContentType, Devblog, FullContent, NewFullContent, Project, ProjectStatus } from "../types/Content";
+import { Blog, Content, ContentType, Devblog, FullContent, NewDevblog, NewFullContent, Project, ProjectStatus } from "../types/Content";
 import InputArea from "../components/ContentManagement/InputArea";
 import { ClickButton, DropDown, EnterButton, InputButtonHolder, InputGroup, InputSection, SectionTitle, ShortTextInput, SmallSectionTitle, StateButton, StyledButton } from "../components/ContentManagement/InputElements";
 import ProjectManagment from "../components/ContentManagement/ProjectManagment";
 import BaseContentManagment from "../components/ContentManagement/BaseContentManagment";
 import BlogManagment from "../components/ContentManagement/BlogManagment";
-import { ContentOperations } from "../adapters/content";
-import { blogToNew, contentToNew, projectToNew } from "../types/HelperFuncs";
+import { ContentOperations, DevblogOperations, TagOperations } from "../adapters/content";
+import { blogToNew, contentToNew, devblogToNew, projectToNew } from "../types/HelperFuncs";
 import { RequestStatus } from "../types/RequestContent";
-import { validateBlog, validateContent, validateProject } from "../components/ContentManagement/InputValidation";
+import { validateBlog, validateContent, validateDevblog, validateProject } from "../components/ContentManagement/InputValidation";
 import DevblogManagement from "../components/ContentManagement/DevblogManagement";
 
 /* -------------------------------------------------------------------------- */
@@ -145,44 +145,81 @@ const ManageContent = () => {
   
   /* -------------------------------------------------------------------------- */
   
+  // TODO add success message
+
   // How to submit the form
   const onSubmit = () => {
+
+    let newValidationErrors = {}; 
+
+    switch (currentAction) {
+      case ActionTypes.Create: 
+      case ActionTypes.Update:
+      case ActionTypes.Delete:
+        let baseNewData = contentToNew(baseContentData);
+        validateContent(baseNewData, newValidationErrors);
+        let baseData = {...baseContentData, ...baseNewData};
+
+        // Sets up extra content data objects
+        let extraData: FullContent["extra_content"];
+        let extraNewData: NewFullContent["new_extra_content"];
+        
+        switch (extraContentType) {
+          case ContentType.Blog:
+            extraNewData = {"blog": blogToNew(blogData)};
+            validateBlog(extraNewData.blog, newValidationErrors);
+            extraData = {"blog": {...blogData, ...extraNewData["blog"]}};
+            break;
+            
+          case ContentType.Project:
+            extraNewData = {"project": projectToNew(projectData)};
+            validateProject(extraNewData.project, newValidationErrors);
+            extraData = {"project": {...projectData, ...extraNewData["project"]}};
+            break; 
+        }
+        
+        setValidationErrors(newValidationErrors);
+        
+        // If there are errors scroll to top stop request
+        if (Object.keys(newValidationErrors).length !== 0) {
+          pageTop.current?.scrollIntoView();
+          return;
+        }
+        
+        submitContent({baseData, baseNewData, extraData, extraNewData});
+        
+        break;
+
+      case ActionTypes.DevblogCreate:
+      case ActionTypes.DevblogUpdate:
+      case ActionTypes.DevblogDelete:
+      
+        let devblogNewData = devblogToNew(devblogData);
+        validateDevblog(devblogNewData, newValidationErrors);
+
+        setValidationErrors(newValidationErrors);
+        
+        // If there are errors scroll to top stop request
+        if (Object.keys(newValidationErrors).length !== 0) {
+          pageTop.current?.scrollIntoView();
+          return;
+        }
+      
+        submitDevblog({submitDevblogData: devblogData, devblogNewData});
+        break;
+    }
+  }
+  
+  interface SubmitContentParams {
+    baseData: FullContent["base_content"];
+    baseNewData: NewFullContent["new_base_content"];
+    extraData: FullContent["extra_content"];
+    extraNewData: NewFullContent["new_extra_content"];
+  }
+
+  const submitContent = ({baseData, baseNewData, extraData, extraNewData}: SubmitContentParams) => {
     
     /* ---------- Validates data and sets up data to be sent in request --------- */
-    
-    let newValidationErrors = {}; 
-    
-    let baseNewData = contentToNew(baseContentData);
-    validateContent(baseNewData, newValidationErrors);
-    let baseData = {...baseContentData, ...baseNewData};
-
-    // Sets up extra content data objects
-    let extraData: FullContent["extra_content"];
-    let extraNewData: NewFullContent["new_extra_content"];
-    
-    switch (extraContentType) {
-      case ContentType.Blog:
-        extraNewData = {"blog": blogToNew(blogData)};
-        validateBlog(extraNewData.blog, newValidationErrors);
-        extraData = {"blog": {...blogData, ...extraNewData["blog"]}};
-        break;
-        
-      case ContentType.Project:
-        extraNewData = {"project": projectToNew(projectData)};
-        validateProject(extraNewData.project, newValidationErrors);
-        extraData = {"project": {...projectData, ...extraNewData["project"]}};
-        break; 
-    }
-    
-    setValidationErrors(newValidationErrors);
-    
-    // If there are errors scroll to top stop request
-    if (Object.keys(newValidationErrors).length !== 0) {
-      pageTop.current?.scrollIntoView();
-      return;
-    }
-    
-    /* -------------------------------------------------------------------------- */
     
     switch (currentAction) {
       case ActionTypes.Create:
@@ -192,9 +229,18 @@ const ManageContent = () => {
           new_extra_content: extraNewData
         };
 
+        // TODO add error handling
         ContentOperations.add_content({
           addContent,
           password: serverPassword
+        }).then(() => {
+          if (extraContentType === ContentType.Blog) {
+            TagOperations.add_tags({
+              blog_slug: baseNewData.slug,
+              tags: Array.from(tags),
+              password: serverPassword
+            });
+          }
         });
 
         break;
@@ -206,6 +252,20 @@ const ManageContent = () => {
           updated_content: {
             base_content: baseData,
             extra_content: extraData
+          }
+        }).then(() => {
+          // After updating content, update tags needed then so there is no race condition
+          if (extraContentType === ContentType.Blog) {
+            TagOperations.delete_tags({
+              blog_slug: baseData.slug,
+              password: serverPassword
+            }).then(() => {
+              TagOperations.add_tags({
+                blog_slug: baseNewData.slug,
+                tags: Array.from(tags),
+                password: serverPassword
+              });
+            })
           }
         })
 
@@ -222,40 +282,108 @@ const ManageContent = () => {
     }
   };
 
+  interface submitDevblogParams {
+    submitDevblogData: Devblog;
+    devblogNewData: NewDevblog;
+  }
+
+  const submitDevblog = ({submitDevblogData: devblogData, devblogNewData}: submitDevblogParams) => {
+    switch (currentAction) {
+      case ActionTypes.DevblogCreate:
+        DevblogOperations.add_devblog({
+          newDevblogInfo: devblogNewData,
+          password: serverPassword
+        });
+
+        break;
+
+      case ActionTypes.DevblogUpdate:
+        DevblogOperations.update_devblog({
+          title: modifyItem,
+          password: serverPassword,
+          updatedDevblogInfo: devblogData
+        });
+
+        break;
+
+      case ActionTypes.DevblogDelete:
+        DevblogOperations.delete_devblog({
+          title: modifyItem,
+          password: serverPassword
+        });
+
+        break;
+    }
+  };
+
   /* -------------------------------------------------------------------------- */
   
   // Loads the content to be updated or deleted
   const loadOldContent = () => {
-    ContentOperations.get_content({
-      slug: modifyItem
-    }).then((value) => {
-      switch (value.requestStatus) {
-        // TODO add success messages and error handling
-        case RequestStatus.Success:
-          // Sets the base content state
-          setBaseContentData({
-            action: ReducerAction.Set,
-            newState: value.requestedData.base_content
-          });
-          
-          // Sets the extra content state
-          if ("blog" in value.requestedData.extra_content) {
-            setExtraContentType(ContentType.Blog);
-            setBlogData({
-              action: ReducerAction.Set,
-              newState: value.requestedData.extra_content["blog"]
-            });
-          } else if ("project" in value.requestedData.extra_content) {
-            setExtraContentType(ContentType.Project);
-            setProjectData({
-              action: ReducerAction.Set,
-              newState: value.requestedData.extra_content["project"]
-            });
-          }        
+  
+    switch (currentAction) {
+      case ActionTypes.Update:
+      case ActionTypes.Delete:
+        ContentOperations.get_content({
+          slug: modifyItem
+        }).then((value) => {
+          switch (value.requestStatus) {
+            // TODO add success messages and error handling
+            case RequestStatus.Success:
+              // Sets the base content state
+              setBaseContentData({
+                action: ReducerAction.Set,
+                newState: value.requestedData.base_content
+              });
+              
+              // Sets the extra content state
+              if ("blog" in value.requestedData.extra_content) {
+                setExtraContentType(ContentType.Blog);
+                setBlogData({
+                  action: ReducerAction.Set,
+                  newState: value.requestedData.extra_content["blog"]
+                });
 
-          break;
-      }
-    })
+                // Gets the tags for the blog because they are not in the blog data
+                TagOperations.get_blog_tags({
+                  blog_slug: value.requestedData.base_content.slug
+                }).then((value) => {
+                  // TODO add error handling
+                  if (value.requestStatus === RequestStatus.Success) {
+                    setTags(new Set(value.requestedData.map((tag) => tag.title)));
+                  }
+                })
+
+              } else if ("project" in value.requestedData.extra_content) {
+                setExtraContentType(ContentType.Project);
+                setProjectData({
+                  action: ReducerAction.Set,
+                  newState: value.requestedData.extra_content["project"]
+                });
+              }        
+
+              break;
+          }
+        });
+        break;
+      
+      case ActionTypes.DevblogUpdate:
+      case ActionTypes.DevblogDelete:
+        DevblogOperations.get_devblog_object({
+          title: modifyItem
+        }).then((value) => {
+          switch (value.requestStatus) {
+            // TODO add success messages and error handling
+            case RequestStatus.Success:
+              // Sets the devblog state
+              setDevblogData({
+                action: ReducerAction.Set,
+                newState: value.requestedData
+              });
+              break;
+          }
+        });
+    }
   }
 
   /* -------------------------------------------------------------------------- */
@@ -273,10 +401,17 @@ const ManageContent = () => {
       newState: defaultBlog
     });
     
+    setTags(new Set());
+    
     setProjectData({
       action: ReducerAction.Set,
       newState: defaultProject
     });
+    
+    setDevblogData({
+      action: ReducerAction.Set,
+      newState: defaultDevblog
+    })
   }
   
   /* -------------------------------------------------------------------------- */

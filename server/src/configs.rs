@@ -24,30 +24,30 @@ pub fn route_config(cfg: &mut web::ServiceConfig) {
                     .route(web::put().to(content::update_content))
                     .route(web::delete().to(content::delete_content)),
             )
-
-            // Routes for tag operations relating to a blog
+    );
+    
+    // Routes for tag operations relating to a blog
+    cfg.service(
+        web::scope("/tag")
             .service(
-                web::scope("/tag")
-                    .service(
-                        web::resource("/{slug}")
-                            .route(web::get().to(content::get_tags))
-                            .route(web::post().to(content::add_tags))
-                            .route(web::delete().to(content::delete_tags))
-                    )
+                web::resource("/{slug}")
+                    .route(web::get().to(content::get_tags))
+                    .route(web::post().to(content::add_tags))
+                    .route(web::delete().to(content::delete_tags))
             )
-
-            // Routes for dealing with devblogs including all crud routes
+    );
+        
+    // Routes for dealing with devblogs including all crud routes
+    cfg.service(
+        web::scope("/devblog")
+            .service(web::resource("/add").route(web::post().to(content::add_devblog)))
+            // Given a blog gets next and previous blogs in devlog
+            .service(web::resource("/get-next-prev-blog").route(web::get().to(content::get_surrounding_blogs)))
             .service(
-                web::scope("/devblog")
-                    .service(web::resource("/add").route(web::post().to(content::add_devblog)))
-                    // Given a blog gets next and previous blogs in devlog
-                    .service(web::resource("/get-next-prev-blog").route(web::get().to(content::get_surrounding_blogs)))
-                    .service(
-                        web::resource("/{title}")
-                            .route(web::get().to(content::get_devblog))
-                            .route(web::put().to(content::update_devblog))
-                            .route(web::delete().to(content::delete_devblog)),
-                    )
+                web::resource("/{title}")
+                    .route(web::get().to(content::get_devblog))
+                    .route(web::put().to(content::update_devblog))
+                    .route(web::delete().to(content::delete_devblog)),
             )
     );
 }
