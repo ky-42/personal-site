@@ -22,7 +22,7 @@ const MetaData = ({title, description, type}: MetaDataProps) => {
       <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="author" content={jsonConfig.name} />
-      <link rel="canonical" href={`https://${jsonConfig.productionClientUrl}${location.pathname}`} />
+      <link rel="canonical" href={`https://${jsonConfig.productionClientUrl}${location.pathname.replace(/\/$/, '')}`} />
 
       {/* ------------------------ Open graph metadata tags ------------------------ */}
       <meta property="og:type" content={type} />
