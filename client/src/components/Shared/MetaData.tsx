@@ -2,6 +2,7 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 
 import jsonConfig from "@config/config.json";
+import { useLocation } from "react-router-dom";
 
 interface MetaDataProps {
   title: string,
@@ -10,6 +11,9 @@ interface MetaDataProps {
 }
 
 const MetaData = ({title, description, type}: MetaDataProps) => {
+  
+  const location = useLocation();
+  
   return (
     <Helmet>
       {/* TODO Add more open graph meta tags */}
@@ -18,6 +22,7 @@ const MetaData = ({title, description, type}: MetaDataProps) => {
       <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="author" content={jsonConfig.name} />
+      <link rel="canonical" href={`https://${jsonConfig.productionClientUrl}${location.pathname}`} />
 
       {/* ------------------------ Open graph metadata tags ------------------------ */}
       <meta property="og:type" content={type} />
