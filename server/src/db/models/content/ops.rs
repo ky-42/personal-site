@@ -539,6 +539,15 @@ pub mod devblog_ops {
             self.save_changes::<Devblog>(db_conn)?;
             Ok(())
         }
+        
+        pub fn get_devblog_from_id(
+            devblog_id: i32,
+            db_conn: &mut PgConnection
+        ) -> Result<Devblog, AppError> {
+            Ok(devblog::table
+                .filter(devblog::id.eq(devblog_id))
+                .get_result(db_conn)?)
+        }
 
         // Gets the next and previous blogs in a devblog series
         pub fn get_surrounding_blogs(

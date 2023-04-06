@@ -209,6 +209,22 @@ pub async fn get_devblog(
     Ok(web::Json(fetched_devblog))
 }
 
+pub async fn get_devblog_from_id(
+    db_pool: web::Data<DbPool>,
+    devblog_id: web::Path<IdStruct>,
+) -> Result<web::Json<Devblog>, AppError> {
+    let fetched_devblog: Devblog = web::block(move || {
+        let mut db_conn = db_pool.get()?;
+        Devblog::get_devblog_from_id(
+            devblog_id.into_inner().id,
+            &mut db_conn
+        )
+    })
+    .await??;
+
+    Ok(web::Json(fetched_devblog))
+}
+
 // Given a blog gets next and previous blogs in devlog
 pub async fn get_surrounding_blogs(
     db_pool: web::Data<DbPool>,

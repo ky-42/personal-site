@@ -6,7 +6,7 @@ import { EnterButton, InputButtonHolder, ShortTextInput } from "./InputElements"
 import { ReducerAction, SetReducer, UpdateReducer } from "../../types/ManageContent";
 import InputArea from "./InputArea";
 import { AiOutlineRight } from "react-icons/ai";
-import Tag from "./Tag";
+import { ManageTag } from "../Shared/Buttons";
 import { ContentOperations, DevblogOperations } from "../../adapters/content";
 import { RequestStatus } from "../../types/RequestContent";
 
@@ -126,7 +126,7 @@ const BlogManagment = ({blogData, setBlogData, tags, setTags, validationErrors}:
             <br />
             <TagsList>
               {Array.from(tags).map(tag => {
-                return <Tag tagString={tag} removeTag={removeTag} key={tag} />
+                return <ManageTag tagString={tag} removeTag={removeTag} key={tag} />
               })}
             </TagsList>
           </div>

@@ -82,7 +82,7 @@ const LoadErrorHandle = <T, >(handlingData: LoadErrorHandleProps<T>): JSX.Elemen
       
       // TODO maybe fix this
       // eslint-disable-next-line
-  }, [handlingData, handlingData.requestInfo, handlingData.requestInfo.requestStatus]);
+  }, [handlingData.requestInfo, handlingData.requestInfo.requestStatus]);
 
   // Helps handle requestest by showing different elements based on the requests state
   switch (handlingData.requestInfo.requestStatus) {

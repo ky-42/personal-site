@@ -15,7 +15,7 @@ pub fn route_config(cfg: &mut web::ServiceConfig) {
         web::scope("/content")
             .service(web::resource("/add").route(web::post().to(content::add_content)))
             .service(web::resource("/list").route(web::get().to(content::list_content)))
-            .service(web::resource("view-from-id/{id}").route(web::get().to(content::view_from_id)))
+            .service(web::resource("/view-from-id/{id}").route(web::get().to(content::view_from_id)))
 
             // Routes for a single existing peice of content
             .service(
@@ -43,6 +43,8 @@ pub fn route_config(cfg: &mut web::ServiceConfig) {
             .service(web::resource("/add").route(web::post().to(content::add_devblog)))
             // Given a blog gets next and previous blogs in devlog
             .service(web::resource("/get-next-prev-blog").route(web::get().to(content::get_surrounding_blogs)))
+            .service(web::resource("/view-from-id/{id}").route(web::get().to(content::get_devblog_from_id)))
+
             .service(
                 web::resource("/{title}")
                     .route(web::get().to(content::get_devblog))

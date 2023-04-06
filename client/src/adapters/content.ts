@@ -1,7 +1,7 @@
 import axios from "axios";
 import backend_axios from ".";
 import { Blog, Devblog, FullContent, NewDevblog, Tag } from "../types/Content";
-import { ContentAddParams, RequestState, RequestStatus, FullContentList, ContentSlug, ContentListInfo, ContentUpdateInfo, ContentPassword, BlogSlug, TagAddInfo, BlogSlugPassword, DevblogTitle, SurroundingData, SurroundingBlogs, DevblogAddInfo, DevblogUpdateInfo, DevblogPassword } from "../types/RequestContent";
+import { ContentAddParams, RequestState, RequestStatus, FullContentList, ContentSlug, ContentListInfo, ContentUpdateInfo, ContentPassword, BlogSlug, TagAddInfo, BlogSlugPassword, DevblogTitle, SurroundingData, SurroundingBlogs, DevblogAddInfo, DevblogUpdateInfo, DevblogPassword, Id } from "../types/RequestContent";
 
 /* ---------- General operation adapter for all backend operations ---------- */
 
@@ -37,6 +37,13 @@ export const ContentOperations = {
  "get_content": async (params: ContentSlug): Promise<RequestState<FullContent>> => {
     return await GeneralOperation<FullContent>({
       url: `/content/${params.slug}`,
+      method: "GET",
+      headers: {}
+  })},
+  
+  "get_content_from_id": async (params: Id): Promise<RequestState<FullContent>> => {
+    return await GeneralOperation<FullContent>({
+      url: `/content/view-from-id/${params.id}`,
       method: "GET",
       headers: {}
   })},
@@ -93,8 +100,8 @@ export const ContentOperations = {
 /* ------------------------- Tag operation adapters ------------------------- */
 
 export const TagOperations = {
-  "get_blog_tags": async (params: BlogSlug): Promise<RequestState<Tag[]>> => {
-    return await GeneralOperation<Tag[]>({
+  "get_blog_tags": async (params: BlogSlug): Promise<RequestState<Set<Tag>>> => {
+    return await GeneralOperation<Set<Tag>>({
       url: `/tag/${params.blog_slug}`,
       method: "GET",
       headers: {}
@@ -138,10 +145,17 @@ export const DevblogOperations = {
       method: "GET",
       headers: {}
   })},
+  
+  "get_devlog_object_from_id":async (params: Id) => {
+    return await GeneralOperation<Devblog>({
+      url: `/devblog/view-from-id/${params.id}`,
+      method: "GET",
+      headers: {}
+  })},
 
   "get_surrounding_blogs": async (params: SurroundingData): Promise<RequestState<SurroundingBlogs>> => {
     return await GeneralOperation<SurroundingBlogs>({
-      url: "/devblog/get-next-pre-blog",
+      url: "/devblog/get-next-prev-blog",
       method: "GET",
       headers: {},
       params: params

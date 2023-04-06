@@ -70,7 +70,8 @@ const emptyToUndefined = (value: any): true | undefined => {
         return undefined;
     } else if (
         typeof value === "object"
-        && Object.keys(value).length === 0 
+        && Object.keys(value).length === 0
+        && !(value instanceof Date)
     ) {
         return undefined;
     }
