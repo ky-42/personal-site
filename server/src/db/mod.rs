@@ -1,5 +1,4 @@
 pub mod models;
-
 use diesel::prelude::*;
 use diesel::{pg::PgConnection, r2d2::{self, ConnectionManager}};
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};

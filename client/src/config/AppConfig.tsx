@@ -64,6 +64,18 @@ const GlobalCSS = createGlobalStyle`
   a {
     text-decoration: none;
   }
+
+  /* Change the color and size of the scroll bar */
+  ::-webkit-scrollbar {
+    width: 0.8rem;
+    opacity: 0;
+  }
+
+  /* Change the color of the scroll bar thumb */
+  ::-webkit-scrollbar-thumb {
+    background-color: ${StyleTheme.lightTone};
+    border-radius: 0;
+  }
 `
 const AppConfig = () => {
   // Sets config for things that will effect or be used by all pages

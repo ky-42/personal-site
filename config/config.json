@@ -132,7 +132,8 @@
             ]
         },
         "blogList": {
-            "description": "A list of the blogs I've created. Most are about my experiences programming but theres a little bit of everything!"
+            "description": "A list of the blogs I've created. Most are about my experiences programming but theres a little bit of everything!",
+            "contentPerPage": 8
         },
         "projectList": {
             "description": "A list of my projects! Some are finished and some arn't"

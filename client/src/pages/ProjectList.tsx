@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import styled, { css } from "styled-components";
 import {AiFillCaretLeft} from "react-icons/ai";
 
-import {GetContentList} from "../adapters/content";
+import {ContentOperations} from "../adapters/content";
 import {FullContentList, listOrder, RequestState, RequestStatus} from "../types/RequestContent";
 import {ContentType, ProjectStatus} from "../types/Content";
 import PageTitle from "../components/Shared/PageTitle";
@@ -128,7 +128,7 @@ const ProjectList = () => {
   
   // Gets under dev projects and gets max page
   useEffect(() => {
-    GetContentList({
+    ContentOperations.get_content_list({
       page_info: {
         content_per_page: 12,
         page: 0,
@@ -147,7 +147,7 @@ const ProjectList = () => {
   useEffect(() => {
     // Checks if the page the user is on was already fetched
     if (fetchedFinishedProjects[page] === undefined) {
-      GetContentList({
+      ContentOperations.get_content_list({
         page_info: {
           content_per_page: contentPerPage,
           page,

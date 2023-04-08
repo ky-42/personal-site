@@ -1,9 +1,11 @@
-use super::{ContentType, base::Content, deserialize_helpers::empty_vec_as_none};
-use crate::schema::{blog, project, sql_types};
+use super::{ContentType, base::Content};
+use super::deserialize_helpers::empty_string_as_none;
+use crate::schema::{blog, project, tag, devblog, sql_types};
 use diesel::{expression::AsExpression, pg::{Pg, PgValue}, serialize::{self, ToSql, Output, IsNull}, deserialize::{self, FromSql, FromSqlRow}};
 use serde::{self, Deserialize, Serialize};
 use std::io::Write;
 use validator::Validate;
+use chrono::{self, DateTime, Utc};
 
 /* -------------------------- Extra content stores -------------------------- */
 // Used to store any peice of extra content under
@@ -46,38 +48,94 @@ impl Validate for NewExtraContent {
 // with other details in the content table to make
 // a complete peice of content
 
-
 #[derive(Insertable, Deserialize, Serialize, Validate, Debug)]
 #[diesel(table_name = blog)]
 pub struct NewBlog {
-    #[serde(deserialize_with = "empty_vec_as_none")]
-    tags: Option<Vec<String>>,
+    related_project_id: Option<i32>,
+    devblog_id: Option<i32>
 }
 
 #[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Validate, Debug)]
-#[diesel(table_name = blog, treat_none_as_null = true, belongs_to(Content, foreign_key = id ))]
+#[diesel(table_name = blog, treat_none_as_null = true, belongs_to(Content, foreign_key = id ), belongs_to(Project, foreign_key = related_project_id), belongs_to(Devblog, foreign_key = devblog_id))]
 pub struct Blog {
     id: i32,
-    #[serde(deserialize_with = "empty_vec_as_none")]
-    tags: Option<Vec<Option<String>>>,
     content_type: ContentType,
+    related_project_id: Option<i32>,
+    devblog_id: Option<i32>
 }
 
 #[derive(Insertable, Deserialize, Serialize, Validate, Debug)]
 #[diesel(table_name = project)]
 pub struct NewProject {
     current_status: CurrentStatus,
+    #[serde(deserialize_with = "empty_string_as_none")]
+    github_link: Option<String>,
+    #[serde(deserialize_with = "empty_string_as_none")]
+    url: Option<String>,
+    start_date: Option<DateTime<Utc>>
 }
 
 #[derive(Queryable, AsChangeset, Identifiable, Associations, Serialize, Deserialize, Validate, Debug)]
-#[diesel(table_name = project, belongs_to(Content, foreign_key = id ))]
+#[diesel(table_name = project, treat_none_as_null = true, belongs_to(Content, foreign_key = id))]
 pub struct Project {
     id: i32,
     current_status: CurrentStatus,
     content_type: ContentType,
+    #[serde(deserialize_with = "empty_string_as_none")]
+    github_link: Option<String>,
+    #[serde(deserialize_with = "empty_string_as_none")]
+    url: Option<String>,
+    start_date: Option<DateTime<Utc>>
+}
+
+impl Blog {
+    pub fn get_id(&self) -> i32 {
+        self.id
+    }
+}
+
+impl Project {
+    pub fn get_id(&self) -> i32 {
+        self.id
+    }
+}
+
+/* --------------------------- Content extenstions -------------------------- */
+// Extra details the connect with peice of content
+
+// No NewTag structure becuase its a simple data type that is unlikely to change
+// and it made adding multiple tags easier I do recognize the inconsistency 
+#[derive(Queryable, Identifiable, Serialize, Deserialize, Debug)]
+#[diesel(table_name = tag, belongs_to(Blog, foreign_key = blog_id ))]
+pub struct Tag {
+    id: i32,
+    blog_id: i32,
+    title: String
+}
+
+#[derive(Insertable, Serialize, Deserialize, Validate, Debug)]
+#[diesel(table_name = devblog)]
+pub struct NewDevblog {
+    #[validate(length(min = 1))]
+    title: String
+}
+
+#[derive(Queryable, AsChangeset, Identifiable, Serialize, Deserialize, Validate, Debug)]
+#[diesel(table_name = devblog)]
+pub struct Devblog {
+    id: i32,
+    #[validate(length(min = 1))]
+    title: String
+}
+
+impl Devblog {
+    pub fn get_id(&self) -> i32 {
+        self.id
+    }
 }
 
 /* ---------------------------- Models data types --------------------------- */
+// Data that is used in a db model
 
 // Represtent the current status of a project
 #[derive(Debug, Serialize, Deserialize, AsExpression, FromSqlRow, QueryId)]
@@ -109,28 +167,13 @@ impl FromSql<sql_types::Projectstatus, Pg> for CurrentStatus {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-
-impl Blog {
-    pub fn get_id(&self) -> i32 {
-        self.id
-    }
-}
-
-impl Project {
-    pub fn get_id(&self) -> i32 {
-        self.id
-    }
-}
-
-/* -------------------------------------------------------------------------- */
+/* ---------------------- Extra content auto generation --------------------- */
 
 #[cfg(test)]
 pub mod tests {
 
     use super::*;
-    // use lipsum::{lipsum, lipsum_title, lipsum_words};
-    use rand::seq::SliceRandom;
+    use chrono::TimeZone;
     use rand::Rng;
     
     pub fn random_extra() -> (NewExtraContent, ContentType) {
@@ -159,9 +202,39 @@ pub mod tests {
                     CurrentStatus::UnderDevelopment
                 }  
             };
+            
+            let github_link = {
+                // 1/2 chance of having github link
+                if rng.gen_range(0..1) > 0 {
+                    Some(String::from("https://github.com/ky-42/personal-site"))
+                } else {
+                    None
+                }  
+            };
+
+            let url = {
+                // 1/2 chance of having a url
+                if rng.gen_range(0..1) > 0 {
+                    Some(String::from("https://kyledenief.me/"))
+                } else {
+                    None
+                }  
+            };
+            
+            let start_date = {
+                // 1/2 chance of having a start date
+                if rng.gen_range(0..1) > 0 {
+                    Some(Utc.with_ymd_and_hms(2023, 3, 14, 14, 40, 20).unwrap())
+                } else {
+                    None
+                }  
+            };
 
             NewProject {
-                current_status
+                current_status,
+                github_link,
+                url,
+                start_date                
             }
         }
     }        
@@ -169,39 +242,9 @@ pub mod tests {
     impl NewBlog {
         // Generates an instance of NewBlog with random values
         pub fn random() -> NewBlog {
-
-            let mut rng = rand::thread_rng();
-
-            // 1/6 chance of even having tags
-            let tags: Option<Vec<String>> = if rng.gen_range(0..6) > 0 {
-                // Number of tags to add
-                let num_tags = rng.gen_range(1..4);
-                Some(
-                    [
-                        "Python",
-                        "Javascript",
-                        "Rust",
-                        "Django",
-                        "Tutorial",
-                        "React",
-                        "Flask",
-                        "Actix",
-                        "Discord.py",
-                    ]
-                    // Chooses random elements from list and convers them to strings
-                    .choose_multiple(&mut rng, num_tags)
-                    .cloned()
-                    .collect::<Vec<&str>>()
-                    .iter()
-                    .map(|&s| s.into())
-                    .collect(),
-                )
-            } else {
-                None
-            };
-
             NewBlog {
-                tags
+                related_project_id: None,
+                devblog_id: None
             }
         }
     }

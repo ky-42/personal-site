@@ -114,7 +114,7 @@ const Connect = () => {
         {
           // Adds any number of links defined in config.json
           jsonConfig.pages.connect.links.map(linkData => {
-            return <ExternalLink LinkTo={linkData.url} Icon={iconMatch[linkData.name as keyof typeof iconMatch]} />;
+            return <ExternalLink LinkTo={linkData.url} Icon={iconMatch[linkData.name as keyof typeof iconMatch]} key={linkData.name} />;
           })
         }
       </ExternalLinks>

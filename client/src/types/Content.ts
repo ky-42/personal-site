@@ -52,11 +52,15 @@ export interface NewContent {
 }
 
 export interface NewBlog {
-  tags?: Array<string>;
+  devblog_id?: number;
+  related_project_id?: number;
 }
 
 export interface NewProject {
   current_status: ProjectStatus;
+  github_link?: string;
+  url?: string;
+  start_date?: Date;
 }
 
 export interface NewFullContent {
@@ -64,4 +68,19 @@ export interface NewFullContent {
   new_extra_content: {project: NewProject} | {blog: NewBlog}
 }
 
-/* -------------------------------------------------------------------------- */
+/* --------------------------- Content extenstions -------------------------- */
+  
+export interface Tag {
+  id: number;
+  blog_id: number;
+  title: string;
+}
+
+export interface NewDevblog {
+  title: String;
+}
+
+export interface Devblog {
+  id: number;
+  title: string;
+}

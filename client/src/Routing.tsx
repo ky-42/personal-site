@@ -1,9 +1,13 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import PageConfig from "./config/PageConfig";
 import * as Pages from "./pages/_PagesExport";
 
 const Routing = () => {
+  
+  // Used to force a reload of the content view when the url changes
+  const location = useLocation();
+  
   return (
     // TODO create loading pag<></>how if loading takes a certain amount of time
     <React.Suspense fallback={<></>}>
@@ -15,11 +19,11 @@ const Routing = () => {
           <Route path="connect" element={<Pages.Connect />} />
           <Route path="projects">
             <Route index element={<Pages.ProjectList />} />
-            <Route path=":slug" element={<Pages.ContentView />} />
+            <Route path=":slug" element={<Pages.ContentView key={location.key} />} />
           </Route>
           <Route path="blogs">
             <Route index element={<Pages.BlogList />} />
-            <Route path=":slug" element={<Pages.ContentView />} />
+            <Route path=":slug" element={<Pages.ContentView key={location.key} />} />
           </Route>
           <Route path="*" element={<Pages.NotFound />} />
         </Route>

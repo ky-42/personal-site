@@ -1,10 +1,39 @@
-import { ContentType, FullContent, NewFullContent, ProjectStatus } from "./Content";
+import { ContentType, Devblog, FullContent, NewDevblog, NewFullContent, ProjectStatus } from "./Content";
+
+/* -------------------------------------------------------------------------- */
+/*                                   General                                  */
+/* -------------------------------------------------------------------------- */
+
+export interface Id {
+  id: number
+}
 
 /* -------------------------------------------------------------------------- */
 /*                Types used in requests to backend for content               */
 /* -------------------------------------------------------------------------- */
 
-// Options for the order to show a list of content
+export interface ContentSlug {
+  slug: string
+}
+
+export interface ContentPassword extends ContentSlug {
+  password: string
+}
+
+export interface ContentUpdateInfo extends ContentPassword {
+  updated_content: FullContent
+}
+
+export interface ContentAddParams {
+  addContent: NewFullContent,
+  password: string
+};
+
+export interface ContentListInfo {
+  page_info: PageInfo,
+  content_filters: ContentFilter
+}
+
 export enum listOrder {
   Newest = "Newest",
   Oldest = "Oldest",
@@ -17,29 +46,68 @@ export interface PageInfo {
   show_order: listOrder;
 }
 
-// Options for operation on an existing peice of content
-export interface ContentPieceOptions {
-  slug: string,
-  method: string,
-  password?: string
-  updated_content?: FullContent
-};
-
-// Options for adding content
-export interface ContentAddParams {
-  addContent: NewFullContent,
-  password: string
-};
-
 export interface FullContentList {
   full_content_list: FullContent[],
   content_count: number
 }
 
+// When updating update searchParamsToContentFilter in HelperFuncs.ts
 export interface ContentFilter {
   content_type: ContentType,
   project_status?: ProjectStatus,
-  blog_tag?: string
+  // Id for project to get blogs for
+  project_blogs?: number,
+  blog_tag?: string,
+  devblog_id?: number,
+  search?: string
+}
+
+/* -------------------------------------------------------------------------- */
+/*                 Types used in requests to backend for tags                 */
+/* -------------------------------------------------------------------------- */
+
+export interface BlogSlug {
+  blog_slug: string,
+}
+
+export interface BlogSlugPassword extends BlogSlug {
+  password: string
+}
+
+export interface TagAddInfo extends BlogSlugPassword {
+  tags: string[]
+}
+
+/* -------------------------------------------------------------------------- */
+/*               Types used in requests to backend for devblogs               */
+/* -------------------------------------------------------------------------- */
+
+export interface DevblogTitle {
+  title: string
+}
+
+export interface DevblogPassword extends DevblogTitle {
+  password: string
+}
+
+export interface DevblogAddInfo {
+  newDevblogInfo: NewDevblog
+  password: string
+}
+
+export interface DevblogUpdateInfo extends DevblogPassword {
+  updatedDevblogInfo: Devblog
+}
+
+export interface SurroundingData {
+  devblog_id: number,
+  blog_slug: string,
+  direction_count: number
+}
+
+export interface SurroundingBlogs {
+  before_blogs: FullContent[],
+  after_blogs: FullContent[]
 }
 
 /* ---- Types used to help handle loading and errors when requesting data --- */

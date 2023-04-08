@@ -1,4 +1,4 @@
-import { NewContent, NewBlog, NewProject } from "../../types/Content";
+import { NewContent, NewBlog, NewProject, NewDevblog } from "../../types/Content";
 
 
 // Ensures that data in a content object is valid
@@ -22,13 +22,7 @@ export const validateBlog = (data: NewBlog, validationErrors: Record<string, str
     let key: keyof NewBlog;
     for (key in data) {
         if (!emptyToUndefined(data[key])) {
-            if (
-                key === "tags"
-            ) {
-                data[key] = undefined;
-            } else {
-                validationErrors[key] = "Value needed";                
-            }
+            data[key] = undefined;
         }
     }
 }
@@ -39,12 +33,28 @@ export const validateProject = (data: NewProject, validationErrors: Record<strin
     for (key in data) {
         if (!emptyToUndefined(data[key])) {
             if (
-                false
+                key === "url" || 
+                key === "github_link" ||
+                key === "start_date" 
             ) {
-                // data[key] = undefined;
+                data[key] = undefined;
             } else {
                 validationErrors[key] = "Value needed";                
             }
+        }
+    }
+}
+
+// Ensures that data in a devblog object is valid 
+export const validateDevblog = (data: NewDevblog, validationErrors: Record<string, string>) => {
+    let key: keyof NewDevblog;
+    for (key in data) {
+        if (!emptyToUndefined(data[key])) {
+            if (
+                key === "title"
+            ) {
+                validationErrors[key] = "Value needed";                
+            } 
         }
     }
 }
@@ -60,7 +70,8 @@ const emptyToUndefined = (value: any): true | undefined => {
         return undefined;
     } else if (
         typeof value === "object"
-        && Object.keys(value).length === 0 
+        && Object.keys(value).length === 0
+        && !(value instanceof Date)
     ) {
         return undefined;
     }

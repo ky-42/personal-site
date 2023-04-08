@@ -1,13 +1,16 @@
 import { NewBlog, NewContent, NewProject } from "./Content"
 
 /* -------------------------------------------------------------------------- */
-/*                      Types for the manage content page                     */
+/*                          Types for the manage page                         */
 /* -------------------------------------------------------------------------- */
 
 export enum ActionTypes {
   Create = "Create",
   Update = "Update",
-  Delete = "Delete"
+  Delete = "Delete",
+  DevblogCreate = "Devblog Create",
+  DevblogUpdate = "Devblog Update",
+  DevblogDelete = "Devblog Delete"
 }
 
 export interface DeleteState {

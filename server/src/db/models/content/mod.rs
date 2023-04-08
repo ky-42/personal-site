@@ -13,9 +13,8 @@ pub mod ops;
 
 /* ----------------- Models for a complete piece of content ----------------- */
 // Used to combine the base values for a peice
-// of content with the specific values of the type
-// of the piece of content (The extra content)
-
+// of content with the data specific to the type of content
+//
 #[derive(Serialize, Deserialize, Validate, Debug)]
 pub struct FullContent {
     #[validate]
@@ -41,13 +40,25 @@ pub struct FullContentList {
 /* -------------------------------------------------------------------------- */
 
 #[derive(Deserialize, Debug)]
+#[serde(rename_all = "lowercase")]
+pub enum ContentOrder {
+    Newest,
+    Oldest,
+    ProjectStart
+}
+
+#[derive(Deserialize, Debug)]
 pub struct ContentFilter {
     content_type: ContentType,
     project_status: Option<extra::CurrentStatus>,
-    blog_tag: Option<String>
+    // Id for project to get blogs of 
+    project_blogs: Option<i32>,
+    blog_tag: Option<String>,
+    devblog_id: Option<i32>,
+    search: Option<String>
 }
 
-/* ---------------------------- Models data types --------------------------- */
+/* ---------------------------- Model data types ---------------------------- */
 // Data types used by both base and extra content
 
 // Represents the type of the content and therefore what extra

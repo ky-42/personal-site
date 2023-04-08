@@ -3,7 +3,7 @@ import { BrowserView } from 'react-device-detect';
 import styled from 'styled-components';
 
 import ContentContainer from '../components/Home/ContentSection';
-import { GetContentList } from "../adapters/content";
+import { ContentOperations } from "../adapters/content";
 import { ContentType } from "../types/Content";
 import ContentItem from "../components/Home/ContentItem";
 import { RequestState, listOrder, RequestStatus, PageInfo, ContentFilter, FullContentList } from "../types/RequestContent";
@@ -113,7 +113,7 @@ const Home = () => {
 
   useEffect(() => {
     // Gets latest project
-    GetContentList({
+    ContentOperations.get_content_list({
       page_info: latestContentPageInfo,
       content_filters: projectFilter
     }).then((contentList: RequestState<FullContentList>) => {
@@ -121,7 +121,7 @@ const Home = () => {
     })
 
     // Gets latest blog
-    GetContentList({
+    ContentOperations.get_content_list({
       page_info: latestContentPageInfo,
       content_filters: blogFilter
     }).then((contentList: RequestState<FullContentList>) => {

@@ -5,7 +5,6 @@ import styled, { css } from "styled-components";
 export const BasicInputStyling = css`
   font-size: 1.3rem;
   padding: 0.4rem 1.0rem 0.5rem 1.0rem;
-  margin: 0.8rem 0 0 0;
   border-radius: 0.5rem;
   border: 0.1rem solid ${props => props.theme.darkTone};
   color: ${props => props.theme.lightTone};
@@ -15,6 +14,9 @@ export const BasicInputStyling = css`
     color: ${props => props.theme.textColour};
     border: 0.1rem solid ${props => props.theme.highlight};
     outline: none;
+  }
+  &::placeholder {
+    color: ${props => props.theme.darkTone};
   }
 `;
 
@@ -57,6 +59,10 @@ export const ShortTextInput = styled.input`
   ${BasicInputStyling}
   max-width: 50.0rem;
   height: 2.0rem;
+`;
+
+export const DateInput = styled.input`
+  ${BasicInputStyling}
 `;
 
 export const DropDown = styled.select`
@@ -116,6 +122,10 @@ export const SectionTitle = styled.h2`
   text-align: center;
 `;
 
+export const SmallSectionTitle = styled.h3`
+  text-align: center;
+`;
+
 export const InputGroup = styled.div`
   display: flex;
   column-gap: 5.0rem;
@@ -123,4 +133,10 @@ export const InputGroup = styled.div`
   align-items: center;
   flex-wrap: wrap;
   width: 100%;
+`;
+
+export const InputButtonHolder = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
