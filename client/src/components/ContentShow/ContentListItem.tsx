@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { FullContent } from "../../types/Content";
+import { ContentType, FullContent } from "../../types/Content";
 import { Link } from "react-router-dom";
 
 /* -------------------------------------------------------------------------- */
@@ -66,7 +66,17 @@ const ContentListItem = ({content}: ContentItemProps) => {
 
   // Creates readable date string for the date the content was created
   // so it can be shown
-  const ContentDate = new Intl.DateTimeFormat('en-US', {month: "short", day: "numeric", year: "numeric"}).format(content.base_content.created_at)
+  let ContentDate: string;
+  
+  if (
+    content.base_content.content_type === ContentType.Project
+    && "project" in content.extra_content
+    && content.extra_content.project.start_date !== undefined
+  ) {
+    ContentDate = new Intl.DateTimeFormat('en-US', {month: "short", day: "numeric", year: "numeric"}).format(content.extra_content.project.start_date);
+  } else {
+    ContentDate = new Intl.DateTimeFormat('en-US', {month: "short", day: "numeric", year: "numeric"}).format(content.base_content.created_at);
+  };
 
   return (
     // Links to content is representing in form /content-type/slug

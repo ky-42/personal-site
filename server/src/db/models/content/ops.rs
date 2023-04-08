@@ -1,4 +1,4 @@
-use diesel::{prelude::*, insert_into};
+use diesel::{prelude::*, insert_into, sql_types::Integer};
 use crate::{handlers::{errors::AppError, route_data::{self, ShowOrder}}, db::models::content::FullContent, schema};
 use super::{base, extra};
 
@@ -271,8 +271,14 @@ impl super::FullContentList {
                 project_list = match page_info.show_order {
                     ShowOrder::Newest => project_list.order_by(content::created_at.desc()),
                     ShowOrder::Oldest => project_list.order_by(content::created_at.asc()),
-                    ShowOrder::ProjectStartNewest => project_list.order_by(project::start_date.desc()),
-                    ShowOrder::ProjectStartOldest => project_list.order_by(project::start_date.asc())
+                    ShowOrder::ProjectStartNewest => project_list.order_by((
+                        diesel::dsl::sql::<Integer>("CASE WHEN project.start_date IS NULL THEN 1 ELSE 0 END ASC"),
+                        project::start_date.desc()
+                    )),
+                    ShowOrder::ProjectStartOldest => project_list.order_by((
+                        diesel::dsl::sql::<Integer>("CASE WHEN project.start_date IS NULL THEN 1 ELSE 0 END ASC"),
+                        project::start_date.asc()
+                    ))
                 };
 
                 // Filters by project status

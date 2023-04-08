@@ -299,7 +299,7 @@ const ContentView = () => {
 
       // Formated date for project start
       if (data.extra_content.project.start_date !== undefined) {
-        projectStartString = new Intl.DateTimeFormat('en-US', {month: "short", year: "numeric"}).format(data.extra_content.project.start_date);
+        projectStartString = new Intl.DateTimeFormat('en-US', {month: "short", day: "numeric", year: "numeric"}).format(data.extra_content.project.start_date);
       }
 
       ExtraTopSection = (
