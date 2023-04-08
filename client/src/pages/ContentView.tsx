@@ -384,7 +384,7 @@ const ContentView = () => {
           <ContentDate>
             {/* Renders the dates for posting, editing, and project start */}
             {`
-              ${(projectStartString !== undefined ? `Project Started on: ${projectStartString} |` : "")}
+              ${(projectStartString !== undefined ? `Project Started On: ${projectStartString} |` : "")}
               Posted On: ${createDateString}
               ${data.base_content.created_at === data.base_content.updated_at ? `| Edited On: ${editDateString}` : "" }
             `}
