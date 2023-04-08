@@ -350,7 +350,7 @@ const ManageContent = () => {
                 }).then((value) => {
                   // TODO add error handling
                   if (value.requestStatus === RequestStatus.Success) {
-                    setTags(new Set(value.requestedData.map((tag) => tag.title)));
+                    setTags(new Set(Array.from(value.requestedData).map((tag) => tag.title)));
                   }
                 })
 

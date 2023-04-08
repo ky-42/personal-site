@@ -72,10 +72,13 @@ const TagHolderShow = styled(ButtonHolder)`
 
 interface TagProps {
   tagString: string,
+}
+
+interface TagPropsWithUrl extends TagProps {
   url: string
 }
 
-export const ShowTag = ({tagString, url}: TagProps) => {
+export const ShowTag = ({tagString, url}: TagPropsWithUrl) => {
   return (
     <ButtonLink to={url}>
       <TagHolderShow>
