@@ -65,7 +65,6 @@ const TopLinks = styled.div`
   row-gap: 1rem;
 `;
 
-
 /* -------------------------------- Blog data ------------------------------- */
 
 const BlogBottomData = styled.div``;
@@ -82,7 +81,6 @@ const TagDiv = styled.div`
 const NextDevblogSection = styled.div`
   display: flex;
   justify-content: space-between;
-  aligh-items: center;
   row-gap: 2rem;
   column-gap: 2rem;
   margin-top: 2rem;
@@ -96,7 +94,6 @@ const NextDevblogSection = styled.div`
 const DevblogTitleArea = styled(Link)`
   display: flex;
   flex-direction: column;
-  aligh-items: center;
   justify-content: center;
   font-size: 2.4rem;
   color: ${props => props.theme.textColour};
@@ -225,11 +222,19 @@ const ContentView = () => {
 
   const RenderBlogTags = ({data}: {data: Set<Tag>}) => {
     return (
-        <TagDiv>
-          {Array.from(data).map(tag => {
-            return <ShowTag tagString={tag.title} key={tag.id} />
-          })}
-        </TagDiv>
+      <TagDiv>
+        {/*
+          Shows tags which link to blog page with the tag as a filter
+          so it will only show blog with same tag
+        */}
+        {Array.from(data).map(tag => {
+          return <ShowTag
+            tagString={tag.title}
+            url={`/blogs?${new URLSearchParams({"blog_tag": tag.title}).toString()}`}
+            key={tag.id}
+          />
+        })}
+      </TagDiv>
     )
   }; 
 
@@ -261,9 +266,11 @@ const ContentView = () => {
     )
   };
   
+  // Renders the name of the linked devblog which links to the blog page
+  // with the devblog as a filter so it will only show blogs from the devblog
   const RenderDevblogName = ({data}: {data: Devblog}) => {
     return (
-      <DevblogTitleArea to={``}>
+      <DevblogTitleArea to={`/blogs?${new URLSearchParams({"devblog_id": `${data.id}`}).toString()}`}>
         <DevblogTitleText>
           Part of Devblog:
         </DevblogTitleText>
@@ -307,8 +314,13 @@ const ContentView = () => {
           }
           {
             // TODO: Could show error here using the RequestState
+            // Only show button if there is a blogs linked to it and if there is
+            // show a link to blog page with only the blogs linked to the current project
             showLinkedBlogs &&
-            <ShowLink button_text={"Related Blogs"} url={""} />
+            <ShowLink
+              button_text={"Related Blogs"}
+              url={`/blogs?${new URLSearchParams({"project_blogs": `${data.base_content.id}`}).toString()}`}
+            />
           } 
         </TopLinks>
       );

@@ -1,7 +1,6 @@
 use diesel::{prelude::*, insert_into};
-use crate::{handlers::{errors::AppError, route_data::{self, ShowOrder}}, db::models::content::FullContent};
+use crate::{handlers::{errors::AppError, route_data::{self, ShowOrder}}, db::models::content::FullContent, schema};
 use super::{base, extra};
-use devblog_ops::DevblogString;
 
 /* -------------------------------------------------------------------------- */
 
@@ -146,11 +145,13 @@ impl super::FullContentList {
         // with filters applied
 
         use crate::schema::content;
-
+        
         match filters.content_type {
             super::ContentType::Blog => {
 
                 use crate::schema::blog;
+                use crate::schema::tag;
+                use crate::schema::devblog;
 
                 // Creates inital joined query with blog table and content table
                 let mut blog_list = content::table
@@ -180,11 +181,8 @@ impl super::FullContentList {
                     blog_list = blog_list.filter(blog::devblog_id.eq(devblog_id));
                 };
                 
-                // TODO Need to test this
                 // Gets all blogs with a specific tag
                 if let Some(tag_title) = &filters.blog_tag {
-                    use crate::schema::tag;
-                    
                     let sub_query = tag::table
                         .select(0.into_sql::<diesel::sql_types::Integer>())
                         .filter(tag::blog_id.eq(blog::id))
@@ -193,45 +191,41 @@ impl super::FullContentList {
                     blog_list = blog_list.filter(diesel::dsl::exists(sub_query));
                 };
                 
-                // Searches tags, devblogs, title, and description that look like a term
+                // Searches tags, devblogs, title, related project and description that look like a term
                 // This is very basic search and could most definitly be improved 
                 if let Some(search_term) = &filters.search {
-                    use crate::schema::tag;
                     
-                    // Searches for devblogs for term and if found adds blogs under
-                    // the devblog to results
-                    let assosiated_devblogs = search_term.search_devblogs(db_conn)?;
+                    // Query for devblog title matching
+                    let devblog_sub_query = devblog::table
+                        .select(0.into_sql::<diesel::sql_types::Integer>())
+                        .filter(blog::devblog_id.is_not_null().and(blog::devblog_id.eq(devblog::id.nullable())))
+                        .filter(devblog::title.ilike(format!("{}{}{}", "%", search_term, "%")));
                     
-                    let mut devblog_ids: Vec<i32> = vec![];
-                    
-                    for devblog_obj in assosiated_devblogs {
-                        devblog_ids.push(devblog_obj.get_id());
-                    };
-                    
-                    blog_list = blog_list.filter(blog::devblog_id.eq_any(devblog_ids));
-                    
-                    // Checks for tags that match search and are assosiated with blog
+                    // Query for tag matching
                     let tag_sub_query = tag::table
                         .select(0.into_sql::<diesel::sql_types::Integer>())
                         .filter(tag::blog_id.eq(blog::id))
                         .filter(tag::title.ilike(format!("{}{}{}", "%", search_term, "%")));
-
-                    blog_list = blog_list.or_filter(diesel::dsl::exists(tag_sub_query));
                     
-                    blog_list = blog_list
-                        .or_filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
-                        .or_filter(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")));
+                    // Query for related project title matching
+                    let content_alias = diesel::alias!(schema::content as content_alias);
+                    let project_sub_query = content_alias
+                        .select(0.into_sql::<diesel::sql_types::Integer>())
+                        .filter(blog::related_project_id.is_not_null().and(blog::related_project_id.eq(content_alias.field(content::id).nullable())))
+                        .filter(
+                            content_alias.field(content::title).ilike(format!("{}{}{}", "%", search_term, "%")).or(
+                                content_alias.field(content::content_desc).ilike(format!("{}{}{}", "%", search_term, "%"))
+                            )
+                        );
                     
-                    // Checks projects for matching search and if project is related to
-                    // any blogs adds those to the search results
-                    let matching_project_ids: Vec<i32> = content::table
-                        .filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
-                        .or_filter(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")))
-                        .select(content::id)
-                        .get_results(db_conn)?;
-                    
-                    blog_list = blog_list.or_filter(blog::related_project_id.eq_any(matching_project_ids));
-                    
+                    // Adds all the queries together on the main query
+                    blog_list = blog_list.filter(
+                        diesel::dsl::exists(devblog_sub_query)
+                        .or(diesel::dsl::exists(tag_sub_query))
+                        .or(diesel::dsl::exists(project_sub_query))
+                        .or(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
+                        .or(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")))
+                    );
                 };
             
                 // Runs query to get the list of blogs 
@@ -331,6 +325,8 @@ impl super::FullContentList {
             super::ContentType::Blog => {
 
                 use crate::schema::blog;
+                use crate::schema::tag;
+                use crate::schema::devblog;
 
                 // Creates inital joined query with blog table and content table
                 let mut blog_list = content::table
@@ -351,8 +347,6 @@ impl super::FullContentList {
                 // TODO Need to test this
                 // Gets all blogs with a specific tag
                 if let Some(tag_title) = &filters.blog_tag {
-                    use crate::schema::tag;
-                    
                     let sub_query = tag::table
                         .select(0.into_sql::<diesel::sql_types::Integer>())
                         .filter(tag::blog_id.eq(blog::id))
@@ -361,45 +355,41 @@ impl super::FullContentList {
                     blog_list = blog_list.filter(diesel::dsl::exists(sub_query));
                 };
                 
-                // Searches tags, devblogs, title, and description that look like a term
+                // Searches tags, devblogs, title, related project and description that look like a term
                 // This is very basic search and could most definitly be improved 
                 if let Some(search_term) = &filters.search {
-                    use crate::schema::tag;
                     
-                    // Searches for devblogs for term and if found adds blogs under
-                    // the devblog to results
-                    let assosiated_devblogs = search_term.search_devblogs(db_conn)?;
+                    // Query for devblog title matching
+                    let devblog_sub_query = devblog::table
+                        .select(0.into_sql::<diesel::sql_types::Integer>())
+                        .filter(blog::devblog_id.is_not_null().and(blog::devblog_id.eq(devblog::id.nullable())))
+                        .filter(devblog::title.ilike(format!("{}{}{}", "%", search_term, "%")));
                     
-                    let mut devblog_ids: Vec<i32> = vec![];
-                    
-                    for devblog_obj in assosiated_devblogs {
-                        devblog_ids.push(devblog_obj.get_id());
-                    };
-                    
-                    blog_list = blog_list.filter(blog::devblog_id.eq_any(devblog_ids));
-                    
-                    // Checks for tags that match search and are assosiated with blog
+                    // Query for tag matching
                     let tag_sub_query = tag::table
                         .select(0.into_sql::<diesel::sql_types::Integer>())
                         .filter(tag::blog_id.eq(blog::id))
                         .filter(tag::title.ilike(format!("{}{}{}", "%", search_term, "%")));
-
-                    blog_list = blog_list.or_filter(diesel::dsl::exists(tag_sub_query));
                     
-                    blog_list = blog_list
-                        .or_filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
-                        .or_filter(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")));
+                    // Query for related project title matching
+                    let content_alias = diesel::alias!(schema::content as content_alias);
+                    let project_sub_query = content_alias
+                        .select(0.into_sql::<diesel::sql_types::Integer>())
+                        .filter(blog::related_project_id.is_not_null().and(blog::related_project_id.eq(content_alias.field(content::id).nullable())))
+                        .filter(
+                            content_alias.field(content::title).ilike(format!("{}{}{}", "%", search_term, "%")).or(
+                                content_alias.field(content::content_desc).ilike(format!("{}{}{}", "%", search_term, "%"))
+                            )
+                        );
                     
-                    // Checks projects for matching search and if project is related to
-                    // any blogs adds those to the search results
-                    let matching_project_ids: Vec<i32> = content::table
-                        .filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
-                        .or_filter(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")))
-                        .select(content::id)
-                        .get_results(db_conn)?;
-                    
-                    blog_list = blog_list.or_filter(blog::related_project_id.eq_any(matching_project_ids));
-                    
+                    // Adds all the queries together on the main query
+                    blog_list = blog_list.filter(
+                        diesel::dsl::exists(devblog_sub_query)
+                        .or(diesel::dsl::exists(tag_sub_query))
+                        .or(diesel::dsl::exists(project_sub_query))
+                        .or(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
+                        .or(content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")))
+                    );
                 };
 
                 // Get and return the count of the query

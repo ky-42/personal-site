@@ -57,7 +57,8 @@
             ]
         },
         "blogList": {
-            "description": ""
+            "description": "",
+            "contentPerPage": 8
         },
         "projectList": {
             "description": ""

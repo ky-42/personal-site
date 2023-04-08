@@ -5,6 +5,7 @@ import styled from "styled-components";
 /* ------------------------ General Styled Components ----------------------- */
 
 const ButtonLink = styled(Link)`
+  flex: 0 0 auto;
   color: ${props => props.theme.textColour};
 `;
 
@@ -12,6 +13,7 @@ const TagText = styled.p`
   font-size: 1.5rem;
   text-align: center;
   margin: 0;
+  white-space: nowrap;
 `;
 
 /* ------------------------ Tags used on manage page ------------------------ */
@@ -70,11 +72,12 @@ const TagHolderShow = styled(ButtonHolder)`
 
 interface TagProps {
   tagString: string,
+  url: string
 }
 
-export const ShowTag = ({tagString}: TagProps) => {
+export const ShowTag = ({tagString, url}: TagProps) => {
   return (
-    <ButtonLink to={``}>
+    <ButtonLink to={url}>
       <TagHolderShow>
         <TagText>
           {tagString}
@@ -117,7 +120,6 @@ const DevblogLinkHolder = styled(ButtonHolder)`
   padding: 0.75rem 0.8rem;
   width: 22.5rem;
   flex-shrink: 0;
-  text-wrap: nowrap;
 `;
 
 const DevblogLinkText = styled.p`

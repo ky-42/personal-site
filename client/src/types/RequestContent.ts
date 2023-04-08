@@ -51,6 +51,7 @@ export interface FullContentList {
   content_count: number
 }
 
+// When updating update searchParamsToContentFilter in HelperFuncs.ts
 export interface ContentFilter {
   content_type: ContentType,
   project_status?: ProjectStatus,
