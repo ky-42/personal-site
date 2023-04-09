@@ -51,8 +51,8 @@ const loadAnimation = css`
 `;
 
 const LoadBar = styled.div<{reload: boolean | null}>`
-  position: absolute;
-  bottom: 0.2rem;
+  position: relative;
+  top: -.2rem;
   width: 100%;
   height: 0.2rem;
   padding: 0 0.4rem;
