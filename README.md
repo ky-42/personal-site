@@ -18,12 +18,15 @@ Feel free to reach out if you have any questions! Also you can host the site wit
 - [x] 0.7.0
   - [x] Better content managment page
   - [x] Better support for personalizing the site so others can host and extend
-- [ ] 0.8.0
-  - [ ] Support for linking blogs to others in a series
-  - [ ] Support for linking blogs to others in a dev blog format
-  - [ ] Support for linking a projects to a dev blog series
+- [x] 0.8.0
+  - [x] Support for linking blogs to others in a series
+  - [x] Support for linking blogs to others in a dev blog format
+  - [x] Support for linking a projects to a dev blog series
+  - [x] Adding more blog and project sorting features (Searching, reverse order, etc.)
 - [ ] 0.9.0
-  - [ ] Adding more blog and project sorting features (Searching, reverse order, etc.)
+  - [ ] Code cleanup
+  - [ ] Better error handling
+  - [ ] Page restoration
 - [ ] 1.0.0
   - [ ] Asteroids game on the background
 
