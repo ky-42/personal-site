@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
 
 import { Blog } from "../../types/Content";
@@ -9,6 +9,7 @@ import { AiOutlineRight } from "react-icons/ai";
 import { ManageTag } from "../Shared/Buttons";
 import { ContentOperations, DevblogOperations } from "../../adapters/content";
 import { RequestStatus } from "../../types/RequestContent";
+import { NotificationContext, NotificationType } from "../../contexts/Notification";
 
 /* ---------------------------- Styled Components --------------------------- */
 
@@ -50,6 +51,8 @@ interface blogManagmentProps {
 // Form part for inputing data about the blog specific parts of content
 const BlogManagment = ({blogData, setBlogData, tags, setTags, validationErrors}: blogManagmentProps) => {
   
+  const notifications = useContext(NotificationContext);
+  
   // State for current tag being typed
   const [currentTag, setCurrentTag] = React.useState<string>("");
   
@@ -70,9 +73,16 @@ const BlogManagment = ({blogData, setBlogData, tags, setTags, validationErrors}:
             value: content.requestedData.base_content.id
           });
           break;
-        default:
+
+        case RequestStatus.Error:
+        case RequestStatus.Loading:
+          notifications.addNotification({
+            message: "Error getting project id",
+            type: NotificationType.Error
+          });
+
           console.log("Error getting project id");
-          // TODO add error handling
+          break;
       }
     });
   }
@@ -88,11 +98,18 @@ const BlogManagment = ({blogData, setBlogData, tags, setTags, validationErrors}:
             value: devblog.requestedData.id
           })
           break;
-        default:
+
+        case RequestStatus.Error:
+        case RequestStatus.Loading:
+          notifications.addNotification({
+            message: "Error getting devblog id",
+            type: NotificationType.Error
+          });
+
           console.log("Error getting devblog id");
-          // TODO add error handling
+          break;
       }
-    })
+    });
   }
   
   /* -------------------------------------------------------------------------- */

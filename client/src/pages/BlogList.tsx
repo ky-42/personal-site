@@ -295,7 +295,7 @@ const BlogList = () => {
     // If there is an existing time out it will clear it.
     // This is so that not everything typed will be searched
     if (searchTimeout !== null) {
-      window.clearTimeout(searchTimeout);
+      clearTimeout(searchTimeout);
     };
 
     setReloadSearchAnimation(!reloadSearchAnimation);

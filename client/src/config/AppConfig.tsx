@@ -5,6 +5,7 @@ import Routing from "../Routing";
 import { HelmetProvider } from "react-helmet-async";
 import useWindowSize from "../hooks/useWindowSize";
 import jsonConfig from "@config/config.json";
+import { NotificationProvider } from "../contexts/Notification";
 
 // Size in px at which site starts using mobile features
 const MobileWidth = 700; 
@@ -85,14 +86,16 @@ const AppConfig = () => {
 
   return (
     <MobileContext.Provider value={StyleTheme.mobile}>
-      <ThemeProvider theme={StyleTheme}>
-        <GlobalCSS />
-        <BrowserRouter>
-          <HelmetProvider>
-            <Routing />
-          </HelmetProvider>
-        </BrowserRouter>
-      </ThemeProvider>
+      <NotificationProvider>
+        <ThemeProvider theme={StyleTheme}>
+          <GlobalCSS />
+          <BrowserRouter>
+            <HelmetProvider>
+              <Routing />
+            </HelmetProvider>
+          </BrowserRouter>
+        </ThemeProvider>
+      </NotificationProvider>
     </MobileContext.Provider>
   )
 };

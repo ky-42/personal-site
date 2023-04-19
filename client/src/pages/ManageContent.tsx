@@ -1,4 +1,4 @@
-import { useReducer, useRef, useState } from "react";
+import { useContext, useReducer, useRef, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineRight } from "react-icons/ai";
 
@@ -15,6 +15,7 @@ import { blogToNew, contentToNew, devblogToNew, projectToNew } from "../types/He
 import { RequestStatus } from "../types/RequestContent";
 import { validateBlog, validateContent, validateDevblog, validateProject } from "../components/ContentManagement/InputValidation";
 import DevblogManagement from "../components/ContentManagement/DevblogManagement";
+import { NotificationContext, NotificationType } from "../contexts/Notification";
 
 /* -------------------------------------------------------------------------- */
 
@@ -115,6 +116,8 @@ const devblogReducer = <K extends keyof Devblog>(state: Devblog, action: SetRedu
 
 const ManageContent = () => {
 
+  const notifications = useContext(NotificationContext);
+
   // Action to be performed on server
   const [currentAction, setCurrentAction] = useState(ActionTypes.Create);
   
@@ -145,8 +148,6 @@ const ManageContent = () => {
   
   /* -------------------------------------------------------------------------- */
   
-  // TODO add success message
-
   // How to submit the form
   const onSubmit = () => {
 
@@ -183,6 +184,12 @@ const ManageContent = () => {
         // If there are errors scroll to top stop request
         if (Object.keys(newValidationErrors).length !== 0) {
           pageTop.current?.scrollIntoView();
+          
+          notifications.addNotification({
+            message: "There are errors in the form",
+            type: NotificationType.Error
+          });
+          
           return;
         }
         
@@ -202,6 +209,12 @@ const ManageContent = () => {
         // If there are errors scroll to top stop request
         if (Object.keys(newValidationErrors).length !== 0) {
           pageTop.current?.scrollIntoView();
+
+          notifications.addNotification({
+            message: "There are errors in the form",
+            type: NotificationType.Error
+          });
+
           return;
         }
       
@@ -229,20 +242,59 @@ const ManageContent = () => {
           new_extra_content: extraNewData
         };
 
-        // TODO add error handling
         ContentOperations.add_content({
           addContent,
           password: serverPassword
-        }).then(() => {
-          if (extraContentType === ContentType.Blog) {
-            TagOperations.add_tags({
-              blog_slug: baseNewData.slug,
-              tags: Array.from(tags),
-              password: serverPassword
-            });
-          }
-        });
+        }).then((base_content_request) => {
 
+          switch (base_content_request.requestStatus) {
+            case (RequestStatus.Success):
+
+              if (extraContentType === ContentType.Blog) {
+                TagOperations.add_tags({
+                  blog_slug: baseNewData.slug,
+                  tags: Array.from(tags),
+                  password: serverPassword
+                }).then((tag_request) => {
+
+                  switch (tag_request.requestStatus) {
+                    case (RequestStatus.Success):
+                      notifications.addNotification({
+                        message: "Content added successfully",
+                        type: NotificationType.Success
+                      });
+                      break;
+                    
+                    default:
+                      notifications.addNotification({
+                        message: "Error adding tags. Delete content and try again",
+                        type: NotificationType.Error
+                      });
+                      
+                      console.log(tag_request);
+                      break;
+                  }
+
+                });
+              } else {
+                notifications.addNotification({
+                  message: "Content added successfully",
+                  type: NotificationType.Success
+                });
+              };
+              break;
+            
+            default:
+              notifications.addNotification({
+                message: "Error adding content",
+                type: NotificationType.Error
+              });
+              
+              console.log(base_content_request);
+              break;
+          }
+
+        });
         break;
 
       case ActionTypes.Update:
@@ -253,22 +305,79 @@ const ManageContent = () => {
             base_content: baseData,
             extra_content: extraData
           }
-        }).then(() => {
-          // After updating content, update tags needed then so there is no race condition
-          if (extraContentType === ContentType.Blog) {
-            TagOperations.delete_tags({
-              blog_slug: baseData.slug,
-              password: serverPassword
-            }).then(() => {
-              TagOperations.add_tags({
-                blog_slug: baseNewData.slug,
-                tags: Array.from(tags),
-                password: serverPassword
-              });
-            })
-          }
-        })
+        }).then((base_content_request) => {
 
+          switch (base_content_request.requestStatus) {
+            case (RequestStatus.Success):
+              // After updating content, update tags needed then so there is no race condition
+              if (extraContentType === ContentType.Blog) {
+                TagOperations.delete_tags({
+                  blog_slug: baseData.slug,
+                  password: serverPassword
+                }).then((tag_delete_request) => {
+
+                  switch (tag_delete_request.requestStatus) {
+                    case RequestStatus.Success:
+                      TagOperations.add_tags({
+                        blog_slug: baseNewData.slug,
+                        tags: Array.from(tags),
+                        password: serverPassword
+                      }).then((tag_add_request) => {
+
+                        switch (tag_add_request.requestStatus) {
+                          case RequestStatus.Success:
+                            notifications.addNotification({
+                              message: "Content updated successfully",
+                              type: NotificationType.Success
+                            });
+                            break;
+                          
+                          case RequestStatus.Error:
+                          case RequestStatus.Loading:
+                            notifications.addNotification({
+                              message: "Error updating tags. Old tags deleted by new tags added try reupdating content",
+                              type: NotificationType.Error
+                            });
+
+                            console.log(tag_add_request);
+                            break;
+                        }
+
+                      });
+                      break;
+                    
+                    case RequestStatus.Error:
+                    case RequestStatus.Loading:
+                      notifications.addNotification({
+                        message: "Error updating tags. Old tags still exist try reupdating content",
+                        type: NotificationType.Error
+                      });
+
+                      console.log(tag_delete_request);
+                      break;
+                  }
+
+                })
+              } else {
+                notifications.addNotification({
+                  message: "Content updated successfully",
+                  type: NotificationType.Success
+                });
+              }
+              break;
+            
+            case RequestStatus.Error:
+            case RequestStatus.Loading:
+              notifications.addNotification({
+                message: "Error updating content",
+                type: NotificationType.Error
+              });
+              
+              console.log(base_content_request);
+              break;
+          }
+
+        });
         break;
 
       case ActionTypes.Delete:
@@ -276,8 +385,28 @@ const ManageContent = () => {
         ContentOperations.delete_content({
           slug: modifyItem,
           password: serverPassword
-        });
+        }).then((base_content_request) => {
 
+          switch (base_content_request.requestStatus) {
+            case RequestStatus.Success:
+              notifications.addNotification({
+                message: "Content deleted successfully",
+                type: NotificationType.Success
+              });
+              break;
+            
+            case RequestStatus.Error:
+            case RequestStatus.Loading:
+              notifications.addNotification({
+                message: "Error deleting content",
+                type: NotificationType.Error
+              });
+              
+              console.log(base_content_request);
+              break;
+          }
+
+        });
         break;
     }
   };
@@ -293,8 +422,28 @@ const ManageContent = () => {
         DevblogOperations.add_devblog({
           newDevblogInfo: devblogNewData,
           password: serverPassword
-        });
+        }).then((devblog_add_request) => {
 
+          switch (devblog_add_request.requestStatus) {
+            case RequestStatus.Success:
+              notifications.addNotification({
+                message: "Devblog added successfully",
+                type: NotificationType.Success
+              });
+              break;
+            
+            case RequestStatus.Error:
+            case RequestStatus.Loading:
+              notifications.addNotification({
+                message: "Error adding devblog",
+                type: NotificationType.Error
+              });
+              
+              console.log(devblog_add_request);
+              break;
+          }
+
+        });
         break;
 
       case ActionTypes.DevblogUpdate:
@@ -302,16 +451,56 @@ const ManageContent = () => {
           title: modifyItem,
           password: serverPassword,
           updatedDevblogInfo: devblogData
-        });
+        }).then((devblog_update_request) => {
 
+          switch (devblog_update_request.requestStatus) {
+            case RequestStatus.Success:
+              notifications.addNotification({
+                message: "Devblog updated successfully",
+                type: NotificationType.Success
+              });
+              break;
+            
+            case RequestStatus.Error:
+            case RequestStatus.Loading:
+              notifications.addNotification({
+                message: "Error updating devblog",
+                type: NotificationType.Error
+              });
+              
+              console.log(devblog_update_request);
+              break;
+          }
+
+        });
         break;
 
       case ActionTypes.DevblogDelete:
         DevblogOperations.delete_devblog({
           title: modifyItem,
           password: serverPassword
-        });
+        }).then((devblog_delete_request) => {
 
+          switch (devblog_delete_request.requestStatus) {
+            case RequestStatus.Success:
+              notifications.addNotification({
+                message: "Devblog deleted successfully",
+                type: NotificationType.Success
+              });
+              break;
+            
+            case RequestStatus.Error:
+            case RequestStatus.Loading:
+              notifications.addNotification({
+                message: "Error deleting devblog",
+                type: NotificationType.Error
+              });
+              
+              console.log(devblog_delete_request);
+              break;
+          }
+
+        });
         break;
     }
   };
@@ -326,44 +515,81 @@ const ManageContent = () => {
       case ActionTypes.Delete:
         ContentOperations.get_content({
           slug: modifyItem
-        }).then((value) => {
-          switch (value.requestStatus) {
-            // TODO add success messages and error handling
+        }).then((base_content_request) => {
+
+          switch (base_content_request.requestStatus) {
             case RequestStatus.Success:
               // Sets the base content state
               setBaseContentData({
                 action: ReducerAction.Set,
-                newState: value.requestedData.base_content
+                newState: base_content_request.requestedData.base_content
               });
               
               // Sets the extra content state
-              if ("blog" in value.requestedData.extra_content) {
+              if ("blog" in base_content_request.requestedData.extra_content) {
                 setExtraContentType(ContentType.Blog);
                 setBlogData({
                   action: ReducerAction.Set,
-                  newState: value.requestedData.extra_content["blog"]
+                  newState: base_content_request.requestedData.extra_content["blog"]
                 });
 
                 // Gets the tags for the blog because they are not in the blog data
                 TagOperations.get_blog_tags({
-                  blog_slug: value.requestedData.base_content.slug
-                }).then((value) => {
-                  // TODO add error handling
-                  if (value.requestStatus === RequestStatus.Success) {
-                    setTags(new Set(Array.from(value.requestedData).map((tag) => tag.title)));
-                  }
-                })
+                  blog_slug: base_content_request.requestedData.base_content.slug
+                }).then((tag_request) => {
 
-              } else if ("project" in value.requestedData.extra_content) {
+                  switch (tag_request.requestStatus) {
+                    case RequestStatus.Success:
+                      if (tag_request.requestStatus === RequestStatus.Success) {
+                        setTags(new Set(Array.from(tag_request.requestedData).map((tag) => tag.title)));
+                      };
+                      
+                      notifications.addNotification({
+                        message: "Old content loaded successfully",
+                        type: NotificationType.Success
+                      });
+
+                      break;
+                    
+                    case RequestStatus.Error:
+                    case RequestStatus.Loading:
+                      notifications.addNotification({
+                        message: "Error loading old tags. Try again",
+                        type: NotificationType.Error
+                      });
+
+                      console.log(tag_request);
+                      break;
+                  }
+
+                });
+
+              } else if ("project" in base_content_request.requestedData.extra_content) {
                 setExtraContentType(ContentType.Project);
                 setProjectData({
                   action: ReducerAction.Set,
-                  newState: value.requestedData.extra_content["project"]
+                  newState: base_content_request.requestedData.extra_content["project"]
+                });
+                
+                notifications.addNotification({
+                  message: "Old content loaded successfully",
+                  type: NotificationType.Success
                 });
               }        
 
               break;
+            
+            case RequestStatus.Error:
+            case RequestStatus.Loading:
+              notifications.addNotification({
+                message: "Error loading old content",
+                type: NotificationType.Error
+              });
+              
+              console.log(base_content_request);
+              break;
           }
+
         });
         break;
       
@@ -371,15 +597,30 @@ const ManageContent = () => {
       case ActionTypes.DevblogDelete:
         DevblogOperations.get_devblog_object({
           title: modifyItem
-        }).then((value) => {
-          switch (value.requestStatus) {
-            // TODO add success messages and error handling
+        }).then((devblog_request) => {
+          switch (devblog_request.requestStatus) {
             case RequestStatus.Success:
               // Sets the devblog state
               setDevblogData({
                 action: ReducerAction.Set,
-                newState: value.requestedData
+                newState: devblog_request.requestedData
               });
+              
+              notifications.addNotification({
+                message: "Old devblog loaded successfully",
+                type: NotificationType.Success
+              });
+              
+              break;
+            
+            case RequestStatus.Error:
+            case RequestStatus.Loading:
+              notifications.addNotification({
+                message: "Error loading old devblog",
+                type: NotificationType.Error
+              });
+              
+              console.log(devblog_request);
               break;
           }
         });
@@ -411,7 +652,12 @@ const ManageContent = () => {
     setDevblogData({
       action: ReducerAction.Set,
       newState: defaultDevblog
-    })
+    });
+    
+    notifications.addNotification({
+      message: "Content cleared",
+      type: NotificationType.Info
+    });
   }
   
   /* -------------------------------------------------------------------------- */
