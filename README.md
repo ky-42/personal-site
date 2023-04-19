@@ -25,7 +25,7 @@ Feel free to reach out if you have any questions! Also you can host the site wit
   - [x] Adding more blog and project sorting features (Searching, reverse order, etc.)
 - [ ] 0.9.0
   - [ ] Code cleanup
-  - [ ] Better error handling
+  - [x] Better error handling
   - [ ] Page restoration
 - [ ] 1.0.0
   - [ ] Asteroids game on the background
