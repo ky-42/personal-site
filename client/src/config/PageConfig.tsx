@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import NavBar from "../components/NavBar/NavBar";
-import { Outlet, useLocation } from "react-router-dom";
+import { NavigationType, Outlet, unstable_useBlocker, useBeforeUnload, useLocation, useNavigationType } from "react-router-dom";
 import NotificationList from "../components/Notifications/NotificationList";
 
 // Where all content will be displayed does not include nav bar
@@ -28,6 +28,12 @@ const PageConfig = () => {
   
   const location = useLocation();
   
+  // Need for scroll event listener
+  const locationRef = useRef(location);
+  locationRef.current = location;
+  
+  const navigationType = useNavigationType();
+  
   /*
   Scoll to top of the main content div when user goes to new page.
   Needed because the div contining the main content does not
@@ -36,11 +42,23 @@ const PageConfig = () => {
   */
   const BodyDivRef = useRef<null | HTMLDivElement>(null);
   useEffect(() => {
+    // Sets scroll position when page changes
+    // If the user navigates backwards then the scroll position is set to the last scroll position
+    const pathName = location.pathname.replace(/\/$/, "");
     if (BodyDivRef.current !== null) {
-      BodyDivRef.current.scrollTop = 0;
+      BodyDivRef.current.scrollTop = sessionStorage.getItem(`scrollPosition_${pathName}`) !== null && navigationType === NavigationType.Pop
+        ? parseInt(sessionStorage.getItem(`scrollPosition_${pathName}`) as string)
+        : 0;
     }
   }, [location]);
 
+  // Save the scroll position of the current page
+  BodyDivRef.current?.addEventListener("scroll", () => {
+    if (BodyDivRef.current !== null) {
+      sessionStorage.setItem(`scrollPosition_${locationRef.current.pathname.replace(/\/$/, "")}`, BodyDivRef.current.scrollTop.toString());
+    }
+  });
+  
   return (
     <>
       <NotificationList />

@@ -13,7 +13,8 @@ import { ShowLink } from "../components/Shared/Buttons";
 import jsonConfig from '@config/config.json';
 import { searchParamsToContentFilter } from "../types/HelperFuncs";
 import useQuery from "../hooks/useQueryParams";
-import { useLocation } from "react-router-dom";
+import { NavigationType, useLocation, useNavigationType } from "react-router-dom";
+import { jsonParser } from "../adapters/helpers";
 
 /* -------------------------------------------------------------------------- */
 
@@ -152,20 +153,39 @@ const BlogList = () => {
   // location.search used as dependency for useEffect as 
   // url is used to set the search bar and rerequest with filters
   const location = useLocation();
+  
+  // Used to determine if user navigated backwards
+  const naviagtionType = useNavigationType();
 
   // Gets query params from url
-  const [searchParams, replaceSearchParams, setSearchParams] = useQuery();
+  const [searchParams, _, setSearchParams] = useQuery();
   const currentContentFilter = useMemo(() => searchParamsToContentFilter(ContentType.Blog, searchParams), [searchParams]);
   
   // Info about pages of blogs
-  const [page, setPage] = useState(0);
+  // Uses sessionStorage to keep state when user navigates back
+  const [page, setPage] = useState(
+    sessionStorage.getItem("blogListPage") !== null && naviagtionType === NavigationType.Pop
+    ? JSON.parse(sessionStorage.getItem("blogListPage") as string)
+    : 0
+  );
   const [maxPage, setMaxPage] = useState(1);
-  
+
   // State for all the blogs the site has retreived
-  const [recivedBlogs, setRecivedBlogs] = useState<Record<number, FullContentList>>({});
+  // Uses sessionStorage to keep state when user navigates back
+  const [recivedBlogs, setRecivedBlogs] = useState<Record<number, FullContentList>>(
+    sessionStorage.getItem("blogListRecivedBlogs") !== null && naviagtionType === NavigationType.Pop
+    ? JSON.parse(sessionStorage.getItem("blogListRecivedBlogs") as string, jsonParser)
+    : {}
+  );
+
   // The latest set of blogs the site has retreived
   // Need seperate state for latest recieved for error handling reason
-  const [latestRecivedBlogs, setLatestRecivedBlogs] = useState<RequestState<FullContentList>>({requestStatus: RequestStatus.Loading});
+  // Uses sessionStorage to keep state when user navigates back
+  const [latestRecivedBlogs, setLatestRecivedBlogs] = useState<RequestState<FullContentList>>(
+    sessionStorage.getItem("blogListLatestRecivedBlogs") !== null && naviagtionType === NavigationType.Pop
+    ? JSON.parse(sessionStorage.getItem("blogListLatestRecivedBlogs") as string, jsonParser)
+    : {requestStatus: RequestStatus.Loading}
+  );
   
   // State for when to rerequest blogs
   const [reloadSearchAnimation, setReloadSearchAnimation] = useState<boolean | null>(null);
@@ -176,6 +196,20 @@ const BlogList = () => {
   
   // State for search bar
   const [currentSearch, setCurrentSearch] = useState<string>("");
+  
+  /* ----------------------------- Unmount effects ---------------------------- */
+  
+  useEffect(() => {
+    return () => {
+      if (searchTimeout){
+        clearTimeout(searchTimeout);
+      }
+      
+      sessionStorage.setItem("blogListPage", page.toString());
+      sessionStorage.setItem("blogListRecivedBlogs", JSON.stringify(recivedBlogs));
+      sessionStorage.setItem("blogListLatestRecivedBlogs", JSON.stringify(latestRecivedBlogs));
+    }
+  })
   
   /* -------------------------- Next page requesting -------------------------- */
 

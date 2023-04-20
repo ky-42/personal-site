@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import styled, { css } from "styled-components";
 import {AiFillCaretLeft} from "react-icons/ai";
 
@@ -9,7 +9,8 @@ import PageTitle from "../components/Shared/PageTitle";
 import ContentListItem from '../components/ContentShow/ContentListItem';
 import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
 import MetaData from '../components/Shared/MetaData';
-
+import { NavigationType, useNavigationType } from 'react-router-dom';
+import { jsonParser } from '../adapters/helpers';
 import jsonConfig from '@config/config.json';
 
 /* -------------------------------------------------------------------------- */
@@ -95,19 +96,37 @@ const ProjectList = () => {
   
   // TODO Fix finished list when there are 3 items is weird and wraps early
   // event though its the same as the under dev list
-  // 
+  
   const contentPerPage = 6;
   
-  const [page, setPage] = useState(0);
+  // Used to determine if user navigated backwards
+  const navigationType = useNavigationType();
+  
+  // Uses sessionStorage to keep state when user navigates back
+  const [page, setPage] = useState(
+    sessionStorage.getItem("projectListPage") && navigationType === NavigationType.Pop
+    ? parseInt(sessionStorage.getItem("projectListPage")!)
+    : 0
+  );
   const [maxPage, setMaxPage] = useState(0);
 
-  const [underDevProjects, setUnderDevProjects] = useState<RequestState<FullContentList>>({requestStatus: RequestStatus.Loading});
+  // Uses sessionStorage to keep state when user navigates back
+  const [underDevProjects, setUnderDevProjects] = useState<RequestState<FullContentList>>(
+    sessionStorage.getItem("projectListUnderDev") && navigationType === NavigationType.Pop
+    ? JSON.parse(sessionStorage.getItem("projectListUnderDev") as string, jsonParser)
+    : {requestStatus: RequestStatus.Loading}
+  );
   // Needed cause no depedencies for under dev useEffect and
   // no clear thing to add there so this will reload the page
   // for under dev
   const [underDevReload, setUnderDevReload] = useState(false);
   
-  const [pageFinishedProjects, setPageFinishedProjects] = useState<RequestState<FullContentList>>({requestStatus: RequestStatus.Loading});
+  // Uses sessionStorage to keep state when user navigates back
+  const [pageFinishedProjects, setPageFinishedProjects] = useState<RequestState<FullContentList>>(
+    sessionStorage.getItem("projectListFinishedPage") && navigationType === NavigationType.Pop
+    ? JSON.parse(sessionStorage.getItem("projectListFinishedPage") as string, jsonParser)
+    : {requestStatus: RequestStatus.Loading}
+  );
   const [fetchedFinishedProjects, setFetchedFinishedProjects] = useState<Record<number, RequestState<FullContentList>>>({});
 
   // Used to scroll to top of list of projects when page changes and top
@@ -124,6 +143,16 @@ const ProjectList = () => {
     }
   }
   
+  /* ----------------------------- Unmount effects ---------------------------- */
+
+  useEffect(() => {
+    return () => {
+      sessionStorage.setItem("projectListPage", page.toString());
+      sessionStorage.setItem("projectListFinishedPage", JSON.stringify(pageFinishedProjects));
+      sessionStorage.setItem("projectListUnderDev", JSON.stringify(underDevProjects));
+    }
+  }, [page]);
+
   /* ------------------- useEffect functions to reuqest data ------------------ */
   
   // Gets under dev projects and gets max page
@@ -257,7 +286,7 @@ const ProjectList = () => {
       <PageChangeDiv>
         <Arrow active={+(0 !== page)} onClick={() => {finishedHeader.current?.scrollIntoView(); changePageNum(false)}} />
         <PageNum>
-          {page + 1}
+          {page}
         </PageNum>
         <Arrow active={+(maxPage !== page)} flip={+true} onClick={() => {finishedHeader.current?.scrollIntoView(); changePageNum(true)}} />
       </PageChangeDiv>
