@@ -26,7 +26,7 @@ Feel free to reach out if you have any questions! Also you can host the site wit
 - [ ] 0.9.0
   - [ ] Code cleanup
   - [x] Better error handling
-  - [ ] Page restoration
+  - [x] Page restoration
 - [ ] 1.0.0
   - [ ] Asteroids game on the background
 
