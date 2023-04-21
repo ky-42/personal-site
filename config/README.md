@@ -23,3 +23,6 @@ The Connect page on the website includes links to your social media profiles. Th
 - Twitter
 
 You can add your own links to the `config.json` file by updating the `links` array in the `connect` section. For each link, you need to specify the `name` of the social media platform and the `url` to your profile on that platform.
+
+## Server
+All configuration for the server is done to the `.env` file in the `server` directory. This is where you set the admin password, database information, and the url of the client server. This file needs to be with the release executable when it is deployed but updated with the info for your deployment and a strong admin password.
