@@ -1,5 +1,5 @@
 # Personal Site
-This is the repo for a personal website that anyone can customize and use. I created this site as a way to showcase my work, share my knowledge with others, and as a fun side project.
+This is the repo for a personal website that anyone can customize and use. I created this site as a way to showcase my work, share my knowledge with others, and as a fun side project. You can see an example of the website at [kyledenief.me](https://kyledenief.me/).
 
 ## Features
 - Contact, About, Home, Project, and Blog pages
@@ -26,8 +26,10 @@ After almost a year of development, I'm pleased to say that my personal website 
 - Diesel
 - PostgreSQL
 
-## Configuration
-[More on configuration](/config/README.md)
+## Other READMEs
+- [More on customization and configuration](/config/README.md)
+- [More on client](/client/README.md)
+- [More on server](/server/README.md)
 
 ## Run Locally
 ### Prerequisites
