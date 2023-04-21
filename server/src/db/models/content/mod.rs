@@ -40,14 +40,6 @@ pub struct FullContentList {
 /* -------------------------------------------------------------------------- */
 
 #[derive(Deserialize, Debug)]
-#[serde(rename_all = "lowercase")]
-pub enum ContentOrder {
-    Newest,
-    Oldest,
-    ProjectStart
-}
-
-#[derive(Deserialize, Debug)]
 pub struct ContentFilter {
     content_type: ContentType,
     project_status: Option<extra::CurrentStatus>,

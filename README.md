@@ -1,40 +1,77 @@
-# Kyle Denief Personal Site 
-https://kyledenief.me
+# Personal Site
+This is the repo for a personal website that anyone can customize and use. I created this site as a way to showcase my work, share my knowledge with others, and as a fun side project.
 
-This is the repo for my personal/portfolio website. It has support for posting your blogs and projects. I made this to help me show off my projects and have a place to direct people to learn more about me. I think its also just cool to have something your proud of to show others!
+## Features
+- Contact, About, Home, Project, and Blog pages
+- Full customization via JSON
+- On-site content management
+- Great error handling
+- Responsive design
+- Searching functionality
+- Polished
+- Good SEO
 
-Feel free to reach out if you have any questions! Also you can host the site with your own info if you want but if you do I just ask you send it to me so I can see!
+## Roadmap
+After almost a year of development, I'm pleased to say that my personal website is essentially complete. I've learned a lot in the process, and I'm satisfied with the features I've incorporated. Although I had hoped to add the ability to play asteroids in the background of the site, I won't be able to do so anytime soon.
 
-# Road map
-- [x] 0.5.0
-  - [x] Full stable release with all basic features
-- [x] 0.6.0
-  - [x] Refactoring of major parts of code
-  - [x] Minor visual improvements
-  - [x] General clean up (adding comment, optimizations, etc.)
-  - [x] Markdown support in blogs and projects
-  - [x] Add support to update blog and project specific data
-  - [x] SEO
-- [x] 0.7.0
-  - [x] Better content managment page
-  - [x] Better support for personalizing the site so others can host and extend
-- [x] 0.8.0
-  - [x] Support for linking blogs to others in a series
-  - [x] Support for linking blogs to others in a dev blog format
-  - [x] Support for linking a projects to a dev blog series
-  - [x] Adding more blog and project sorting features (Searching, reverse order, etc.)
-- [ ] 0.9.0
-  - [ ] Code cleanup
-  - [x] Better error handling
-  - [x] Page restoration
-- [ ] 1.0.0
-  - [ ] Asteroids game on the background
+## Technologies Used
+### Client
+- TypeScript
+- React
+- Styled-components
 
-# How to setup test env
-Things you will need:
-- postgresql-libs / libpq-dev
-- docker compose or a postgres server
-- yarn or npm
+### Server
+- Rust
+- Actix Web
+- Diesel
+- PostgreSQL
 
-#### Some resources I used in the create of the site
-Frontend File Structure - https://www.freecodecamp.org/news/a-better-way-to-structure-react-projects/
+## Configuration
+[More on configuration](/config/README.md)
+
+## Run Locally
+### Prerequisites
+- Rust
+- libpq-dev/postgresql-libs
+- Diesel cli
+- Yarn or npm
+- A PostgreSQL server
+
+### Running client (using yarn)
+1. Navigate to the `client` directory
+2. Install dependencies using `yarn install`
+3. Start the client server using `yarn start`
+
+Note: If you change the client server port, make sure to update the URL in the `.env` file in the `server` directory.
+
+### Running server
+1. Navigate to the `server` directory
+2. Ensure that you have a PostgreSQL database up and running
+3. Edit the `.env` file with your database information
+4. Install the Diesel CLI and run `diesel database setup`
+5. Bring up the server with `cargo run`
+
+Note: If you change the server port or ip, make sure to update the URL in `client/src/adapters/index.ts`.
+
+## Building
+### Prerequisites
+- Rust
+- libpq-dev/postgresql-libs
+- Yarn or npm
+
+### Building client (using yarn)
+1. Update the `config/config.json` file with the production URLs of your frontend and backend servers, and optionally add your Plausible Analytics information
+2. Navigate to the `client` directory
+3. Build the client with `yarn build`
+
+### Building server
+1. Navigate to the `server` directory
+2. Build the server with `cargo build --release`
+
+Note: Database migrations are included in the release build so they will be ran when the server is run.
+
+### Deployment
+I have decided not to have a standard deployment method for the app, leaving it up to each individual. I personally have the client deployed on a Digital Ocean VM using NGINX as a reverse proxy. The server is deployed on another VM that also runs the PostgreSQL database. The server is run by a service on startup and PostgreSQL runs in a Docker container that is also brought up by a server. You need the same but updated `.env` file from the `server` directory in the same folder as the release executable when it is ran. If you are having trouble deploying, don't be afraid to contact me.
+
+## Contributing
+Even though I am done contributing to the site for now, if you notice any issues or have any suggestions for how I can improve the site, feel free to create an issue or submit a pull request.
