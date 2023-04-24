@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import NavBar from '../components/NavBar/NavBar';
 import { NavigationType, Outlet, useLocation, useNavigationType } from 'react-router-dom';
-import NotificationList from '../components/Notifications/NotificationList';
 
 // Where all content will be displayed does not include nav bar
 const BodyDiv = styled.div`
@@ -67,7 +66,6 @@ const PageConfig = () => {
 
   return (
     <>
-      <NotificationList />
       <BodyDiv ref={BodyDivRef}>
         <SideMargin>
           <Outlet />

@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import useWindowSize from '../hooks/useWindowSize';
 import jsonConfig from '@config/config.json';
 import { NotificationProvider } from '../contexts/Notification';
+import NotificationList from '../components/Notifications/NotificationList';
 
 // Size in px at which site starts using mobile features
 const MobileWidth = 700;
@@ -89,6 +90,7 @@ const AppConfig = () => {
       <NotificationProvider>
         <ThemeProvider theme={StyleTheme}>
           <GlobalCSS />
+          <NotificationList />
           <BrowserRouter>
             <HelmetProvider>
               <Routing />
