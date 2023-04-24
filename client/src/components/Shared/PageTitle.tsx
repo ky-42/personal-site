@@ -1,14 +1,13 @@
-import React from "react";
-import styled from "styled-components";
+import styled from 'styled-components';
 
 /* -------------------------------------------------------------------------- */
 
 const PageTitleHeader = styled.header`
-  margin-top: clamp(2.08rem,  6vw, 6.0rem);
+  margin-top: clamp(2.08rem, 6vw, 6rem);
 `;
 
 const PageTitleText = styled.h1`
-  font-size: clamp(2.88rem, 10vw, 6.0rem);
+  font-size: clamp(2.88rem, 10vw, 6rem);
   text-align: center;
   margin-top: 0;
 `;
@@ -16,19 +15,17 @@ const PageTitleText = styled.h1`
 /* -------------------------------------------------------------------------- */
 
 interface PageTitleProps {
-  children: string,
-  icon?: React.ReactNode
+  children: string;
+  icon?: React.ReactNode;
 }
 
 const PageTitle = ({ children, icon }: PageTitleProps) => {
-  return(
+  return (
     <PageTitleHeader>
       {icon}
-      <PageTitleText>
-        {children}
-      </PageTitleText>
+      <PageTitleText>{children}</PageTitleText>
     </PageTitleHeader>
-  )
-}
+  );
+};
 
 export default PageTitle;

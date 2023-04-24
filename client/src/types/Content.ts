@@ -3,13 +3,13 @@
 /* -------------------------------------------------------------------------- */
 
 export enum ContentType {
-  Blog = "blog",
-  Project = "project",
+  Blog = 'blog',
+  Project = 'project',
 }
-  
+
 export enum ProjectStatus {
-  UnderDevelopment = "under_development",
-  Finished = "finished"
+  UnderDevelopment = 'under_development',
+  Finished = 'finished',
 }
 
 /* -------------------------------------------------------------------------- */
@@ -38,7 +38,7 @@ export interface Blog extends NewBlog {
 
 export interface FullContent {
   base_content: Content;
-  extra_content: {project: Project} | {blog: Blog}
+  extra_content: { project: Project } | { blog: Blog };
 }
 
 /* ------------------------- New Content Interfaces ------------------------- */
@@ -65,11 +65,11 @@ export interface NewProject {
 
 export interface NewFullContent {
   new_base_content: NewContent;
-  new_extra_content: {project: NewProject} | {blog: NewBlog}
+  new_extra_content: { project: NewProject } | { blog: NewBlog };
 }
 
 /* --------------------------- Content extenstions -------------------------- */
-  
+
 export interface Tag {
   id: number;
   blog_id: number;
@@ -77,7 +77,7 @@ export interface Tag {
 }
 
 export interface NewDevblog {
-  title: String;
+  title: string;
 }
 
 export interface Devblog {

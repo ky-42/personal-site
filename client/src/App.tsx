@@ -3,7 +3,7 @@ import AppConfig from './config/AppConfig';
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <React.StrictMode>
         <AppConfig></AppConfig>
       </React.StrictMode>

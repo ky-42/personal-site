@@ -1,6 +1,5 @@
-import React from "react";
-import styled from "styled-components";
-import { ErrorTextStyling } from "./InputElements";
+import styled from 'styled-components';
+import { ErrorTextStyling } from './InputElements';
 
 /* -------------------------------------------------------------------------- */
 
@@ -11,17 +10,17 @@ const Input = styled.div`
   margin: 2.5rem 0;
 `;
 
-const InputLabel = styled.label<{error: boolean}>`
+const InputLabel = styled.label<{ error: boolean }>`
   text-align: center;
-  font-size: 2.0rem;
-  ${props => props.error ? ErrorTextStyling : null};
+  font-size: 2rem;
+  ${(props) => (props.error ? ErrorTextStyling : null)};
   margin-bottom: 0.8rem;
 `;
 
 const ErrorText = styled.label`
   margin: 0.5rem;
   text-align: center;
-  font-size: 1.0rem;
+  font-size: 1rem;
   text-decoration: underline;
   ${ErrorTextStyling}
 `;
@@ -29,27 +28,21 @@ const ErrorText = styled.label`
 /* -------------------------------------------------------------------------- */
 
 interface InputAreaProps {
-  lableText: string,
-  error?: string,
-  InputElement: JSX.Element
+  lableText: string;
+  error?: string;
+  InputElement: JSX.Element;
 }
 
 // Component that holds and input giving it a header and structure
 const InputArea = ({ lableText, error, InputElement }: InputAreaProps) => {
   return (
     <Input>
-      <InputLabel error={error !== undefined}>
-        {lableText}
-      </InputLabel>
-      { error !== undefined &&
-        <ErrorText>
-          {error}
-        </ErrorText> 
-      }
+      <InputLabel error={error !== undefined}>{lableText}</InputLabel>
+      {error !== undefined && <ErrorText>{error}</ErrorText>}
       <br />
       {InputElement}
     </Input>
-  )
-}
+  );
+};
 
 export default InputArea;

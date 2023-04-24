@@ -1,22 +1,21 @@
-import React from "react";
-import styled from "styled-components";
+import styled from 'styled-components';
 
 /* -------------------------------------------------------------------------- */
 
 const SocialLink = styled.a`
   //Idk why felx is needed here but it centers
   display: flex;
-  width: 10.0rem;
-  height: 10.0rem;
-  border: 0.5rem solid ${props => props.theme.lightTone};
+  width: 10rem;
+  height: 10rem;
+  border: 0.5rem solid ${(props) => props.theme.lightTone};
   &:hover {
-    border-color: ${props => props.theme.highlight};
+    border-color: ${(props) => props.theme.highlight};
   }
 `;
 
 const ConnectLinkDiv = styled.div`
   // Removes link colouring
-  color: ${props => props.theme.textColour};
+  color: ${(props) => props.theme.textColour};
   font-size: 4.8rem;
   // Centers icon
   display: flex;

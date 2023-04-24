@@ -1,12 +1,12 @@
-import { AiOutlineMinus } from "react-icons/ai"
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import { AiOutlineMinus } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 /* ------------------------ General Styled Components ----------------------- */
 
 const ButtonLink = styled(Link)`
   flex: 0 0 auto;
-  color: ${props => props.theme.textColour};
+  color: ${(props) => props.theme.textColour};
 `;
 
 const TagText = styled.p`
@@ -22,22 +22,22 @@ const ButtonHolder = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: ${props => props.theme.lightTone} 0.3rem solid;
+  border: ${(props) => props.theme.lightTone} 0.3rem solid;
   height: 3.5rem;
   padding: 0.05rem 0 0.05rem 0.5rem;
 
   &:hover {
     text-decoration: underline;
   }
-  
+
   &:active {
-    border: ${props => props.theme.highlight} 0.3rem solid;
+    border: ${(props) => props.theme.highlight} 0.3rem solid;
   }
 `;
 
 const DeleteButton = styled.button`
-  color: ${props => props.theme.highlight};
-  background-color: ${props => props.theme.backgroundColour};
+  color: ${(props) => props.theme.highlight};
+  background-color: ${(props) => props.theme.backgroundColour};
   outline: 0;
   border: 0;
   padding-top: 0.75rem;
@@ -45,24 +45,20 @@ const DeleteButton = styled.button`
 `;
 
 interface ManageTagProps extends TagProps {
-  removeTag: (tag: string) => void
+  removeTag: (tag: string) => void;
 }
 
 // Shows a tags and a button to remove it
-export const ManageTag = ({tagString: tag, removeTag}: ManageTagProps) => {
+export const ManageTag = ({ tagString: tag, removeTag }: ManageTagProps) => {
   return (
     <ButtonHolder>
-      <TagText>
-        {tag}
-      </ TagText>
-      <DeleteButton 
-        onClick={() => removeTag(tag)}
-      >
+      <TagText>{tag}</TagText>
+      <DeleteButton onClick={() => removeTag(tag)}>
         <AiOutlineMinus />
       </DeleteButton>
-    </ ButtonHolder>
-  )
-}
+    </ButtonHolder>
+  );
+};
 
 /* --------------------- Tags used on content view page --------------------- */
 
@@ -71,24 +67,22 @@ const TagHolderShow = styled(ButtonHolder)`
 `;
 
 interface TagProps {
-  tagString: string,
+  tagString: string;
 }
 
 interface TagPropsWithUrl extends TagProps {
-  url: string
+  url: string;
 }
 
-export const ShowTag = ({tagString, url}: TagPropsWithUrl) => {
+export const ShowTag = ({ tagString, url }: TagPropsWithUrl) => {
   return (
     <ButtonLink to={url}>
       <TagHolderShow>
-        <TagText>
-          {tagString}
-        </ TagText>
-      </ TagHolderShow>
+        <TagText>{tagString}</TagText>
+      </TagHolderShow>
     </ButtonLink>
-  )
-}
+  );
+};
 
 /* ---------------- General button used on content view page ---------------- */
 
@@ -97,26 +91,24 @@ const ShowLinkHolder = styled(ButtonHolder)`
 `;
 
 interface ShowLinkProps {
-  button_text: string | JSX.Element,
-  url: string
+  button_text: string | JSX.Element;
+  url: string;
 }
 
-export const ShowLink = ({button_text, url}: ShowLinkProps) => {
+export const ShowLink = ({ button_text, url }: ShowLinkProps) => {
   return (
     <ButtonLink to={url}>
       <ShowLinkHolder>
-        <TagText>
-          {button_text}
-        </ TagText>
-      </ ShowLinkHolder>
+        <TagText>{button_text}</TagText>
+      </ShowLinkHolder>
     </ButtonLink>
-  )
-}
+  );
+};
 
 /* --- Button for the next and previous devblog links on content view page -- */
 
 const DevblogLinkHolder = styled(ButtonHolder)`
-  // When updating this, also update the width of empty divs in ContentView.tsx 
+  // When updating this, also update the width of empty divs in ContentView.tsx
   // when there is no next or previous blog
   height: auto;
   flex-direction: column;
@@ -136,24 +128,20 @@ const DevblogLinkText = styled.p`
 `;
 
 interface DevblogLinkProps extends ShowLinkProps {
-  isPrevious: boolean
+  isPrevious: boolean;
 }
 
-export const DevblogLink = ({button_text, url, isPrevious}: DevblogLinkProps) => {
-  return(
+export const DevblogLink = ({ button_text, url, isPrevious }: DevblogLinkProps) => {
+  return (
     <ButtonLink to={url}>
       <DevblogLinkHolder>
-        <TagText>
-          {isPrevious ? "Previous Blog:" : "Next Blog:"}
-        </TagText>
+        <TagText>{isPrevious ? 'Previous Blog:' : 'Next Blog:'}</TagText>
         <br />
-        <DevblogLinkText>
-          {button_text}
-        </ DevblogLinkText>
-      </ DevblogLinkHolder>
+        <DevblogLinkText>{button_text}</DevblogLinkText>
+      </DevblogLinkHolder>
     </ButtonLink>
-  )
-}
+  );
+};
 
 // Used to keep the spacing of the devblog links consistent
 // when there is no next or previous blog

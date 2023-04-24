@@ -1,20 +1,20 @@
-import { ThemeProvider, createGlobalStyle } from "styled-components";
-import { BrowserRouter } from "react-router-dom";
-import MobileContext from "../contexts/Mobile";
-import Routing from "../Routing";
-import { HelmetProvider } from "react-helmet-async";
-import useWindowSize from "../hooks/useWindowSize";
-import jsonConfig from "@config/config.json";
-import { NotificationProvider } from "../contexts/Notification";
+import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import { BrowserRouter } from 'react-router-dom';
+import MobileContext from '../contexts/Mobile';
+import Routing from '../Routing';
+import { HelmetProvider } from 'react-helmet-async';
+import useWindowSize from '../hooks/useWindowSize';
+import jsonConfig from '@config/config.json';
+import { NotificationProvider } from '../contexts/Notification';
 
 // Size in px at which site starts using mobile features
-const MobileWidth = 700; 
+const MobileWidth = 700;
 
 // Stlyes to pass to all components
 const StyleTheme = {
   mobile: false,
-  borderSize: "0.3rem",
-  navHeight: "4.496rem",
+  borderSize: '0.3rem',
+  navHeight: '4.496rem',
   ...jsonConfig.colours,
 };
 
@@ -77,12 +77,12 @@ const GlobalCSS = createGlobalStyle`
     background-color: ${StyleTheme.lightTone};
     border-radius: 0;
   }
-`
+`;
 const AppConfig = () => {
   // Sets config for things that will effect or be used by all pages
 
-  // Checks if screen is of mobile width 
-  StyleTheme.mobile = (useWindowSize().width < MobileWidth);
+  // Checks if screen is of mobile width
+  StyleTheme.mobile = useWindowSize().width < MobileWidth;
 
   return (
     <MobileContext.Provider value={StyleTheme.mobile}>
@@ -97,7 +97,7 @@ const AppConfig = () => {
         </ThemeProvider>
       </NotificationProvider>
     </MobileContext.Provider>
-  )
+  );
 };
 
 export default AppConfig;
