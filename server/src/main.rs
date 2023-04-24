@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate diesel;
 use actix_web::{middleware::Logger, web, App, HttpServer};
-use dotenv;
 use std::env;
 
 mod configs;

@@ -53,7 +53,7 @@ impl Content {
         &self.content_type
     }
 
-    pub fn update_edit_at(&mut self) -> () {
+    pub fn update_edit_at(&mut self) {
         self.updated_at = chrono::offset::Utc::now();
     }
 }
