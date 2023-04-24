@@ -1,5 +1,4 @@
-import React from "react";
-import styled from "styled-components";
+import styled from 'styled-components';
 
 /* -------------------------------------------------------------------------- */
 
@@ -11,9 +10,7 @@ const SuccessText = styled.p`
 
 const SuccessPlaceholder = () => {
   // Placeholder to use when request completed successfully
-  return (
-    <SuccessText>SuccessText</SuccessText>
-  )
-}
+  return <SuccessText>SuccessText</SuccessText>;
+};
 
 export default SuccessPlaceholder;

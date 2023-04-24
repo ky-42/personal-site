@@ -7,7 +7,7 @@ use crate::db::models::content::FullContent;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct DbRows {
-    pub rows_effected: i32
+    pub rows_effected: i32,
 }
 
 #[derive(Deserialize, Debug)]
@@ -15,14 +15,14 @@ pub enum ShowOrder {
     Newest,
     Oldest,
     ProjectStartNewest,
-    ProjectStartOldest
+    ProjectStartOldest,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct PageInfo {
     pub content_per_page: i64,
     pub page: i64,
-    pub show_order: ShowOrder
+    pub show_order: ShowOrder,
 }
 
 impl Default for PageInfo {
@@ -42,22 +42,22 @@ pub struct ContentSlug {
 
 #[derive(Serialize, Debug)]
 pub struct CountReturn {
-    count: i64    
+    count: i64,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct IdStruct {
-    pub id: i32
+    pub id: i32,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct TagsToAdd {
-    pub tags: Vec<String>
+    pub tags: Vec<String>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct DevblogTitle {
-    pub title: String
+    pub title: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -69,6 +69,6 @@ pub struct GetSurroundingData {
 
 #[derive(Serialize, Debug)]
 pub struct SurroundingBlogs {
-    pub before_blogs: Vec<FullContent>, 
-    pub after_blogs: Vec<FullContent>
+    pub before_blogs: Vec<FullContent>,
+    pub after_blogs: Vec<FullContent>,
 }

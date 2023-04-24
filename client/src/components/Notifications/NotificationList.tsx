@@ -1,7 +1,7 @@
-import { useContext } from "react";
-import styled from "styled-components";
-import { NotificationContext } from "../../contexts/Notification";
-import NotificationBox from "./NotificationBox";
+import { useContext } from 'react';
+import styled from 'styled-components';
+import { NotificationContext } from '../../contexts/Notification';
+import NotificationBox from './NotificationBox';
 
 /* -------------------------------------------------------------------------- */
 
@@ -20,27 +20,24 @@ const NotificationListDiv = styled.div`
 /* -------------------------------------------------------------------------- */
 
 const NotificationList = () => {
-  
-  const {
-    notifications,
-    deleteNotification,
-    startTimer,
-    stopTimer
-  } = useContext(NotificationContext);
-  
+  const { notifications, deleteNotification, startTimer, stopTimer } =
+    useContext(NotificationContext);
+
   return (
     <NotificationListDiv>
       {
         // Map over notifications and create a NotificationBox for each one
         Object.keys(notifications).map((notificationId) => {
-          return <NotificationBox
-            key={parseInt(notificationId)}
-            id={parseInt(notificationId)}
-            notification={notifications[parseInt(notificationId)]}
-            deleteNotification={deleteNotification}
-            onMouseEnter={() => stopTimer(parseInt(notificationId))}
-            onMouseLeave={() => startTimer(parseInt(notificationId))}
-          />
+          return (
+            <NotificationBox
+              key={parseInt(notificationId)}
+              id={parseInt(notificationId)}
+              notification={notifications[parseInt(notificationId)]}
+              deleteNotification={deleteNotification}
+              onMouseEnter={() => stopTimer(parseInt(notificationId))}
+              onMouseLeave={() => startTimer(parseInt(notificationId))}
+            />
+          );
         })
       }
     </NotificationListDiv>

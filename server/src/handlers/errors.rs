@@ -24,12 +24,11 @@ pub enum AppError {
     #[display(fmt = "No admin password is set")]
     NoAdmin,
     #[display(fmt = "Content did not pass validation. Some values in your data are not valid")]
-    ContentValidationError
+    ContentValidationError,
 }
 
 // Makes content errors returnable by an actix web handler
 impl ResponseError for AppError {
-    
     //Creates a response to return when therer is a content error
     fn error_response(&self) -> HttpResponse {
         HttpResponse::build(self.status_code())

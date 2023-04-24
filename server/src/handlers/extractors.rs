@@ -1,5 +1,5 @@
 use super::errors::AppError;
-use actix_web::{http::header, FromRequest, web};
+use actix_web::{http::header, web, FromRequest};
 use std::future::{ready, Ready};
 
 /* ------------------------ Authentication extractor ------------------------ */
@@ -14,7 +14,6 @@ pub struct AuthUser {}
 impl AuthUser {
     // Authenticates a request
     fn check_request_authentication(req: &actix_web::HttpRequest) -> Result<Self, AppError> {
-
         //Gets server password from app and turns it into bytes
         let server_password = req
             .app_data::<web::Data<AdminInfo>>()
@@ -23,12 +22,13 @@ impl AuthUser {
             .as_bytes();
 
         //Gets password from request in the form of bytes
-        let request_password = req.headers()
+        let request_password = req
+            .headers()
             .get(header::AUTHORIZATION)
             .ok_or(AppError::NotAdmin)?;
 
         if request_password == server_password {
-            Ok(AuthUser{})
+            Ok(AuthUser {})
         } else {
             Err(AppError::NotAdmin)
         }
