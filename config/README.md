@@ -18,9 +18,13 @@ The `config.json` file also includes a field for configuring Plausible Analytics
 
 The Connect page on the website includes links to your social media profiles. The `config.json` file includes a field for adding your social media links. The supported links on the Connect page are:
 
-- Github
-- LinkedIn
-- Twitter
+- github
+- linkedin
+- twitter
+- instagram
+- youtube
+- gitlab
+- codepen
 
 You can add your own links to the `config.json` file by updating the `links` array in the `connect` section. For each link, you need to specify the `name` of the social media platform and the `url` to your profile on that platform.
 
