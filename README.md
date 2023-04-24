@@ -31,6 +31,9 @@ After almost a year of development, I'm pleased to say that my personal website 
 - [More on client](/client/README.md)
 - [More on server](/server/README.md)
 
+## Content Management
+The manage page can be found at /manage on the client. For more information check out [the client readme](/client/README.md)
+
 ## Run Locally
 ### Prerequisites
 - Rust
