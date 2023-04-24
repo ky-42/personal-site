@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
-import { AiFillGithub, AiFillTwitterCircle, AiFillLinkedin } from 'react-icons/ai';
+import {
+  AiFillGithub,
+  AiFillTwitterCircle,
+  AiFillLinkedin,
+  AiFillInstagram,
+  AiFillYoutube,
+  AiFillGitlab,
+  AiFillCodepenCircle,
+} from 'react-icons/ai';
 import PageTitle from '../components/Shared/PageTitle';
 import ExternalLink from '../components/Connect/ExternalLink';
 import MetaData from '../components/Shared/MetaData';
@@ -40,6 +48,10 @@ const iconMatch = {
   github: <AiFillGithub />,
   twitter: <AiFillTwitterCircle />,
   linkedin: <AiFillLinkedin />,
+  instagram: <AiFillInstagram />,
+  youtube: <AiFillYoutube />,
+  gitlab: <AiFillGitlab />,
+  codepen: <AiFillCodepenCircle />,
 };
 
 /* ------------------------- Email copy notification ------------------------ */
