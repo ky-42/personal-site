@@ -1,16 +1,16 @@
-use super::ContentType;
 use super::deserialize_helpers::empty_string_as_none;
+use super::ContentType;
 use crate::schema::content;
-use validator::Validate;
-use serde::{self, Deserialize, Serialize};
 use chrono::{self, DateTime, Utc};
+use serde::{self, Deserialize, Serialize};
+use validator::Validate;
 
 /* --------------------------- Base content models -------------------------- */
 
 /*
 Models for the content table
 The content table stores values that all connent
-will have no matter what type of content it is 
+will have no matter what type of content it is
 */
 
 #[derive(Insertable, Deserialize, Serialize, Validate, Debug)]
@@ -48,11 +48,11 @@ impl Content {
     pub fn get_id(&self) -> i32 {
         self.id
     }
-    
+
     pub fn get_content_type(&self) -> &super::ContentType {
         &self.content_type
     }
-    
+
     pub fn update_edit_at(&mut self) -> () {
         self.updated_at = chrono::offset::Utc::now();
     }
@@ -62,7 +62,7 @@ impl Content {
 
 #[cfg(test)]
 pub mod tests {
-    
+
     use super::*;
     use lipsum::{lipsum, lipsum_title, lipsum_words};
     use rand::Rng;
@@ -70,7 +70,6 @@ pub mod tests {
     impl NewContent {
         // Generates an instance of NewContent with random values
         pub fn random(content_type: ContentType) -> Self {
-
             let mut rng = rand::thread_rng();
 
             let title = lipsum_title();
@@ -91,7 +90,7 @@ pub mod tests {
                 body,
             }
         }
-        
+
         pub fn get_slug(&self) -> &str {
             return &self.slug;
         }
@@ -101,7 +100,7 @@ pub mod tests {
         pub fn get_slug(&self) -> &str {
             return &self.slug;
         }
-        
+
         pub fn set_slug(&mut self, slug: String) {
             self.slug = slug;
         }
