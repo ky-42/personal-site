@@ -1,16 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { AiFillCaretLeft } from 'react-icons/ai';
 import { ContentOperations } from '../adapters/content';
 import { FullContentList, listOrder, RequestState, RequestStatus } from '../types/RequestContent';
 import { ContentType, ProjectStatus } from '../types/Content';
 import PageTitle from '../components/Shared/PageTitle';
-import ContentListItem from '../components/ContentShow/ContentListItem';
+import ContentListItem, { getColumnStart } from '../components/ContentShow/ContentListItem';
 import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
 import MetaData from '../components/Shared/MetaData';
 import { NavigationType, useNavigationType } from 'react-router-dom';
 import { jsonParser } from '../adapters/helpers';
 import jsonConfig from '@config/config.json';
+import { NotificationContext, NotificationType } from '../contexts/Notification';
 
 /* -------------------------------------------------------------------------- */
 
@@ -27,21 +28,24 @@ const ProjectsTypeDiv = styled.section`
 `;
 
 const ContentList = styled.div`
-  display: flex;
-  justify-content: center;
+  display: grid;
   width: 100%;
   max-width: 132rem;
-  flex-wrap: wrap;
+  grid-template-columns: repeat(6, 22rem);
   // Outline covers the outline of the outside of the inside
   // elements border for effect
   outline: 0.2rem solid ${(props) => props.theme.backgroundColour};
   outline-offset: -0.1rem;
+
   // Changes number of columns based on screen width
   @media (max-width: 1500px) {
+    grid-template-columns: repeat(4, 22rem);
     max-width: 88rem;
   }
+
   @media (max-width: 1000px) {
     max-width: 44rem;
+    grid-template-columns: auto;
   }
 `;
 
@@ -92,13 +96,12 @@ const PageNum = styled.p`
 /* -------------------------------------------------------------------------- */
 
 const ProjectList = () => {
-  // TODO Fix finished list when there are 3 items is weird and wraps early
-  // event though its the same as the under dev list
-
   const contentPerPage = 6;
 
   // Used to determine if user navigated backwards
   const navigationType = useNavigationType();
+
+  const notifications = useContext(NotificationContext);
 
   // Uses sessionStorage to keep state when user navigates back
   const [page, setPage] = useState(
@@ -127,7 +130,11 @@ const ProjectList = () => {
   );
   const [fetchedFinishedProjects, setFetchedFinishedProjects] = useState<
     Record<number, RequestState<FullContentList>>
-  >({});
+  >(
+    sessionStorage.getItem('projectListFinishedList') && navigationType === NavigationType.Pop
+      ? JSON.parse(sessionStorage.getItem('projectListFinishedList') as string, jsonParser)
+      : {},
+  );
 
   // Used to scroll to top of list of projects when page changes and top
   // is out of view
@@ -147,26 +154,29 @@ const ProjectList = () => {
       sessionStorage.setItem('projectListPage', page.toString());
       sessionStorage.setItem('projectListFinishedPage', JSON.stringify(pageFinishedProjects));
       sessionStorage.setItem('projectListUnderDev', JSON.stringify(underDevProjects));
+      sessionStorage.setItem('projectListFinishedList', JSON.stringify(fetchedFinishedProjects));
     };
-  }, [page]);
+  });
 
   /* ------------------- useEffect functions to reuqest data ------------------ */
 
-  // Gets under dev projects and gets max page
+  // Gets under dev projects if not already fetched
   useEffect(() => {
-    ContentOperations.get_content_list({
-      page_info: {
-        content_per_page: 12,
-        page: 0,
-        show_order: listOrder.ProjectStartNewest,
-      },
-      content_filters: {
-        content_type: ContentType.Project,
-        project_status: ProjectStatus.UnderDevelopment,
-      },
-    }).then((value) => {
-      setUnderDevProjects(value);
-    });
+    if (underDevProjects.requestStatus !== RequestStatus.Success) {
+      ContentOperations.get_content_list({
+        page_info: {
+          content_per_page: 12,
+          page: 0,
+          show_order: listOrder.ProjectStartNewest,
+        },
+        content_filters: {
+          content_type: ContentType.Project,
+          project_status: ProjectStatus.UnderDevelopment,
+        },
+      }).then((value) => {
+        setUnderDevProjects(value);
+      });
+    }
   }, [underDevReload]);
 
   // Gets the current pages finished projects
@@ -202,7 +212,7 @@ const ProjectList = () => {
 
   // Side effect of request success should only run once and for finished projects
   const PageLoadSuccessEffect = ({ data }: { data: FullContentList }) => {
-    setMaxPage(Math.ceil(data.content_count / contentPerPage) - 1);
+    setMaxPage(data.page_count - 1);
   };
 
   // What element to show when fetch requests for projects lists succeed
@@ -211,9 +221,16 @@ const ProjectList = () => {
       <ContentList>
         {
           // Makes sure there are projects to display
-          data.content_count > 0 ? (
-            data.full_content_list.map((gotProjects) => {
-              return <ContentListItem content={gotProjects} key={gotProjects.base_content.id} />;
+          data.page_count > 0 ? (
+            data.full_content_list.map((gotProjects, index, fullList) => {
+              return (
+                <ContentListItem
+                  content={gotProjects}
+                  key={gotProjects.base_content.id}
+                  startColumnTwo={getColumnStart(index, fullList.length, 2)}
+                  startColumnThree={getColumnStart(index, fullList.length, 3)}
+                />
+              );
             })
           ) : (
             <p>No Projects</p>
@@ -227,6 +244,13 @@ const ProjectList = () => {
   // Function reload current page of projects for there respective sections
 
   const FinishedPageRetry = () => {
+    notifications.addNotification({
+      type: NotificationType.Info,
+      message: 'Rerequesting finished page',
+    });
+
+    setPageFinishedProjects({ requestStatus: RequestStatus.Loading });
+
     // Works cause this is watched by useEffect
     setFetchedFinishedProjects((state) => {
       delete state[page];
@@ -235,6 +259,12 @@ const ProjectList = () => {
   };
 
   const UnderDevRetry = () => {
+    notifications.addNotification({
+      type: NotificationType.Info,
+      message: 'Rerequesting under development page',
+    });
+
+    setUnderDevProjects({ requestStatus: RequestStatus.Loading });
     setUnderDevReload(!underDevReload);
   };
 
@@ -274,7 +304,7 @@ const ProjectList = () => {
       {/* Arrows to change finished projects page */}
       <PageChangeDiv>
         <Arrow
-          active={+(0 !== page)}
+          active={+(0 < page)}
           onClick={() => {
             finishedHeader.current?.scrollIntoView();
             changePageNum(false);
@@ -282,7 +312,7 @@ const ProjectList = () => {
         />
         <PageNum>{page}</PageNum>
         <Arrow
-          active={+(maxPage !== page)}
+          active={+(maxPage > page)}
           flip={+true}
           onClick={() => {
             finishedHeader.current?.scrollIntoView();

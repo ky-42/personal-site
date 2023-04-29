@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { ContentOperations } from '../adapters/content';
 import { ContentType } from '../types/Content';
@@ -10,7 +10,7 @@ import {
   RequestStatus,
 } from '../types/RequestContent';
 import PageTitle from '../components/Shared/PageTitle';
-import ContentListItem from '../components/ContentShow/ContentListItem';
+import ContentListItem, { getColumnStart } from '../components/ContentShow/ContentListItem';
 import MetaData from '../components/Shared/MetaData';
 import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
 import { ShowLink } from '../components/Shared/Buttons';
@@ -19,6 +19,7 @@ import { searchParamsToContentFilter } from '../types/HelperFuncs';
 import useQuery from '../hooks/useQueryParams';
 import { NavigationType, useLocation, useNavigationType } from 'react-router-dom';
 import { jsonParser } from '../adapters/helpers';
+import { NotificationContext, NotificationType } from '../contexts/Notification';
 
 /* -------------------------------------------------------------------------- */
 
@@ -112,15 +113,17 @@ const DropDown = styled.select`
 /* -------------------------- Content and show more ------------------------- */
 
 const ContentList = styled.section`
+  display: grid;
+  width: 100%;
   max-width: 88rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  grid-template-columns: repeat(4, 22rem);
   margin-bottom: 3rem;
   outline: 0.2rem solid ${(props) => props.theme.backgroundColour};
   outline-offset: -0.1rem;
+
   @media (max-width: 1000px) {
     max-width: 44rem;
+    grid-template-columns: auto;
   }
 `;
 
@@ -157,8 +160,13 @@ const BlogList = () => {
   // url is used to set the search bar and rerequest with filters
   const location = useLocation();
 
+  const notifications = useContext(NotificationContext);
+
   // Used to determine if user navigated backwards
   const naviagtionType = useNavigationType();
+
+  // State to triger a rerequest for the current page of blogs
+  const [retryLoad, setRetryLoad] = useState(false);
 
   // Gets query params from url
   const [searchParams, _, setSearchParams] = useQuery();
@@ -242,7 +250,11 @@ const BlogList = () => {
 
     // Requests only new pages and the page check is need cause if
     // initial request fails the page gets set to negative one
-    if (recivedBlogs[page] === undefined && page >= 0) {
+    if (
+      recivedBlogs[page] === undefined &&
+      page >= 0 &&
+      latestRecivedBlogs.requestStatus !== RequestStatus.Success
+    ) {
       ContentOperations.get_content_list({
         page_info: pageInfo,
         content_filters: currentContentFilter,
@@ -250,11 +262,10 @@ const BlogList = () => {
         setLatestRecivedBlogs(value);
       });
     }
-  }, [page, recivedBlogs, location.search]);
+  }, [page, retryLoad, recivedBlogs, location.search]);
 
   // Requests more content
   const loadMore = () => {
-    // TODO find way let user rerequest next page on error
     // note that if last requested page was the last page they loadmore button wont work
     if (page !== maxPage) {
       if (latestRecivedBlogs.requestStatus === RequestStatus.Success) {
@@ -265,7 +276,11 @@ const BlogList = () => {
 
         setPage(page + 1);
       } else {
-        setPage(page + 1);
+        notifications.addNotification({
+          type: NotificationType.Info,
+          message: 'Retrying...',
+        });
+        setRetryLoad(!retryLoad);
       }
 
       setLatestRecivedBlogs({ requestStatus: RequestStatus.Loading });
@@ -280,9 +295,16 @@ const BlogList = () => {
       <>
         {
           // Makes sure there are blogs to display
-          data.content_count > 0 ? (
-            data.full_content_list.map((gotBlog) => {
-              return <ContentListItem content={gotBlog} key={gotBlog.base_content.id} />;
+          data.page_count > 0 ? (
+            data.full_content_list.map((gotBlog, index, fullList) => {
+              return (
+                <ContentListItem
+                  content={gotBlog}
+                  key={gotBlog.base_content.id}
+                  startColumnTwo={getColumnStart(index, fullList.length, 2)}
+                  startColumnThree={getColumnStart(index, fullList.length, 2)}
+                />
+              );
             })
           ) : (
             <p>No Blogs</p>
@@ -292,15 +314,9 @@ const BlogList = () => {
     );
   };
 
-  // Side effect of request error
-  const PageLoadErrorEffect = (_errorString: { errorString: string }) => {
-    setPage(page - 1);
-  };
-
   // Side effect of request success should only run once
   const PageLoadSuccessEffect = ({ data }: { data: FullContentList }) => {
-    const maxPageCalculation = Math.ceil(data.content_count / contentPerPage) - 1;
-    setMaxPage(maxPageCalculation > 0 ? maxPageCalculation : 0);
+    setMaxPage(data.page_count - 1);
   };
 
   /* ---------------------------- Helper functions ---------------------------- */
@@ -412,7 +428,6 @@ const BlogList = () => {
           requestInfo={latestRecivedBlogs}
           successElement={RenderBlogList}
           successEffect={{ effect: PageLoadSuccessEffect }}
-          errorEffect={{ effect: PageLoadErrorEffect }}
         />
       </ContentList>
 

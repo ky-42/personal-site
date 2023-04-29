@@ -21,7 +21,7 @@ pub struct NewContent {
     slug: String,
     #[validate(length(min = 1))]
     title: String,
-    #[serde(deserialize_with = "empty_string_as_none")]
+    #[serde(default, deserialize_with = "empty_string_as_none")]
     content_desc: Option<String>,
     #[validate(length(min = 1))]
     body: String,
@@ -36,7 +36,7 @@ pub struct Content {
     slug: String,
     #[validate(length(min = 1))]
     title: String,
-    #[serde(deserialize_with = "empty_string_as_none")]
+    #[serde(default, deserialize_with = "empty_string_as_none")]
     content_desc: Option<String>,
     #[validate(length(min = 1))]
     body: String,

@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RequestState, RequestStatus } from '../../types/RequestContent';
 import ErrorDisplay from './ErrorDisplay';
 import LoadingPlaceholder from './LoadingPlaceholder';
 import SuccessPlaceholder from './SuccessPlaceholder';
+
+// The below is a component that helps handle requests by showing different elements based on the requests state.
+// This includes loading, error, and success states.
 
 /* -------------------------------------------------------------------------- */
 
@@ -13,20 +16,24 @@ interface stateEffect<T extends Function> {
   callCount?: number;
 }
 
-//TODO document API for this element
-
-// Parameters to the component below
 // ____Element parameters are component function that will be returned when the specified state is active
-// ____Effect are side effect function to call when the specified state is active
+// Success element will be passed the data from the request.
+// Error element will be passed the error string from the request and the retryFunc.
+// Loading element will be passed nothing.
+
+// ____Effect are an object with side effect function to call when the specified state is active
+// and a call count to determine the max amount of times the effect can be called.
 interface LoadErrorHandleProps<T> {
   requestInfo: RequestState<T>;
   successElement?: (data: { data: T }) => JSX.Element;
   successEffect?: stateEffect<(data: { data: T }) => void>;
   errorElement?: (errorString: { errorString: string; retryFunc?: () => void }) => JSX.Element;
   errorEffect?: stateEffect<(errorString: { errorString: string }) => void>;
-  retryFunc?: () => void;
   loadingElement?: () => JSX.Element;
   loadingEffect?: stateEffect<() => void>;
+  // Will be passed to the error element if there is one.
+  retryFunc?: () => void;
+  // Determines if the component will return a placeholder element when there is no element passed for the state.
   placeHolders?: boolean;
 }
 
@@ -78,9 +85,6 @@ const LoadErrorHandle = <T,>(handlingData: LoadErrorHandleProps<T>): JSX.Element
 
         break;
     }
-
-    // TODO maybe fix this
-    // eslint-disable-next-line
   }, [handlingData.requestInfo, handlingData.requestInfo.requestStatus]);
 
   // Helps handle requestest by showing different elements based on the requests state

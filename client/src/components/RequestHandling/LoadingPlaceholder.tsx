@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const LoadingText = styled.p`
   text-align: center;
+  grid-column: 1 / -1;
 `;
 
 /* -------------------------------------------------------------------------- */

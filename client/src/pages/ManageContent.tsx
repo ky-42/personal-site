@@ -61,7 +61,6 @@ const defaultContent: Content = {
   content_type: defaultExtraContent,
   slug: '',
   title: '',
-  content_desc: '',
   body: '',
 };
 
@@ -708,7 +707,14 @@ const ManageContent = () => {
           InputElement={
             <DropDown
               value={extraContentType}
-              onChange={(e) => setExtraContentType(e.target.value as ContentType)}
+              onChange={(e) => {
+                setExtraContentType(e.target.value as ContentType);
+                setBaseContentData({
+                  action: ReducerAction.Update,
+                  field: 'content_type',
+                  value: e.target.value as ContentType,
+                });
+              }}
             >
               <option value={ContentType.Blog}>Blog</option>
               <option value={ContentType.Project}>Project</option>

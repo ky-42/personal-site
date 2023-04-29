@@ -50,7 +50,6 @@ mod tests {
     use db::models::content::extra::NewExtraContent;
     use std::collections::HashMap;
     use std::sync::Once;
-    // use rand::Rng;
 
     static INIT: Once = Once::new();
 
@@ -83,7 +82,6 @@ mod tests {
         .await;
 
         // Send content add request
-        // Todo randomize between project and blog
         let add_data = db::models::content::NewFullContent::random_content();
         let add_request = test::TestRequest::post()
             .uri("/content/add")
@@ -133,7 +131,6 @@ mod tests {
         let delete_response: handlers::route_data::DbRows =
             test::call_and_read_body_json(&app, delete_request).await;
         assert!(delete_response.rows_effected == 1);
-        //Todo maybe add another check to make sure the right one got deleted
     }
 
     #[actix_web::test]

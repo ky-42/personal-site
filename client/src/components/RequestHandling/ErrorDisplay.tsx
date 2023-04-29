@@ -6,6 +6,7 @@ const ErrorDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  grid-column: 1 / -1;
 `;
 
 const ErrorText = styled.p`

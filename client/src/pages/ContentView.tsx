@@ -61,7 +61,15 @@ const TopLinks = styled.div`
   display: flex;
   flex-wrap: wrap;
   column-gap: clamp(1rem, 4vw, 2.5rem);
+  align-items: center;
   row-gap: 1rem;
+`;
+
+// Used when there is error with links near the title
+const TopLinkError = styled.p`
+  margin: 0;
+  font-size: 16;
+  font-variation-settings: 'wght' 550;
 `;
 
 /* -------------------------------- Blog data ------------------------------- */
@@ -135,7 +143,9 @@ const ContentView = () => {
   // The slug of the project that the blog is linked to
   const [linkedProjectSlug, setLinkedProjectSlug] = useState<string | undefined>(undefined);
   // The whether to show the linked blogs button depending on if blog there are linked blogs
-  const [showLinkedBlogs, setShowLinkedBlogs] = useState<boolean>(false);
+  const [linkedBlogs, setLinkedBlogs] = useState<RequestState<FullContentList>>({
+    requestStatus: RequestStatus.Loading,
+  });
 
   const [blogTags, setBlogTags] = useState<RequestState<Set<Tag>>>({
     requestStatus: RequestStatus.Loading,
@@ -215,11 +225,7 @@ const ContentView = () => {
           project_blogs: data.base_content.id,
         },
       }).then((value: RequestState<FullContentList>) => {
-        if (value.requestStatus === RequestStatus.Success) {
-          if (value.requestedData.content_count > 0) {
-            setShowLinkedBlogs(true);
-          }
-        }
+        setLinkedBlogs(value);
       });
     }
   };
@@ -293,6 +299,22 @@ const ContentView = () => {
     );
   };
 
+  // Renders button to linked blogs if there are any
+  const RenderLinkedBlogs = ({ data, link_id }: { data: FullContentList; link_id: number }) => {
+    if (data.page_count > 0) {
+      return (
+        <ShowLink
+          button_text={'Related Blogs'}
+          url={`/blogs?${new URLSearchParams({
+            project_blogs: `${link_id}`,
+          }).toString()}`}
+        />
+      );
+    } else {
+      return <></>;
+    }
+  };
+
   /* ----------------- Render components for the base content ----------------- */
 
   // What is rendered when content is gotten successfully
@@ -333,17 +355,15 @@ const ContentView = () => {
             <ShowLink button_text={'Visit Site'} url={data.extra_content.project.url} />
           )}
           {
-            // TODO: Could show error here using the RequestState
             // Only show button if there is a blogs linked to it and if there is
             // show a link to blog page with only the blogs linked to the current project
-            showLinkedBlogs && (
-              <ShowLink
-                button_text={'Related Blogs'}
-                url={`/blogs?${new URLSearchParams({
-                  project_blogs: `${data.base_content.id}`,
-                }).toString()}`}
-              />
-            )
+            <LoadErrorHandle
+              requestInfo={linkedBlogs}
+              successElement={(linkedData) => {
+                return RenderLinkedBlogs({ data: linkedData.data, link_id: data.base_content.id });
+              }}
+              errorElement={() => <TopLinkError>Error checking for related blogs</TopLinkError>}
+            />
           }
         </TopLinks>
       );
@@ -389,9 +409,12 @@ const ContentView = () => {
 
     return (
       <ContentViewBody>
+        {/*
+          Note: because this info has to be requested it won't work when posting links on social media
+        */}
         <MetaData
           title={data.base_content.title}
-          description={data.base_content.content_desc ? data.base_content.content_desc : 'Error'}
+          description={data.base_content.content_desc ? data.base_content.content_desc : ''}
           type='article'
         />
         <TopSection>

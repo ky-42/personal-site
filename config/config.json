@@ -1,142 +1,142 @@
 {
-    "name": "Kyle Denief",
-    "productionClientUrl": "kyledenief.me",
-    "productionServerUrl": "https://api.kyledenief.me",
-    "metaData": {
-        "description": "My personal site where I post my projects and blog",
-        "analytics": {
-            "dataDomain": "kyledenief.me",
-            "analyticsSrc": "https://plausible.kyledenief.me/js/plausible.js"
-        }
-    },
-    "colours": {
-        "textColour": "#FFFFFF",
-        "backgroundColour": "#222629",
-        "highlight": "#86C232",
-        "highlightDark": "#61892F",
-        "lightTone": "#6B6E70",
-        "darkTone": "#474B4F",
-        "errorColour": "#FF0033"
-    },
-    "currentlyReading": {
-        "name": "The Pragmatic Programmer",
-        "author": "David Thomas & Andrew Hunt",
-        "dateStarted": "Dec. 11, 2022"        
-    },
-    "pages": {
-        "home": {
-            "description": "Hi I'm Kyle Denief a university student and self taught programmer. Check out my latest project or blog if that interests you and have a good day!",
-            "mainParagraph": "I am a full-stack web developer with a strong foundation in front-end and back-end development, skilled in Python, TypeScript, and Rust. Self-taught and driven by a passion for computers and technology, I am continually improving my skills. I am currently enrolled in a computer science degree program at Memorial University of Newfoundland, where I aim to hone my abilities."
-        },
-        "connect": {
-            "description": "Hi I'm Kyle Denief if you want to chat the best way to contact me is email!",
-            "mainParagraph": "Hi! Thanks for your interest in connecting with me. I am open to communication for any reason, and I welcome the opportunity to have a conversation. You can reach me on LinkedIn, Twitter, or GitHub, but for the quickest response, please email me at,",
-            "email": "ky42@protonmail.com",
-            "links": [
-                {
-                    "name": "github",
-                    "url": "https://github.com/ky-42"
-                },
-                {
-                    "name": "twitter",
-                    "url": "https://twitter.com/ky421_"
-                },
-                {
-                    "name": "linkedin",
-                    "url": "https://www.linkedin.com/in/kyle-denief-132059230/"
-                }
-            ]
-        },
-        "about": {
-            "description": "Hi I'm Kyle Denief I'm a university student at Memorial University of Newfoundland and I'm a programmer!",
-            "mainParagraph": "As a first-year computer science student at Memorial University of Newfoundland, I am highly motivated to learn and excel in the field of technology. In addition to my coursework, I have self-taught myself a range of programming languages and technologies, including Python, TypeScript, SQL, Docker, Git, Rust, and Linux. I have also gained experience with popular web development frameworks such as React, Flask, and Actix Web. My passion for computers and technology has driven me to continually improve my skills and knowledge. I am proud to have had numerous academic achievements, including winning high school subject awards, being on the honor roll, and receiving a scholarship from the James R. Hoffa Memorial Scholarship Fund. Outside of my studies, I enjoy reading, sports, and fishing. I have played a variety of sports throughout my life, including hockey, baseball, and basketball. I am excited to see where my studies and self-learning will take me in the future.",
-            "toRead": [
-                {
-                    "name": "The Pragmatic Programmer: Your Journey To Mastery",
-                    "author": "Andrew Hunt & David Thomas"
-                },
-                {
-                    "name": "How Not to Be Wrong",
-                    "author": "Jordan Ellenberg"
-                },
-                {
-                    "name": "Perilous Bounty",
-                    "author": "Tom Philpott"
-                },
-                {
-                    "name": "Red Rising",
-                    "author": "Pierce Brown"
-                },
-                {
-                    "name": "Structures: Or Why Things Don't Fall Down",
-                    "author": "J. E. Gordon"
-                },
-                {
-                    "name": "Blackwater: The Rise of the World's Most Powerful Mercenary Army",
-                    "author": "Jeremy Scahill"
-                }
-            ],
-            "finishedReading": [
-                {
-                    "name": "Jim Henson: The Biography",
-                    "author": "Brian Jones"
-                },
-                {
-                    "name": "Atomic Habits",
-                    "author": "James Clear"
-                },
-                {
-                    "name": "The Wealthy Barber",
-                    "author": "David Chilton"
-                },
-                {
-                    "name": "What Color is Your Parachute?",
-                    "author": "Richard Bolles"
-                },
-                {
-                    "name": "Everyday Hockey Heroes",
-                    "author": "Bob McKenzie & Jim Lang"
-                },
-                {
-                    "name": "Splinter of the Mind's Eye",
-                    "author": "Alan Dean Foster"
-                },
-                {
-                    "name": "Business Adventures",
-                    "author": "John Brooks"
-                },
-                {
-                    "name": "Nineteen Eighty-Four",
-                    "author": "George Orwell"
-                },
-                {
-                    "name": "The Kite Runner",
-                    "author": "Khaled Hosseini"
-                },
-                {
-                    "name": "Ready Player Two",
-                    "author": "Ernest Cline"
-                },
-                {
-                    "name": "Ready Player One",
-                    "author": "Ernest Cline"
-                },
-                {
-                    "name": "Armada",
-                    "author": "Ernest Cline"
-                },
-                {
-                    "name": "Python Crash Course",
-                    "author": "Eric Matthes"
-                }
-            ]
-        },
-        "blogList": {
-            "description": "A list of the blogs I've created. Most are about my experiences programming but theres a little bit of everything!",
-            "contentPerPage": 8
-        },
-        "projectList": {
-            "description": "A list of my projects! Some are finished and some arn't"
-        }
+  "name": "Kyle Denief",
+  "productionClientUrl": "kyledenief.me",
+  "productionServerUrl": "https://api.kyledenief.me",
+  "metaData": {
+    "description": "My personal site where I post my projects and blog",
+    "analytics": {
+      "dataDomain": "kyledenief.me",
+      "analyticsSrc": "https://plausible.kyledenief.me/js/plausible.js"
     }
+  },
+  "colours": {
+    "textColour": "#FFFFFF",
+    "backgroundColour": "#222629",
+    "highlight": "#86C232",
+    "highlightDark": "#61892F",
+    "lightTone": "#6B6E70",
+    "darkTone": "#474B4F",
+    "errorColour": "#FF0033"
+  },
+  "currentlyReading": {
+    "name": "The Pragmatic Programmer",
+    "author": "David Thomas & Andrew Hunt",
+    "dateStarted": "Dec. 11, 2022"
+  },
+  "pages": {
+    "home": {
+      "description": "Hi I'm Kyle Denief a university student and self taught programmer. Check out my latest project or blog if that interests you and have a good day!",
+      "mainParagraph": "I am a full-stack web developer with a strong foundation in front-end and back-end development, skilled in Python, TypeScript, and Rust. Self-taught and driven by a passion for computers and technology, I am continually improving my skills. I am currently enrolled in a computer science degree program at Memorial University of Newfoundland, where I aim to hone my abilities."
+    },
+    "connect": {
+      "description": "Hi I'm Kyle Denief if you want to chat the best way to contact me is email!",
+      "mainParagraph": "Hi! Thanks for your interest in connecting with me. I am open to communication for any reason, and I welcome the opportunity to have a conversation. You can reach me on LinkedIn, Twitter, or GitHub, but for the quickest response, please email me at,",
+      "email": "ky42@protonmail.com",
+      "links": [
+        {
+          "name": "github",
+          "url": "https://github.com/ky-42"
+        },
+        {
+          "name": "twitter",
+          "url": "https://twitter.com/ky421_"
+        },
+        {
+          "name": "linkedin",
+          "url": "https://www.linkedin.com/in/kyle-denief-132059230/"
+        }
+      ]
+    },
+    "about": {
+      "description": "Hi I'm Kyle Denief I'm a university student at Memorial University of Newfoundland and I'm a programmer!",
+      "mainParagraph": "As a first-year computer science student at Memorial University of Newfoundland, I am highly motivated to learn and excel in the field of technology. In addition to my coursework, I have self-taught myself a range of programming languages and technologies, including Python, TypeScript, SQL, Docker, Git, Rust, and Linux. I have also gained experience with popular web development frameworks such as React, Flask, and Actix Web. My passion for computers and technology has driven me to continually improve my skills and knowledge. I am proud to have had numerous academic achievements, including winning high school subject awards, being on the honor roll, and receiving a scholarship from the James R. Hoffa Memorial Scholarship Fund. Outside of my studies, I enjoy reading, sports, and fishing. I have played a variety of sports throughout my life, including hockey, baseball, and basketball. I am excited to see where my studies and self-learning will take me in the future.",
+      "toRead": [
+        {
+          "name": "The Pragmatic Programmer: Your Journey To Mastery",
+          "author": "Andrew Hunt & David Thomas"
+        },
+        {
+          "name": "How Not to Be Wrong",
+          "author": "Jordan Ellenberg"
+        },
+        {
+          "name": "Perilous Bounty",
+          "author": "Tom Philpott"
+        },
+        {
+          "name": "Red Rising",
+          "author": "Pierce Brown"
+        },
+        {
+          "name": "Structures: Or Why Things Don't Fall Down",
+          "author": "J. E. Gordon"
+        },
+        {
+          "name": "Blackwater: The Rise of the World's Most Powerful Mercenary Army",
+          "author": "Jeremy Scahill"
+        }
+      ],
+      "finishedReading": [
+        {
+          "name": "Jim Henson: The Biography",
+          "author": "Brian Jones"
+        },
+        {
+          "name": "Atomic Habits",
+          "author": "James Clear"
+        },
+        {
+          "name": "The Wealthy Barber",
+          "author": "David Chilton"
+        },
+        {
+          "name": "What Color is Your Parachute?",
+          "author": "Richard Bolles"
+        },
+        {
+          "name": "Everyday Hockey Heroes",
+          "author": "Bob McKenzie & Jim Lang"
+        },
+        {
+          "name": "Splinter of the Mind's Eye",
+          "author": "Alan Dean Foster"
+        },
+        {
+          "name": "Business Adventures",
+          "author": "John Brooks"
+        },
+        {
+          "name": "Nineteen Eighty-Four",
+          "author": "George Orwell"
+        },
+        {
+          "name": "The Kite Runner",
+          "author": "Khaled Hosseini"
+        },
+        {
+          "name": "Ready Player Two",
+          "author": "Ernest Cline"
+        },
+        {
+          "name": "Ready Player One",
+          "author": "Ernest Cline"
+        },
+        {
+          "name": "Armada",
+          "author": "Ernest Cline"
+        },
+        {
+          "name": "Python Crash Course",
+          "author": "Eric Matthes"
+        }
+      ]
+    },
+    "blogList": {
+      "description": "A list of the blogs I've created. Most are about my experiences programming but theres a little bit of everything!",
+      "contentPerPage": 8
+    },
+    "projectList": {
+      "description": "A list of my projects! Some are finished and some arn't"
+    }
+  }
 }

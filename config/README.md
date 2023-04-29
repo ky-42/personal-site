@@ -1,7 +1,9 @@
 # Configuring the Site
+
 The config folder contains the configuration files for the website. One of my goals with this website was to make it accessible to anyone who wanted to host it with their own information. With this in mind, the client is entirely configurable using the `config.json` file. All you have to do is enter your own data into the `config_template.json` file (and then rename it to `config.json`) or replace the data in the `config.json` file.
 
 ## Mandatory Fields
+
 The `config.json` file includes mandatory fields that need to be filled in before deploying the site. The two mandatory fields are:
 
 - `productionClientUrl`: The URL of the client server when it is deployed.
@@ -18,11 +20,16 @@ The `config.json` file also includes a field for configuring Plausible Analytics
 
 The Connect page on the website includes links to your social media profiles. The `config.json` file includes a field for adding your social media links. The supported links on the Connect page are:
 
-- Github
-- LinkedIn
-- Twitter
+- github
+- linkedin
+- twitter
+- instagram
+- youtube
+- gitlab
+- codepen
 
 You can add your own links to the `config.json` file by updating the `links` array in the `connect` section. For each link, you need to specify the `name` of the social media platform and the `url` to your profile on that platform.
 
 ## Server
+
 All configuration for the server is done to the `.env` file in the `server` directory. This is where you set the admin password, database information, and the url of the client server. This file needs to be with the release executable when it is deployed but updated with the info for your deployment and a strong admin password.

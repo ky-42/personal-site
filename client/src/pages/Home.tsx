@@ -139,7 +139,7 @@ const Home = () => {
 
   // Element to display when latest blog or project is successfully fetched
   const contentFetchSuccess = ({ data }: { data: FullContentList }): JSX.Element => {
-    if (data.content_count > 0) {
+    if (data.page_count > 0) {
       return <ContentItem content={data.full_content_list[0]} />;
     }
     return <p>No Content</p>;

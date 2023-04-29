@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import useWindowSize from '../hooks/useWindowSize';
 import jsonConfig from '@config/config.json';
 import { NotificationProvider } from '../contexts/Notification';
+import NotificationList from '../components/Notifications/NotificationList';
 
 // Size in px at which site starts using mobile features
 const MobileWidth = 700;
@@ -30,6 +31,7 @@ const GlobalCSS = createGlobalStyle`
     color: ${StyleTheme.textColour};
     background-color: ${StyleTheme.backgroundColour};
     font-size: 1.6rem;
+    overflow: hidden;
   }
   
   p {
@@ -78,6 +80,7 @@ const GlobalCSS = createGlobalStyle`
     border-radius: 0;
   }
 `;
+
 const AppConfig = () => {
   // Sets config for things that will effect or be used by all pages
 
@@ -89,6 +92,7 @@ const AppConfig = () => {
       <NotificationProvider>
         <ThemeProvider theme={StyleTheme}>
           <GlobalCSS />
+          <NotificationList />
           <BrowserRouter>
             <HelmetProvider>
               <Routing />

@@ -5,9 +5,7 @@ export const validateContent = (data: NewContent, validationErrors: Record<strin
   let key: keyof NewContent;
   for (key in data) {
     if (!emptyToUndefined(data[key])) {
-      if (key === 'content_desc') {
-        data[key] = undefined;
-      } else {
+      if (key !== 'content_desc') {
         validationErrors[key] = 'Value needed';
       }
     }

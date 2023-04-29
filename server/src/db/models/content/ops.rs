@@ -7,7 +7,86 @@ use crate::{
     },
     schema,
 };
-use diesel::{insert_into, prelude::*, sql_types::Integer};
+use diesel::{
+    insert_into,
+    pg::Pg,
+    prelude::*,
+    query_builder::{AstPass, Query, QueryFragment},
+    query_dsl::LoadQuery,
+    sql_types::{BigInt, Integer},
+};
+
+/* ---------------------------- Pagination Setup ---------------------------- */
+// Credit: https://github.com/diesel-rs/diesel/blob/2.0.x/examples/postgres/advanced-blog-cli/src/pagination.rs
+// Taken straight from the diesel examples
+
+const DEFAULT_PER_PAGE: i64 = 6;
+
+pub trait Paginate: Sized {
+    fn paginate(self, page: i64) -> Paginated<Self>;
+}
+
+impl<T> Paginate for T {
+    fn paginate(self, page: i64) -> Paginated<Self> {
+        Paginated {
+            query: self,
+            per_page: DEFAULT_PER_PAGE,
+            page,
+            offset: page * DEFAULT_PER_PAGE,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, QueryId)]
+pub struct Paginated<T> {
+    query: T,
+    page: i64,
+    per_page: i64,
+    offset: i64,
+}
+
+impl<T> Paginated<T> {
+    pub fn per_page(self, per_page: i64) -> Self {
+        Paginated {
+            per_page,
+            offset: self.page * per_page,
+            ..self
+        }
+    }
+
+    pub fn load_and_count_pages<'a, U>(self, conn: &mut PgConnection) -> QueryResult<(Vec<U>, i64)>
+    where
+        Self: LoadQuery<'a, PgConnection, (U, i64)>,
+    {
+        let per_page = self.per_page;
+        let results = self.load::<(U, i64)>(conn)?;
+        let total = results.get(0).map(|x| x.1).unwrap_or(0);
+        let records = results.into_iter().map(|x| x.0).collect();
+        let total_pages = (total as f64 / per_page as f64).ceil() as i64;
+        Ok((records, total_pages))
+    }
+}
+
+impl<T: Query> Query for Paginated<T> {
+    type SqlType = (T::SqlType, BigInt);
+}
+
+impl<T> RunQueryDsl<PgConnection> for Paginated<T> {}
+
+impl<T> QueryFragment<Pg> for Paginated<T>
+where
+    T: QueryFragment<Pg>,
+{
+    fn walk_ast<'b>(&'b self, mut out: AstPass<'_, 'b, Pg>) -> QueryResult<()> {
+        out.push_sql("SELECT *, COUNT(*) OVER () FROM (");
+        self.query.walk_ast(out.reborrow())?;
+        out.push_sql(") t LIMIT ");
+        out.push_bind_param::<BigInt, _>(&self.per_page)?;
+        out.push_sql(" OFFSET ");
+        out.push_bind_param::<BigInt, _>(&self.offset)?;
+        Ok(())
+    }
+}
 
 /* -------------------------------------------------------------------------- */
 
@@ -162,11 +241,6 @@ impl super::FullContentList {
                     .filter(content::content_type.eq(super::ContentType::Blog))
                     .into_boxed();
 
-                // Does paging of query
-                blog_list = blog_list
-                    .limit(page_info.content_per_page)
-                    .offset(page_info.page * page_info.content_per_page);
-
                 // Changes order of blogs returned
                 blog_list = match page_info.show_order {
                     ShowOrder::Newest => blog_list.order_by(content::created_at.desc()),
@@ -244,8 +318,10 @@ impl super::FullContentList {
                 };
 
                 // Runs query to get the list of blogs
-                let list: Vec<(base::Content, extra::Blog)> =
-                    blog_list.load::<(base::Content, extra::Blog)>(db_conn)?;
+                let (list, page_count): (Vec<(base::Content, extra::Blog)>, i64) = blog_list
+                    .paginate(page_info.page)
+                    .per_page(page_info.content_per_page)
+                    .load_and_count_pages::<(base::Content, extra::Blog)>(db_conn)?;
 
                 // Combines the base content and the blog content into one stuct
                 // and puts it in a list
@@ -258,13 +334,9 @@ impl super::FullContentList {
                     })
                 }
 
-                // Gets count of content with all filters
-                // TODO make pagination extention like in disel docs
-                let content_count: i64 = Self::count(&filters, db_conn)?;
-
                 Ok(Self {
                     full_content_list,
-                    content_count,
+                    page_count,
                 })
             }
 
@@ -278,26 +350,23 @@ impl super::FullContentList {
                     .into_boxed();
 
                 // Changes order of project returned
-                project_list = project_list
-                    .limit(page_info.content_per_page)
-                    .offset(page_info.page * page_info.content_per_page)
-                    .order_by(content::created_at.desc());
-
-                // Changes order of project returned
                 project_list = match page_info.show_order {
                     ShowOrder::Newest => project_list.order_by(content::created_at.desc()),
                     ShowOrder::Oldest => project_list.order_by(content::created_at.asc()),
+                    // Will sort by start date then by created at
                     ShowOrder::ProjectStartNewest => project_list.order_by((
                         diesel::dsl::sql::<Integer>(
                             "CASE WHEN project.start_date IS NULL THEN 1 ELSE 0 END ASC",
                         ),
                         project::start_date.desc(),
+                        content::created_at.desc(),
                     )),
                     ShowOrder::ProjectStartOldest => project_list.order_by((
                         diesel::dsl::sql::<Integer>(
                             "CASE WHEN project.start_date IS NULL THEN 1 ELSE 0 END ASC",
                         ),
                         project::start_date.asc(),
+                        content::created_at.asc(),
                     )),
                 };
 
@@ -316,8 +385,10 @@ impl super::FullContentList {
                 };
 
                 // Runs query to get the list of projects
-                let list: Vec<(base::Content, extra::Project)> =
-                    project_list.load::<(base::Content, extra::Project)>(db_conn)?;
+                let (list, page_count): (Vec<(base::Content, extra::Project)>, i64) = project_list
+                    .paginate(page_info.page)
+                    .per_page(page_info.content_per_page)
+                    .load_and_count_pages::<(base::Content, extra::Project)>(db_conn)?;
 
                 // Combines the base content and the project content into one stuct
                 // and puts it in a list
@@ -330,134 +401,10 @@ impl super::FullContentList {
                     })
                 }
 
-                // Gets count of content with all filters
-                // TODO make pagination extention like in disel docs
-                let content_count: i64 = Self::count(&filters, db_conn)?;
-
                 Ok(Self {
                     full_content_list,
-                    content_count,
+                    page_count,
                 })
-            }
-        }
-    }
-
-    fn count(filters: &super::ContentFilter, db_conn: &mut PgConnection) -> Result<i64, AppError> {
-        // Returns how many peice of contenter there are with filters
-
-        use crate::schema::content;
-
-        match filters.content_type {
-            super::ContentType::Blog => {
-                use crate::schema::blog;
-                use crate::schema::devblog;
-                use crate::schema::tag;
-
-                // Creates inital joined query with blog table and content table
-                let mut blog_list = content::table
-                    .inner_join(blog::table.on(blog::id.eq(content::id)))
-                    .filter(content::content_type.eq(super::ContentType::Blog))
-                    .into_boxed();
-
-                // Get blogs only related to a certain project
-                if let Some(project_id) = &filters.project_blogs {
-                    blog_list = blog_list.filter(blog::related_project_id.eq(project_id));
-                }
-
-                // Returns list of blogs that have the same devblog assosication
-                if let Some(devblog_id) = &filters.devblog_id {
-                    blog_list = blog_list.filter(blog::devblog_id.eq(devblog_id));
-                };
-
-                // TODO Need to test this
-                // Gets all blogs with a specific tag
-                if let Some(tag_title) = &filters.blog_tag {
-                    let sub_query = tag::table
-                        .select(0.into_sql::<diesel::sql_types::Integer>())
-                        .filter(tag::blog_id.eq(blog::id))
-                        .filter(tag::title.eq(tag_title));
-
-                    blog_list = blog_list.filter(diesel::dsl::exists(sub_query));
-                };
-
-                // Searches tags, devblogs, title, related project and description that look like a term
-                // This is very basic search and could most definitly be improved
-                if let Some(search_term) = &filters.search {
-                    // Query for devblog title matching
-                    let devblog_sub_query = devblog::table
-                        .select(0.into_sql::<diesel::sql_types::Integer>())
-                        .filter(
-                            blog::devblog_id
-                                .is_not_null()
-                                .and(blog::devblog_id.eq(devblog::id.nullable())),
-                        )
-                        .filter(devblog::title.ilike(format!("{}{}{}", "%", search_term, "%")));
-
-                    // Query for tag matching
-                    let tag_sub_query = tag::table
-                        .select(0.into_sql::<diesel::sql_types::Integer>())
-                        .filter(tag::blog_id.eq(blog::id))
-                        .filter(tag::title.ilike(format!("{}{}{}", "%", search_term, "%")));
-
-                    // Query for related project title matching
-                    let content_alias = diesel::alias!(schema::content as content_alias);
-                    let project_sub_query = content_alias
-                        .select(0.into_sql::<diesel::sql_types::Integer>())
-                        .filter(
-                            blog::related_project_id.is_not_null().and(
-                                blog::related_project_id
-                                    .eq(content_alias.field(content::id).nullable()),
-                            ),
-                        )
-                        .filter(
-                            content_alias
-                                .field(content::title)
-                                .ilike(format!("{}{}{}", "%", search_term, "%"))
-                                .or(content_alias
-                                    .field(content::content_desc)
-                                    .ilike(format!("{}{}{}", "%", search_term, "%"))),
-                        );
-
-                    // Adds all the queries together on the main query
-                    blog_list = blog_list.filter(
-                        diesel::dsl::exists(devblog_sub_query)
-                            .or(diesel::dsl::exists(tag_sub_query))
-                            .or(diesel::dsl::exists(project_sub_query))
-                            .or(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
-                            .or(content::content_desc
-                                .ilike(format!("{}{}{}", "%", search_term, "%"))),
-                    );
-                };
-
-                // Get and return the count of the query
-                Ok(blog_list.count().get_result(db_conn)?)
-            }
-
-            super::ContentType::Project => {
-                use crate::schema::project;
-
-                // Creates inital joined query with blog table and content table
-                let mut project_list = content::table
-                    .inner_join(project::table.on(project::id.eq(content::id)))
-                    .filter(content::content_type.eq(super::ContentType::Project))
-                    .into_boxed();
-
-                // Filters by project status
-                if let Some(status) = &filters.project_status {
-                    project_list = project_list.filter(project::current_status.eq(status));
-                };
-
-                // Searches projects based on title and description
-                if let Some(search_term) = &filters.search {
-                    project_list = project_list
-                        .filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
-                        .or_filter(
-                            content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")),
-                        );
-                };
-
-                // Get and return the count of the query
-                Ok(project_list.count().get_result(db_conn)?)
             }
         }
     }
