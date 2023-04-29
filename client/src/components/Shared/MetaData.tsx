@@ -13,8 +13,6 @@ const MetaData = ({ title, description, type }: MetaDataProps) => {
 
   return (
     <Helmet>
-      {/* TODO Add more open graph meta tags */}
-
       {/* ------------------------- Standard metadata tags ------------------------- */}
       <title>{title}</title>
       <meta name='description' content={description} />
@@ -26,8 +24,10 @@ const MetaData = ({ title, description, type }: MetaDataProps) => {
 
       {/* ------------------------ Open graph metadata tags ------------------------ */}
       <meta property='og:type' content={type} />
+      <meta property='og:site_name' content={jsonConfig.name} />
       <meta property='og:title' content={title} />
       <meta property='og:description' content={description} />
+      <meta property='og:url' content={location.pathname} />
       <meta property='og:locale' content='en_US' />
 
       {/* ------------------------------ Twitter tags ------------------------------ */}

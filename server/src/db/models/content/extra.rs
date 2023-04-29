@@ -75,9 +75,9 @@ pub struct Blog {
 #[diesel(table_name = project)]
 pub struct NewProject {
     current_status: CurrentStatus,
-    #[serde(deserialize_with = "empty_string_as_none")]
+    #[serde(default, deserialize_with = "empty_string_as_none")]
     github_link: Option<String>,
-    #[serde(deserialize_with = "empty_string_as_none")]
+    #[serde(default, deserialize_with = "empty_string_as_none")]
     url: Option<String>,
     start_date: Option<DateTime<Utc>>,
 }
@@ -90,9 +90,9 @@ pub struct Project {
     id: i32,
     current_status: CurrentStatus,
     content_type: ContentType,
-    #[serde(deserialize_with = "empty_string_as_none")]
+    #[serde(default, deserialize_with = "empty_string_as_none")]
     github_link: Option<String>,
-    #[serde(deserialize_with = "empty_string_as_none")]
+    #[serde(default, deserialize_with = "empty_string_as_none")]
     url: Option<String>,
     start_date: Option<DateTime<Utc>>,
 }

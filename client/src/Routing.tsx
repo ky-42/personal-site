@@ -1,15 +1,15 @@
-import React from 'react';
+import { Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import PageConfig from './config/PageConfig';
 import * as Pages from './pages/_PagesExport';
+import LoadingPage from './pages/Loading';
 
 const Routing = () => {
   // Used to force a reload of the content view when the url changes
   const location = useLocation();
 
   return (
-    // TODO create loading pag<></>how if loading takes a certain amount of time
-    <React.Suspense fallback={<></>}>
+    <Suspense fallback={<LoadingPage />}>
       <Routes>
         <Route path='/' element={<PageConfig />}>
           <Route index element={<Pages.Home />} />
@@ -27,7 +27,7 @@ const Routing = () => {
           <Route path='*' element={<Pages.NotFound />} />
         </Route>
       </Routes>
-    </React.Suspense>
+    </Suspense>
   );
 };
 

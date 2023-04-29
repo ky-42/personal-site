@@ -57,7 +57,7 @@ export interface PageInfo {
 
 export interface FullContentList {
   full_content_list: FullContent[];
-  content_count: number;
+  page_count: number;
 }
 
 // When updating update searchParamsToContentFilter in HelperFuncs.ts

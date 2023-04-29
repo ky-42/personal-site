@@ -39,7 +39,7 @@ pub struct NewFullContent {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FullContentList {
     full_content_list: Vec<FullContent>,
-    content_count: i64,
+    page_count: i64,
 }
 
 /* -------------------------------------------------------------------------- */

@@ -31,6 +31,7 @@ const GlobalCSS = createGlobalStyle`
     color: ${StyleTheme.textColour};
     background-color: ${StyleTheme.backgroundColour};
     font-size: 1.6rem;
+    overflow: hidden;
   }
   
   p {
@@ -79,6 +80,7 @@ const GlobalCSS = createGlobalStyle`
     border-radius: 0;
   }
 `;
+
 const AppConfig = () => {
   // Sets config for things that will effect or be used by all pages
 
