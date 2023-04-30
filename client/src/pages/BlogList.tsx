@@ -127,6 +127,11 @@ const ContentList = styled.section`
   }
 `;
 
+const EmptyText = styled.p`
+  text-align: center;
+  grid-column: 1 / -1;
+`;
+
 const ActiveLoadMore = css`
   color: ${(props) => props.theme.textColour};
   border: 0.3rem solid ${(props) => props.theme.lightTone};
@@ -228,6 +233,17 @@ const BlogList = () => {
 
   /* -------------------------- Next page requesting -------------------------- */
 
+  const [firstLoad, setFirstLoad] = useState(true);
+
+  // Used to triger a rerequest for the current page of blogs when serach filters change
+  useEffect(() => {
+    if (firstLoad) {
+      setFirstLoad(false);
+    } else {
+      clearPages();
+    }
+  }, [location.search]);
+
   // Requests blogs and sets search bar
   useEffect(() => {
     // Checks if the url has changed and sets the current search to the
@@ -262,12 +278,12 @@ const BlogList = () => {
         setLatestRecivedBlogs(value);
       });
     }
-  }, [page, retryLoad, recivedBlogs, location.search]);
+  }, [page, retryLoad, recivedBlogs]);
 
   // Requests more content
   const loadMore = () => {
     // note that if last requested page was the last page they loadmore button wont work
-    if (page !== maxPage) {
+    if (page < maxPage) {
       if (latestRecivedBlogs.requestStatus === RequestStatus.Success) {
         setRecivedBlogs((oldBlogs) => {
           oldBlogs[page] = latestRecivedBlogs.requestedData;
@@ -307,7 +323,7 @@ const BlogList = () => {
               );
             })
           ) : (
-            <p>No Blogs</p>
+            <EmptyText>No Blogs</EmptyText>
           )
         }
       </>
@@ -361,9 +377,19 @@ const BlogList = () => {
     setSearchTimeout(
       setTimeout(() => {
         clearPages();
-        setSearchParams(
-          new URLSearchParams({ ...Object.fromEntries(searchParams.entries()), search: search }),
-        );
+
+        const newParams = new URLSearchParams({
+          ...Object.fromEntries(searchParams.entries()),
+          search: search,
+        });
+
+        if (search === '') {
+          newParams.delete('search');
+        } else {
+          newParams.set('search', search);
+        }
+
+        setSearchParams(newParams);
       }, 1250),
     );
   };
@@ -431,7 +457,7 @@ const BlogList = () => {
         />
       </ContentList>
 
-      <LoadMore active={page !== maxPage} onClick={loadMore}>
+      <LoadMore active={page < maxPage} onClick={loadMore}>
         Load More
       </LoadMore>
     </BlogListBody>

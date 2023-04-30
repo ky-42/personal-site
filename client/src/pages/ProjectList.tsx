@@ -49,6 +49,11 @@ const ContentList = styled.div`
   }
 `;
 
+const EmptyText = styled.p`
+  text-align: center;
+  grid-column: 1 / -1;
+`;
+
 const ProjectsTypeTitle = styled.h2`
   font-size: clamp(2.72rem, 6vw, 3.2rem);
 `;
@@ -233,7 +238,7 @@ const ProjectList = () => {
               );
             })
           ) : (
-            <p>No Projects</p>
+            <EmptyText>No Projects</EmptyText>
           )
         }
       </ContentList>
