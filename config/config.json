@@ -19,9 +19,9 @@
     "errorColour": "#FF0033"
   },
   "currentlyReading": {
-    "name": "The Pragmatic Programmer",
-    "author": "David Thomas & Andrew Hunt",
-    "dateStarted": "Dec. 11, 2022"
+    "name": "Animal Farm",
+    "author": "George Orwell",
+    "dateStarted": "Sep. 14th, 2023"
   },
   "pages": {
     "home": {
@@ -51,10 +51,6 @@
       "description": "Hi I'm Kyle Denief I'm a university student at Memorial University of Newfoundland and I'm a programmer!",
       "mainParagraph": "As a first-year computer science student at Memorial University of Newfoundland, I am highly motivated to learn and excel in the field of technology. In addition to my coursework, I have self-taught myself a range of programming languages and technologies, including Python, TypeScript, SQL, Docker, Git, Rust, and Linux. I have also gained experience with popular web development frameworks such as React, Flask, and Actix Web. My passion for computers and technology has driven me to continually improve my skills and knowledge. I am proud to have had numerous academic achievements, including winning high school subject awards, being on the honor roll, and receiving a scholarship from the James R. Hoffa Memorial Scholarship Fund. Outside of my studies, I enjoy reading, sports, and fishing. I have played a variety of sports throughout my life, including hockey, baseball, and basketball. I am excited to see where my studies and self-learning will take me in the future.",
       "toRead": [
-        {
-          "name": "Animal Farm",
-          "author": "George Orwell"
-        },
         {
           "name": "Lost and Founder",
           "author": "Rand Fishkin"
@@ -97,6 +93,10 @@
         }
       ],
       "finishedReading": [
+        {
+          "name": "The Pragmatic Programmer",
+          "author": "David Thomas & Andrew Hunt"
+        },
         {
           "name": "Jim Henson: The Biography",
           "author": "Brian Jones"
