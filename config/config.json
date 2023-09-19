@@ -19,9 +19,9 @@
     "errorColour": "#FF0033"
   },
   "currentlyReading": {
-    "name": "Animal Farm",
-    "author": "George Orwell",
-    "dateStarted": "Sep. 14th, 2023"
+    "name": "How To Win Friends & Influence People",
+    "author": "Dale Carnegie",
+    "dateStarted": "Sep. 19th, 2023"
   },
   "pages": {
     "home": {
@@ -93,6 +93,10 @@
         }
       ],
       "finishedReading": [
+        {
+          "name": "Animal Farm",
+          "author": "George Orwell"
+        },
         {
           "name": "The Pragmatic Programmer",
           "author": "David Thomas & Andrew Hunt"
