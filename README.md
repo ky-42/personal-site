@@ -87,7 +87,7 @@ Note: If you change the server port or ip, make sure to update the URL in `clien
 ### Building server
 
 1. Navigate to the `server` directory
-2. Build the server with `cargo build --release`
+2. Build the server with `cargo build --release` (Note if you get error that ends in `= note: /usr/bin/ld: cannot find -lpq: No such file or directory` it means you don't have libpq-dev/postgresql-libs which you will need to install)
 
 Note: Database migrations are included in the release build so they will be ran when the server is run.
 
