@@ -19,9 +19,9 @@
     "errorColour": "#FF0033"
   },
   "currentlyReading": {
-    "name": "How To Win Friends & Influence People",
-    "author": "Dale Carnegie",
-    "dateStarted": "Sep. 19th, 2023"
+    "name": "Good Economics for Hard Times",
+    "author": "Abhijit Banerjee & Esther Duflo",
+    "dateStarted": "Jan. 12th, 2024"
   },
   "pages": {
     "home": {
@@ -56,10 +56,6 @@
           "author": "Rand Fishkin"
         },
         {
-          "name": "Good Economics for Hard Times",
-          "author": "Abhijit Banerjee & Esther Duflo"
-        },
-        {
           "name": "Zero to One",
           "author": "Peter Thiel & Blake Masters"
         },
@@ -80,10 +76,6 @@
           "author": "Tom Philpott"
         },
         {
-          "name": "Red Rising",
-          "author": "Pierce Brown"
-        },
-        {
           "name": "Structures",
           "author": "J. E. Gordon"
         },
@@ -93,6 +85,14 @@
         }
       ],
       "finishedReading": [
+        {
+          "name": "Red Rising",
+          "author": "Pierce Brown"
+        },
+        {
+          "name": "How To Win Friends & Influence People",
+          "author": "Dale Carnegie"
+        },
         {
           "name": "Animal Farm",
           "author": "George Orwell"
