@@ -28,16 +28,16 @@ const ErrorText = styled.label`
 /* -------------------------------------------------------------------------- */
 
 interface InputAreaProps {
-  lableText: string;
+  labelText: string;
   error?: string;
   InputElement: JSX.Element;
 }
 
 // Component that holds and input giving it a header and structure
-const InputArea = ({ lableText, error, InputElement }: InputAreaProps) => {
+const InputArea = ({ labelText: labelText, error, InputElement }: InputAreaProps) => {
   return (
     <Input>
-      <InputLabel error={error !== undefined}>{lableText}</InputLabel>
+      <InputLabel error={error !== undefined}>{labelText}</InputLabel>
       {error !== undefined && <ErrorText>{error}</ErrorText>}
       <br />
       {InputElement}

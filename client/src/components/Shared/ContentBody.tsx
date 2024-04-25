@@ -22,6 +22,15 @@ const ContentBody = styled(ReactMarkdown)`
   > h6 {
     font-size: clamp(1.68rem, 4.25vw, 2rem);
   }
+  a {
+    color: ${(props) => props.theme.bodyLinkColour};
+  }  
+  a:hover {
+    text-decoration: underline;
+  }
+  a:visited {
+    color: ${(props) => props.theme.bodyLinkVisitedColour};
+  }
 `;
 
 export default ContentBody;

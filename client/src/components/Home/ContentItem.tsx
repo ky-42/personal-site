@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 /* -------------------------------------------------------------------------- */
 
 const ContentLink = styled(Link)`
-  // Margin keeps content looking more centered becuase text is left aligned
+  // Margin keeps content looking more centered because text is left aligned
   margin-left: clamp(1rem, 5vw, 6rem);
   max-width: 50rem;
   color: ${(props) => props.theme.textColour};
@@ -34,7 +34,7 @@ interface ContentItemProps {
 }
 
 const ContentItem = ({ content }: ContentItemProps) => {
-  // A Link to a peice of content that also displays info about it
+  // A Link to a piece of content that also displays info about it
 
   // Creates readable date string for the date the content was created
   // so it can be shown

@@ -33,4 +33,4 @@ export interface UpdateReducer<T, K extends keyof T> {
   value: T[K];
 }
 
-export type NewContentFeilds = NewContent & NewBlog & NewProject;
+export type NewContentFields = NewContent & NewBlog & NewProject;

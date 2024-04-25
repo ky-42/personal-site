@@ -41,7 +41,7 @@ const ShowOptions = styled.div`
   margin-bottom: clamp(2.5rem, 2.5vw, 5rem);
 `;
 
-const SearchBarWraper = styled.div`
+const SearchBarWrapper = styled.div`
   flex: 1 1 auto;
   position: relative;
   min-width: 10rem;
@@ -141,13 +141,13 @@ const ActiveLoadMore = css`
   }
 `;
 
-const DeactiveLoadMore = css`
+const InactiveLoadMore = css`
   color: ${(props) => props.theme.lightTone};
   border: 0.3rem solid ${(props) => props.theme.darkTone};
 `;
 
 const LoadMore = styled.button<{ active: boolean }>`
-  ${(props) => (props.active ? ActiveLoadMore : DeactiveLoadMore)}
+  ${(props) => (props.active ? ActiveLoadMore : InactiveLoadMore)}
   display: block;
   padding: 1.2rem 4.5rem;
   font-size: 1.6rem;
@@ -162,15 +162,15 @@ const BlogList = () => {
   /* ---------------------------------- State --------------------------------- */
 
   // location.search used as dependency for useEffect as
-  // url is used to set the search bar and rerequest with filters
+  // url is used to set the search bar and re-request with filters
   const location = useLocation();
 
   const notifications = useContext(NotificationContext);
 
   // Used to determine if user navigated backwards
-  const naviagtionType = useNavigationType();
+  const navigationType = useNavigationType();
 
-  // State to triger a rerequest for the current page of blogs
+  // State to trigger a re-request for the current page of blogs
   const [retryLoad, setRetryLoad] = useState(false);
 
   // Gets query params from url
@@ -183,31 +183,31 @@ const BlogList = () => {
   // Info about pages of blogs
   // Uses sessionStorage to keep state when user navigates back
   const [page, setPage] = useState(
-    sessionStorage.getItem('blogListPage') !== null && naviagtionType === NavigationType.Pop
+    sessionStorage.getItem('blogListPage') !== null && navigationType === NavigationType.Pop
       ? JSON.parse(sessionStorage.getItem('blogListPage') as string)
       : 0,
   );
   const [maxPage, setMaxPage] = useState(1);
 
-  // State for all the blogs the site has retreived
+  // State for all the blogs the site has retrieved
   // Uses sessionStorage to keep state when user navigates back
-  const [recivedBlogs, setRecivedBlogs] = useState<Record<number, FullContentList>>(
-    sessionStorage.getItem('blogListRecivedBlogs') !== null && naviagtionType === NavigationType.Pop
-      ? JSON.parse(sessionStorage.getItem('blogListRecivedBlogs') as string, jsonParser)
+  const [receivedBlogs, setReceivedBlogs] = useState<Record<number, FullContentList>>(
+    sessionStorage.getItem('blogListReceivedBlogs') !== null && navigationType === NavigationType.Pop
+      ? JSON.parse(sessionStorage.getItem('blogListReceivedBlogs') as string, jsonParser)
       : {},
   );
 
-  // The latest set of blogs the site has retreived
-  // Need seperate state for latest recieved for error handling reason
+  // The latest set of blogs the site has retrieved
+  // Need separate state for latest received for error handling reason
   // Uses sessionStorage to keep state when user navigates back
-  const [latestRecivedBlogs, setLatestRecivedBlogs] = useState<RequestState<FullContentList>>(
-    sessionStorage.getItem('blogListLatestRecivedBlogs') !== null &&
-      naviagtionType === NavigationType.Pop
-      ? JSON.parse(sessionStorage.getItem('blogListLatestRecivedBlogs') as string, jsonParser)
+  const [latestReceivedBlogs, setLatestReceivedBlogs] = useState<RequestState<FullContentList>>(
+    sessionStorage.getItem('blogListLatestReceivedBlogs') !== null &&
+      navigationType === NavigationType.Pop
+      ? JSON.parse(sessionStorage.getItem('blogListLatestReceivedBlogs') as string, jsonParser)
       : { requestStatus: RequestStatus.Loading },
   );
 
-  // State for when to rerequest blogs
+  // State for when to re-request blogs
   const [reloadSearchAnimation, setReloadSearchAnimation] = useState<boolean | null>(null);
 
   // Used to store search timeout. If the timeout finished the search will
@@ -226,8 +226,8 @@ const BlogList = () => {
       }
 
       sessionStorage.setItem('blogListPage', page.toString());
-      sessionStorage.setItem('blogListRecivedBlogs', JSON.stringify(recivedBlogs));
-      sessionStorage.setItem('blogListLatestRecivedBlogs', JSON.stringify(latestRecivedBlogs));
+      sessionStorage.setItem('blogListReceivedBlogs', JSON.stringify(receivedBlogs));
+      sessionStorage.setItem('blogListLatestReceivedBlogs', JSON.stringify(latestReceivedBlogs));
     };
   });
 
@@ -235,7 +235,7 @@ const BlogList = () => {
 
   const [firstLoad, setFirstLoad] = useState(true);
 
-  // Used to triger a rerequest for the current page of blogs when serach filters change
+  // Used to trigger a re-request for the current page of blogs when search filters change
   useEffect(() => {
     if (firstLoad) {
       setFirstLoad(false);
@@ -267,26 +267,26 @@ const BlogList = () => {
     // Requests only new pages and the page check is need cause if
     // initial request fails the page gets set to negative one
     if (
-      recivedBlogs[page] === undefined &&
+      receivedBlogs[page] === undefined &&
       page >= 0 &&
-      latestRecivedBlogs.requestStatus !== RequestStatus.Success
+      latestReceivedBlogs.requestStatus !== RequestStatus.Success
     ) {
       ContentOperations.get_content_list({
         page_info: pageInfo,
         content_filters: currentContentFilter,
       }).then((value) => {
-        setLatestRecivedBlogs(value);
+        setLatestReceivedBlogs(value);
       });
     }
-  }, [page, retryLoad, recivedBlogs]);
+  }, [page, retryLoad, receivedBlogs]);
 
   // Requests more content
   const loadMore = () => {
-    // note that if last requested page was the last page they loadmore button wont work
+    // note that if last requested page was the last page the "load more" button wont work
     if (page < maxPage) {
-      if (latestRecivedBlogs.requestStatus === RequestStatus.Success) {
-        setRecivedBlogs((oldBlogs) => {
-          oldBlogs[page] = latestRecivedBlogs.requestedData;
+      if (latestReceivedBlogs.requestStatus === RequestStatus.Success) {
+        setReceivedBlogs((oldBlogs) => {
+          oldBlogs[page] = latestReceivedBlogs.requestedData;
           return oldBlogs;
         });
 
@@ -299,11 +299,11 @@ const BlogList = () => {
         setRetryLoad(!retryLoad);
       }
 
-      setLatestRecivedBlogs({ requestStatus: RequestStatus.Loading });
+      setLatestReceivedBlogs({ requestStatus: RequestStatus.Loading });
     }
   };
 
-  /* ------------ Success and error effects and rendering elemetnts ----------- */
+  /* ------------ Success and error effects and rendering elements ------------ */
 
   // How to render a list of blogs
   const RenderBlogList = ({ data }: { data: FullContentList }) => {
@@ -338,7 +338,7 @@ const BlogList = () => {
   /* ---------------------------- Helper functions ---------------------------- */
 
   // Gets a search param from the url
-  // if it doesnt exist returns empty string
+  // if it doesn't exist returns empty string
   const getSearchParam = (param: string): string => {
     const paramReturn = searchParams.get(param);
     if (paramReturn !== null) return paramReturn;
@@ -349,8 +349,8 @@ const BlogList = () => {
   const clearPages = () => {
     setPage(0);
     setMaxPage(1);
-    setRecivedBlogs({});
-    setLatestRecivedBlogs({ requestStatus: RequestStatus.Loading });
+    setReceivedBlogs({});
+    setLatestReceivedBlogs({ requestStatus: RequestStatus.Loading });
   };
 
   /* ------------------------- Filter change functions ------------------------ */
@@ -407,7 +407,7 @@ const BlogList = () => {
       <PageTitle>Blogs</PageTitle>
 
       <ShowOptions>
-        <SearchBarWraper>
+        <SearchBarWrapper>
           <SearchBar
             placeholder='Search'
             value={currentSearch}
@@ -418,7 +418,7 @@ const BlogList = () => {
             key={reloadSearchAnimation ? 1 : 0}
             reload={reloadSearchAnimation}
           />
-        </SearchBarWraper>
+        </SearchBarWrapper>
         <DropDown
           value={getSearchParam('show_order') ? getSearchParam('show_order') : showOrder.Newest}
           onChange={(e) => orderChange(e.target.value as showOrder)}
@@ -439,11 +439,11 @@ const BlogList = () => {
       {/* Renders previous pages of successful blogs fetched */}
       <ContentList>
         <>
-          {Array.from(Array(Object.keys(recivedBlogs).length).keys()).map((value) => {
+          {Array.from(Array(Object.keys(receivedBlogs).length).keys()).map((value) => {
             return (
               <RenderBlogList
-                data={recivedBlogs[value]}
-                key={recivedBlogs[value].full_content_list[0].base_content.id}
+                data={receivedBlogs[value]}
+                key={receivedBlogs[value].full_content_list[0].base_content.id}
               />
             );
           })}
@@ -451,7 +451,7 @@ const BlogList = () => {
 
         {/* Renders lates blog page requested and handles errors if it fails */}
         <LoadErrorHandle
-          requestInfo={latestRecivedBlogs}
+          requestInfo={latestReceivedBlogs}
           successElement={RenderBlogList}
           successEffect={{ effect: PageLoadSuccessEffect }}
         />

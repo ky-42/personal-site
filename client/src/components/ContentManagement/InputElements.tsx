@@ -32,12 +32,12 @@ export const ErrorTextStyling = css`
 `;
 
 const ActiveButton = css`
-  /* Important needed to overide any focus styles */
+  /* Important needed to override any focus styles */
   color: ${(props) => props.theme.textColour} !important;
   border: 0.1rem solid ${(props) => props.theme.highlight} !important;
 `;
 
-const UnactiveButton = css`
+const InactiveButton = css`
   border: 0.1rem solid ${(props) => props.theme.darkTone};
   color: ${(props) => props.theme.lightTone};
   &:focus {
@@ -90,7 +90,7 @@ export const BasicButton = styled.button`
 
 export const ClickButton = styled(BasicButton)`
   &:focus {
-    ${UnactiveButton}
+    ${InactiveButton}
   }
 
   &:active {
@@ -99,7 +99,7 @@ export const ClickButton = styled(BasicButton)`
 `;
 
 export const StateButton = styled(BasicButton)<{ active: boolean }>`
-  ${(props) => (props.active ? ActiveButton : UnactiveButton)}
+  ${(props) => (props.active ? ActiveButton : InactiveButton)}
 `;
 
 export const EnterButton = styled(StyledButton)`

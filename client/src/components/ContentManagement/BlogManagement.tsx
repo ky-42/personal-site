@@ -12,7 +12,7 @@ import { NotificationContext, NotificationType } from '../../contexts/Notificati
 
 /* ---------------------------- Styled Components --------------------------- */
 
-const BlogManagmentArea = styled.div``;
+const BlogManagementArea = styled.div``;
 
 const IdHolder = styled.p`
   text-align: center;
@@ -36,23 +36,23 @@ const TagsList = styled.div`
 
 /* -------------------------------------------------------------------------- */
 
-interface blogManagmentProps {
+interface blogManagementProps {
   blogData: Blog;
   setBlogData: React.Dispatch<SetReducer<Blog> | UpdateReducer<Blog, keyof Blog>>;
   tags: Set<string>;
   setTags: React.Dispatch<React.SetStateAction<Set<string>>>;
-  // Possible errors in an input with key being feild and value being error message
+  // Possible errors in an input with key being field and value being error message
   validationErrors: Record<string, string>;
 }
 
-// Form part for inputing data about the blog specific parts of content
-const BlogManagment = ({
+// Form part for inputting data about the blog specific parts of content
+const BlogManagement = ({
   blogData,
   setBlogData,
   tags,
   setTags,
   validationErrors,
-}: blogManagmentProps) => {
+}: blogManagementProps) => {
   const notifications = useContext(NotificationContext);
 
   // State for current tag being typed
@@ -64,7 +64,7 @@ const BlogManagment = ({
 
   /* ------------------------------- Id Requests ------------------------------ */
 
-  // Request content with a slug and sets proejctId if successful
+  // Request content with a slug and sets projectId if successful
   const getProjectId = (slug: string) => {
     ContentOperations.get_content({ slug: slug }).then((content) => {
       switch (content.requestStatus) {
@@ -125,9 +125,9 @@ const BlogManagment = ({
   };
 
   return (
-    <BlogManagmentArea>
+    <BlogManagementArea>
       <InputArea
-        lableText={'Tags'}
+        labelText={'Tags'}
         InputElement={
           <div>
             <InputButtonHolder>
@@ -159,8 +159,8 @@ const BlogManagment = ({
       />
 
       <InputArea
-        lableText={'Slug of Related Project'}
-        error={validationErrors['realated_project_id']}
+        labelText={'Slug of Related Project'}
+        error={validationErrors['related_project_id']}
         InputElement={
           <div>
             <InputButtonHolder>
@@ -197,7 +197,7 @@ const BlogManagment = ({
       />
 
       <InputArea
-        lableText={'Title of Devblog'}
+        labelText={'Title of Devblog'}
         error={validationErrors['devblog_id']}
         InputElement={
           <div>
@@ -233,8 +233,8 @@ const BlogManagment = ({
           </div>
         }
       />
-    </BlogManagmentArea>
+    </BlogManagementArea>
   );
 };
 
-export default BlogManagment;
+export default BlogManagement;

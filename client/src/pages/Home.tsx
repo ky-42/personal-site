@@ -54,7 +54,7 @@ const IntroText = styled.p`
   line-height: 1.5;
 `;
 
-// Wraper for asteroid button (below)
+// Wrapper for asteroid button (below)
 const BrowserOnly = styled(BrowserView)`
   margin-left: 7.2rem;
   @media (max-width: 1250px) {
@@ -63,7 +63,7 @@ const BrowserOnly = styled(BrowserView)`
   }
 `;
 
-// Currently does nothing cause game is not implmented
+// Currently does nothing cause game is not implemented
 const AsteroidsButton = styled.button`
   background-color: ${(props) => props.theme.backgroundColour};
   font-size: 1.6rem;

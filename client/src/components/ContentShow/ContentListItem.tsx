@@ -99,7 +99,7 @@ interface ContentItemProps {
 }
 
 const ContentListItem = ({ content, startColumnTwo, startColumnThree }: ContentItemProps) => {
-  // Link to a peice of content that also displays info about it
+  // Link to a piece of content that also displays info about it
   // For project list and blog list page
 
   // Creates readable date string for the date the content was created

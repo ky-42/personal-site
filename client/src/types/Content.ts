@@ -68,7 +68,7 @@ export interface NewFullContent {
   new_extra_content: { project: NewProject } | { blog: NewBlog };
 }
 
-/* --------------------------- Content extenstions -------------------------- */
+/* --------------------------- Content extensions -------------------------- */
 
 export interface Tag {
   id: number;

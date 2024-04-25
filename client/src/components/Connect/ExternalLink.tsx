@@ -3,7 +3,7 @@ import styled from 'styled-components';
 /* -------------------------------------------------------------------------- */
 
 const SocialLink = styled.a`
-  //Idk why felx is needed here but it centers
+  //Idk why flex is needed here but it centers
   display: flex;
   width: 10rem;
   height: 10rem;

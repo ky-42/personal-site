@@ -82,14 +82,14 @@ const ActiveArrow = css`
   }
 `;
 
-const DeactiveArrow = css`
+const InactiveArrow = css`
   color: ${(props) => props.theme.darkTone};
 `;
 /* -------------------------------------------------------------------------- */
 
 const Arrow = styled(AiFillCaretLeft)<{ active: number; flip?: number }>`
   font-size: 3.6rem;
-  ${(props) => (props.active ? ActiveArrow : DeactiveArrow)}
+  ${(props) => (props.active ? ActiveArrow : InactiveArrow)}
   ${(props) => (props.flip ? FlipCss : '')}
 `;
 
@@ -122,7 +122,7 @@ const ProjectList = () => {
       ? JSON.parse(sessionStorage.getItem('projectListUnderDev') as string, jsonParser)
       : { requestStatus: RequestStatus.Loading },
   );
-  // Needed cause no depedencies for under dev useEffect and
+  // Needed cause no dependencies for under dev useEffect and
   // no clear thing to add there so this will reload the page
   // for under dev
   const [underDevReload, setUnderDevReload] = useState(false);
@@ -145,7 +145,7 @@ const ProjectList = () => {
   // is out of view
   const finishedHeader = useRef<HTMLHeadingElement>(null);
 
-  // Makes sure page dosent go negative or past the max page
+  // Makes sure page doesn't go negative or past the max page
   const changePageNum = (change: boolean) => {
     if ((page > 0 && !change) || (maxPage > page && change)) {
       change ? setPage(page + 1) : setPage(page - 1);
@@ -163,7 +163,7 @@ const ProjectList = () => {
     };
   });
 
-  /* ------------------- useEffect functions to reuqest data ------------------ */
+  /* ------------------- useEffect functions to request data ------------------ */
 
   // Gets under dev projects if not already fetched
   useEffect(() => {
@@ -213,7 +213,7 @@ const ProjectList = () => {
     }
   }, [page, fetchedFinishedProjects]);
 
-  /* ------------------------ Request succses functions ----------------------- */
+  /* ------------------------ Request success functions ----------------------- */
 
   // Side effect of request success should only run once and for finished projects
   const PageLoadSuccessEffect = ({ data }: { data: FullContentList }) => {
@@ -251,7 +251,7 @@ const ProjectList = () => {
   const FinishedPageRetry = () => {
     notifications.addNotification({
       type: NotificationType.Info,
-      message: 'Rerequesting finished page',
+      message: 'Re-requesting finished page',
     });
 
     setPageFinishedProjects({ requestStatus: RequestStatus.Loading });
@@ -266,7 +266,7 @@ const ProjectList = () => {
   const UnderDevRetry = () => {
     notifications.addNotification({
       type: NotificationType.Info,
-      message: 'Rerequesting under development page',
+      message: 'Re-requesting under development page',
     });
 
     setUnderDevProjects({ requestStatus: RequestStatus.Loading });

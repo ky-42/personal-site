@@ -6,27 +6,27 @@ import InputArea from './InputArea';
 
 /* -------------------------------------------------------------------------- */
 
-const ProjectManagmentArea = styled.div``;
+const ProjectManagementArea = styled.div``;
 
 /* -------------------------------------------------------------------------- */
 
-interface projectManagmentProps {
+interface projectManagementProps {
   projectData: Project;
   setProjectData: React.Dispatch<SetReducer<Project> | UpdateReducer<Project, keyof Project>>;
-  // Possiable errors in an input with key being feild and value being error message
+  // Possible errors in an input with key being field and value being error message
   validationErrors: Record<string, string>;
 }
 
-// Form part for inputing data about the project specific parts of content
-const ProjectManagment = ({
+// Form part for inputting data about the project specific parts of content
+const ProjectManagement = ({
   projectData,
   setProjectData,
   validationErrors,
-}: projectManagmentProps) => {
+}: projectManagementProps) => {
   return (
-    <ProjectManagmentArea>
+    <ProjectManagementArea>
       <InputArea
-        lableText={'Project Status'}
+        labelText={'Project Status'}
         error={validationErrors['current_status']}
         InputElement={
           <DropDown
@@ -47,7 +47,7 @@ const ProjectManagment = ({
 
       <InputGroup>
         <InputArea
-          lableText={'Github Link'}
+          labelText={'Github Link'}
           error={validationErrors['github_link']}
           InputElement={
             <ShortTextInput
@@ -66,7 +66,7 @@ const ProjectManagment = ({
         />
 
         <InputArea
-          lableText={'Website Link'}
+          labelText={'Website Link'}
           error={validationErrors['url']}
           InputElement={
             <ShortTextInput
@@ -85,7 +85,7 @@ const ProjectManagment = ({
         />
 
         <InputArea
-          lableText={'Project Start Date'}
+          labelText={'Project Start Date'}
           error={validationErrors['start_date']}
           InputElement={
             <DateInput
@@ -106,8 +106,8 @@ const ProjectManagment = ({
           }
         />
       </InputGroup>
-    </ProjectManagmentArea>
+    </ProjectManagementArea>
   );
 };
 
-export default ProjectManagment;
+export default ProjectManagement;

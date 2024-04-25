@@ -16,8 +16,8 @@ const LoadingMain = styled.main`
   overflow: hidden;
   width: 100%;
   height: 100vh;
-  // So that the loading text is not imeadiatly visible
-  // It will only be visable after 3 seconds
+  // So that the loading text is not immediately visible
+  // It will only be visible after 3 seconds
   ${FadeInAnimation}
 `;
 

@@ -19,7 +19,7 @@ const UnorderedReading = styled.ul`
 const Book = styled.li`
   margin: 1rem 0;
   list-style-type: none;
-  // Used to repect top and bottom margin/padding
+  // Used to respect top and bottom margin/padding
   display: inline-block;
 `;
 
@@ -33,7 +33,7 @@ interface ReadingListProps {
 }
 
 const ReadingList = ({ ReadingTitle, BookList }: ReadingListProps) => {
-  // Creats a list of book elements from a list of titles
+  // Creates a list of book elements from a list of titles
   const BookListElements = BookList.map((BookTitle, index) => <Book key={index}>{BookTitle}</Book>);
 
   // Adds list separators between all list elements
@@ -41,7 +41,7 @@ const ReadingList = ({ ReadingTitle, BookList }: ReadingListProps) => {
     BookListElements.splice(index * 2 + 1, 0, <ListSeparator key={10000 - index} />);
   });
 
-  // Removes the extra list separator at the end of the list of elemets
+  // Removes the extra list separator at the end of the list of elements
   BookListElements.pop();
 
   return (

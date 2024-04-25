@@ -14,7 +14,7 @@ const BodyDiv = styled.div`
   overflow-y: scroll;
 `;
 
-// Idk why this couldnt go in the BodyDiv but it couldnt
+// Idk why this couldn't go in the BodyDiv but it couldn't
 const SideMargin = styled.div`
   margin: 0 clamp(2.16rem, 6vw, 16rem) 3rem;
 `;
@@ -23,7 +23,7 @@ const PageConfig = () => {
   /*
   Set up the page for the content of the pages to be put in.
   the screen in separated in to two divs the navbar on the bottom
-  and a div to show to pages content. These two divs dont overlap.
+  and a div to show to pages content. These two divs don't overlap.
   */
 
   const location = useLocation();
@@ -35,9 +35,9 @@ const PageConfig = () => {
   const navigationType = useNavigationType();
 
   /*
-  Scoll to top of the main content div when user goes to new page.
-  Needed because the div contining the main content does not
-  rerender just the inside elements meaning the scoll of the div
+  Scroll to top of the main content div when user goes to new page.
+  Needed because the div containing the main content does not
+  rerender just the inside elements meaning the scroll of the div
   does not reset.
   */
   const BodyDivRef = useRef<null | HTMLDivElement>(null);

@@ -8,7 +8,7 @@ import ContentBody from '../Shared/ContentBody';
 
 /* ---------------------------- Styled Components --------------------------- */
 
-const BaseContentManagmentArea = styled.div``;
+const BaseContentManagementArea = styled.div``;
 
 const BodyPreview = styled(ContentBody)`
   margin-top: 2rem;
@@ -19,26 +19,26 @@ const BodyPreview = styled(ContentBody)`
 
 /* -------------------------------------------------------------------------- */
 
-interface baseContentManagmentProps {
+interface baseContentManagementProps {
   baseContentData: Content;
   setBaseContentData: React.Dispatch<SetReducer<Content> | UpdateReducer<Content, keyof Content>>;
-  // Possiable errors in an input with key being feild and value being error message
+  // Possible errors in an input with key being field and value being error message
   validationErrors: Record<string, string>;
 }
 
-// Form part for inputing the data about the base content
-const BaseContentManagment = ({
+// Form part for inputting the data about the base content
+const BaseContentManagement = ({
   baseContentData,
   setBaseContentData,
   validationErrors,
-}: baseContentManagmentProps) => {
+}: baseContentManagementProps) => {
   const [viewPreview, setViewPreview] = useState(false);
 
   return (
-    <BaseContentManagmentArea>
+    <BaseContentManagementArea>
       <InputGroup>
         <InputArea
-          lableText={'Title'}
+          labelText={'Title'}
           error={validationErrors['title']}
           InputElement={
             <ShortTextInput
@@ -56,7 +56,7 @@ const BaseContentManagment = ({
         />
 
         <InputArea
-          lableText={'Slug'}
+          labelText={'Slug'}
           error={validationErrors['slug']}
           InputElement={
             <ShortTextInput
@@ -74,7 +74,7 @@ const BaseContentManagment = ({
         />
 
         <InputArea
-          lableText={'Description'}
+          labelText={'Description'}
           error={validationErrors['content_desc']}
           InputElement={
             <ShortTextInput
@@ -93,7 +93,7 @@ const BaseContentManagment = ({
       </InputGroup>
 
       <InputArea
-        lableText={'Content Body (Markdown)'}
+        labelText={'Content Body (Markdown)'}
         error={validationErrors['body']}
         InputElement={
           <LongTextInput
@@ -110,7 +110,7 @@ const BaseContentManagment = ({
       />
 
       <InputArea
-        lableText={'Content Body Preview'}
+        labelText={'Content Body Preview'}
         InputElement={
           <>
             <StateButton active={viewPreview} onClick={() => setViewPreview(!viewPreview)}>
@@ -120,8 +120,8 @@ const BaseContentManagment = ({
           </>
         }
       />
-    </BaseContentManagmentArea>
+    </BaseContentManagementArea>
   );
 };
 
-export default BaseContentManagment;
+export default BaseContentManagement;

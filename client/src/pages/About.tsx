@@ -9,7 +9,7 @@ import jsonConfig from '@config/config.json';
 
 const AboutBody = styled.main``;
 
-/* -------------------------- About section elments ------------------------- */
+/* ------------------------- About section elements ------------------------- */
 
 const AboutSection = styled.section`
   margin: auto;

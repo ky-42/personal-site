@@ -24,7 +24,7 @@ interface ContentContainerProps {
 
 const ContentContainer = ({ containerTitle, housedElement }: ContentContainerProps) => {
   // Creates a container that will house another element with a title added above element
-  // used for showing info about a peice of content and linking to it
+  // used for showing info about a piece of content and linking to it
   return (
     <Container>
       <ContainerHeader>{containerTitle}</ContainerHeader>

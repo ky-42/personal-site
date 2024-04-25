@@ -10,7 +10,7 @@ const LoadingText = styled.p`
 /* -------------------------------------------------------------------------- */
 
 const LoadingPlaceholder = () => {
-  // Placeholder to use when waiting for a fetch requset to finish
+  // Placeholder to use when waiting for a fetch request to finish
   return <LoadingText>Loading...</LoadingText>;
 };
 

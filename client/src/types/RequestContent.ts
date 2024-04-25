@@ -48,7 +48,7 @@ export enum listOrder {
   ProjectStartOldest = 'ProjectStartOldest',
 }
 
-// Used for requests that require specifiying a page
+// Used for requests that require specifying a page
 export interface PageInfo {
   content_per_page: number;
   page: number;

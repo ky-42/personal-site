@@ -67,7 +67,7 @@ const copyNotificationActive = css`
   cursor: auto;
 `;
 
-const CopyNotifictionBubble = styled.div<{ active: boolean }>`
+const CopyNotificationBubble = styled.div<{ active: boolean }>`
   // Positioning
   position: fixed;
   bottom: calc(${(props) => props.theme.navHeight} + 2rem);
@@ -89,7 +89,7 @@ const CopyNotifictionBubble = styled.div<{ active: boolean }>`
 /* -------------------------------------------------------------------------- */
 
 const Connect = () => {
-  // State for whether copy notification is visable
+  // State for whether copy notification is visible
   const [copyNotification, setCopyNotification] = useState(false);
 
   return (
@@ -133,7 +133,7 @@ const Connect = () => {
       </ExternalLinks>
 
       {/* Copy notification element */}
-      <CopyNotifictionBubble active={copyNotification}>Email Copied</CopyNotifictionBubble>
+      <CopyNotificationBubble active={copyNotification}>Email Copied</CopyNotificationBubble>
     </ConnectBody>
   );
 };

@@ -157,7 +157,7 @@ const ContentView = () => {
     requestStatus: RequestStatus.Loading,
   });
 
-  // Needed to send users to 404 page when slug dosent exist
+  // Needed to send users to 404 page when slug doesn't exist
   const navigate = useNavigate();
 
   /* --------------------- Gets content with slug from url -------------------- */
@@ -319,7 +319,7 @@ const ContentView = () => {
 
   // What is rendered when content is gotten successfully
   const RenderContent = ({ data }: { data: FullContent }) => {
-    // Formated dates for creation and editing
+    // Formatted dates for creation and editing
     const createDateString = new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
@@ -337,7 +337,7 @@ const ContentView = () => {
     let ExtraBottomSection: JSX.Element = <></>;
 
     if (data.base_content.content_type === 'project' && 'project' in data.extra_content) {
-      // Formated date for project start
+      // Formatted date for project start
       if (data.extra_content.project.start_date !== undefined) {
         projectStartString = new Intl.DateTimeFormat('en-US', {
           month: 'short',

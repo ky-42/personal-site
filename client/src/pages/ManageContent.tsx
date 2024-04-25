@@ -28,9 +28,9 @@ import {
   StateButton,
   StyledButton,
 } from '../components/ContentManagement/InputElements';
-import ProjectManagment from '../components/ContentManagement/ProjectManagment';
-import BaseContentManagment from '../components/ContentManagement/BaseContentManagment';
-import BlogManagment from '../components/ContentManagement/BlogManagment';
+import ProjectManagement from '../components/ContentManagement/ProjectManagement';
+import BaseContentManagement from '../components/ContentManagement/BaseContentManagement';
+import BlogManagement from '../components/ContentManagement/BlogManagement';
 import { ContentOperations, DevblogOperations, TagOperations } from '../adapters/content';
 import { blogToNew, contentToNew, devblogToNew, projectToNew } from '../types/HelperFuncs';
 import { RequestStatus } from '../types/RequestContent';
@@ -181,7 +181,7 @@ const ManageContent = () => {
   const [serverPassword, setServerPassword] = useState('');
 
   // Key in the record will be keys of content, blog, devblog, or project
-  // Done this way because we dont need all keys from those types in the object
+  // Done this way because we don't need all keys from those types in the object
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Needed so when there are validation errors page can scroll to top
@@ -373,7 +373,7 @@ const ManageContent = () => {
                           case RequestStatus.Loading:
                             notifications.addNotification({
                               message:
-                                'Error updating tags. Old tags deleted by new tags added try reupdating content',
+                                'Error updating tags. Old tags deleted by new tags added try re-updating content',
                               type: NotificationType.Error,
                             });
 
@@ -386,7 +386,7 @@ const ManageContent = () => {
                     case RequestStatus.Error:
                     case RequestStatus.Loading:
                       notifications.addNotification({
-                        message: 'Error updating tags. Old tags still exist try reupdating content',
+                        message: 'Error updating tags. Old tags still exist try re-updating content',
                         type: NotificationType.Error,
                       });
 
@@ -692,7 +692,7 @@ const ManageContent = () => {
       <InputSection>
         <SectionTitle>Content Data</SectionTitle>
 
-        <BaseContentManagment
+        <BaseContentManagement
           baseContentData={baseContentData}
           setBaseContentData={setBaseContentData}
           validationErrors={validationErrors}
@@ -703,7 +703,7 @@ const ManageContent = () => {
         <SectionTitle>Extra Content</SectionTitle>
 
         <InputArea
-          lableText={'Content Type'}
+          labelText={'Content Type'}
           InputElement={
             <DropDown
               value={extraContentType}
@@ -723,7 +723,7 @@ const ManageContent = () => {
         />
 
         {extraContentType === ContentType.Blog && (
-          <BlogManagment
+          <BlogManagement
             blogData={blogData}
             setBlogData={setBlogData}
             tags={tags}
@@ -732,7 +732,7 @@ const ManageContent = () => {
           />
         )}
         {extraContentType === ContentType.Project && (
-          <ProjectManagment
+          <ProjectManagement
             projectData={projectData}
             setProjectData={setProjectData}
             validationErrors={validationErrors}
@@ -836,7 +836,7 @@ const ManageContent = () => {
           currentAction === ActionTypes.DevblogDelete) && (
           <InputGroup>
             <InputArea
-              lableText={
+              labelText={
                 currentAction === ActionTypes.Update || currentAction === ActionTypes.Delete
                   ? `Slug To ${currentAction} (Enter to load data)`
                   : `Devblog Title To ${currentAction.split(' ').splice(-1)} (Enter to load data)`
@@ -864,7 +864,7 @@ const ManageContent = () => {
         <SectionTitle>Authentication</SectionTitle>
 
         <InputArea
-          lableText={'Server Password'}
+          labelText={'Server Password'}
           InputElement={
             <ShortTextInput
               type='password'
@@ -879,7 +879,7 @@ const ManageContent = () => {
         <SectionTitle>Submit</SectionTitle>
 
         <InputArea
-          lableText={currentAction + ' Above content'}
+          labelText={currentAction + ' Above content'}
           InputElement={<StyledButton onClick={onSubmit}>Submit</StyledButton>}
         />
       </InputSection>

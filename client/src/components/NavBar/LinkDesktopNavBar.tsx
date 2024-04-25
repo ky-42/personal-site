@@ -7,7 +7,7 @@ const LinkDiv = styled(NavLink)`
   height: 100%;
 `;
 
-// Needed to create hover effect becuase otherwise there would be
+// Needed to create hover effect because otherwise there would be
 // Double border width between items in the flex box
 const HoverDiv = styled.div<{ active: boolean }>`
   width: 100%;

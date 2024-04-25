@@ -11,7 +11,7 @@ import NotificationList from '../components/Notifications/NotificationList';
 // Size in px at which site starts using mobile features
 const MobileWidth = 700;
 
-// Stlyes to pass to all components
+// Styles to pass to all components
 const StyleTheme = {
   mobile: false,
   borderSize: '0.3rem',

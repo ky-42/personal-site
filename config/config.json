@@ -16,12 +16,14 @@
     "highlightDark": "#61892F",
     "lightTone": "#6B6E70",
     "darkTone": "#474B4F",
-    "errorColour": "#FF0033"
+    "errorColour": "#FF0033",
+    "bodyLinkColour": "#b1dc76",
+    "bodyLinkVisitedColour": "#c9e2aa"
   },
   "currentlyReading": {
-    "name": "Good Economics for Hard Times",
-    "author": "Abhijit Banerjee & Esther Duflo",
-    "dateStarted": "Jan. 12th, 2024"
+    "name": "Metropolis",
+    "author": "Ben Wilson",
+    "dateStarted": "Mar. 28th, 2024"
   },
   "pages": {
     "home": {
@@ -85,6 +87,10 @@
         }
       ],
       "finishedReading": [
+        {
+          "name": "Good Economics for Hard Times",
+          "author": "Abhijit Banerjee & Esther Duflo"
+        },
         {
           "name": "Red Rising",
           "author": "Pierce Brown"
@@ -176,7 +182,7 @@
       "contentPerPage": 8
     },
     "projectList": {
-      "description": "A list of my projects! Some are finished and some arn't"
+      "description": "A list of my projects! Some are finished and some aren't"
     }
   }
 }

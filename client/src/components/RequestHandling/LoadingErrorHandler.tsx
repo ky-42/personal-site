@@ -39,7 +39,7 @@ interface LoadErrorHandleProps<T> {
 
 const LoadErrorHandle = <T,>(handlingData: LoadErrorHandleProps<T>): JSX.Element => {
   // Sets up state for how many times to call an effect
-  // If undefined call infinitly
+  // If undefined call infinitely
   const [successCalls, setSuccessCalls] = useState(handlingData.successEffect?.callCount);
   const [loadingCalls, setLoadingCalls] = useState(handlingData.loadingEffect?.callCount);
   const [errorCalls, setErrorCalls] = useState(handlingData.errorEffect?.callCount);
@@ -87,7 +87,7 @@ const LoadErrorHandle = <T,>(handlingData: LoadErrorHandleProps<T>): JSX.Element
     }
   }, [handlingData.requestInfo, handlingData.requestInfo.requestStatus]);
 
-  // Helps handle requestest by showing different elements based on the requests state
+  // Helps handle requests by showing different elements based on the requests state
   switch (handlingData.requestInfo.requestStatus) {
     case RequestStatus.Loading:
       // Checks if there is a element passed to display while loading
@@ -128,7 +128,7 @@ const LoadErrorHandle = <T,>(handlingData: LoadErrorHandleProps<T>): JSX.Element
       return <></>;
 
     case RequestStatus.Success:
-      // Checks if there is a element passed to display when the request is successfull
+      // Checks if there is a element passed to display when the request is successful
       // if now will return placeholder or nothing
       if (handlingData.successElement !== undefined) {
         const SuccessElement = handlingData.successElement;
