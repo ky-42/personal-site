@@ -42,10 +42,10 @@ export interface ContentListInfo {
 }
 
 export enum listOrder {
-  Newest = 'Newest',
-  Oldest = 'Oldest',
-  ProjectStartNewest = 'ProjectStartNewest',
-  ProjectStartOldest = 'ProjectStartOldest',
+  Newest = 'newest',
+  Oldest = 'oldest',
+  ProjectStartNewest = 'project_start_newest',
+  ProjectStartOldest = 'project_start_oldest',
 }
 
 // Used for requests that require specifying a page

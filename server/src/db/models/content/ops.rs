@@ -142,9 +142,6 @@ impl super::FullContent {
     pub fn update(self, db_conn: &mut PgConnection) -> Result<(), AppError> {
         use extra::ExtraContent;
 
-        // Update base content
-        self.base_content.save_changes::<base::Content>(db_conn)?;
-
         // Update extra content
         match self.extra_content {
             ExtraContent::Blog(updated) => {
@@ -154,6 +151,12 @@ impl super::FullContent {
                 updated.save_changes::<extra::Project>(db_conn)?;
             }
         };
+
+        // Update base content
+        // This is second so that if user changes content type it will error
+        // out before making any changes to the base content.
+        self.base_content.save_changes::<base::Content>(db_conn)?;
+
         Ok(())
     }
 
