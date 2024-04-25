@@ -115,9 +115,9 @@ mod tests {
             .to_request();
         test::call_service(&app, update_request).await;
 
-        // Rerequests content now that its updated
+        // Re-requests content now that its updated
         // We know the slug updated if the request worked cause we request with the slug
-        // so we dont need to check anything
+        // so we don't need to check anything
         let update_view_request = test::TestRequest::get()
             .uri("/content/new-slug")
             .to_request();
@@ -192,7 +192,7 @@ mod tests {
         let blogs_returned_two: FullContentList =
             test::call_and_read_body_json(&app, list_request_blog_two).await;
 
-        // Checks content recived above vs what was added
+        // Checks content received above vs what was added
         assert_eq!(
             projects_returned
                 .get_list()

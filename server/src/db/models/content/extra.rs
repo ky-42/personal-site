@@ -13,7 +13,7 @@ use std::io::Write;
 use validator::Validate;
 
 /* -------------------------- Extra content stores -------------------------- */
-// Used to store any peice of extra content under
+// Used to store any piece of extra content under
 // one type
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -49,9 +49,9 @@ impl Validate for NewExtraContent {
 }
 
 /* -------------------------- Extra content models -------------------------- */
-// Models for differnt types of content that connect
+// Models for different types of content that connect
 // with other details in the content table to make
-// a complete peice of content
+// a complete piece of content
 
 #[derive(Insertable, Deserialize, Serialize, Validate, Debug)]
 #[diesel(table_name = blog)]
@@ -109,10 +109,10 @@ impl Project {
     }
 }
 
-/* --------------------------- Content extenstions -------------------------- */
-// Extra details the connect with peice of content
+/* --------------------------- Content extensions -------------------------- */
+// Extra details the connect with piece of content
 
-// No NewTag structure becuase its a simple data type that is unlikely to change
+// No NewTag structure because its a simple data type that is unlikely to change
 // and it made adding multiple tags easier I do recognize the inconsistency
 #[derive(Queryable, Identifiable, Serialize, Deserialize, Debug)]
 #[diesel(table_name = tag, belongs_to(Blog, foreign_key = blog_id ))]
@@ -146,7 +146,7 @@ impl Devblog {
 /* ---------------------------- Models data types --------------------------- */
 // Data that is used in a db model
 
-// Represtent the current status of a project
+// Represents the current status of a project
 #[derive(Debug, Serialize, Deserialize, AsExpression, FromSqlRow, QueryId)]
 #[diesel(sql_type = sql_types::Projectstatus)]
 #[serde(rename_all = "snake_case")]
@@ -155,7 +155,7 @@ pub enum CurrentStatus {
     Finished,
 }
 
-// For convertion to and from sql types for CurrentStatus
+// For conversion to and from sql types for CurrentStatus
 impl ToSql<sql_types::Projectstatus, Pg> for CurrentStatus {
     fn to_sql<'b>(&'b self, out: &mut Output<'b, '_, Pg>) -> serialize::Result {
         match *self {

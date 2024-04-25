@@ -36,7 +36,7 @@ pub async fn list_content(
 
 /* ----------------------- CRUD routes for content ----------------------- */
 
-// Returns a single peice of content
+// Returns a single piece of content
 pub async fn view_content(
     db_pool: web::Data<DbPool>,
     slug_requested: web::Path<ContentSlug>,
@@ -50,7 +50,7 @@ pub async fn view_content(
     Ok(web::Json(fetched_content))
 }
 
-// Gets a peice of content given id instead of slug
+// Gets a piece of content given id instead of slug
 pub async fn view_from_id(
     db_pool: web::Data<DbPool>,
     content_id: web::Path<IdStruct>,
@@ -68,7 +68,7 @@ pub async fn view_from_id(
     Ok(web::Json(fetched_content))
 }
 
-// Updates a peice of content given a full content object then includes all values
+// Updates a piece of content given a full content object then includes all values
 // not just the updated properties
 pub async fn update_content(
     db_pool: web::Data<DbPool>,
@@ -89,7 +89,7 @@ pub async fn update_content(
     Ok(HttpResponse::Ok().finish())
 }
 
-// Deletes a peice of content given the slug
+// Deletes a piece of content given the slug
 pub async fn delete_content(
     db_pool: web::Data<DbPool>,
     delete_slug: web::Path<ContentSlug>,
@@ -107,7 +107,7 @@ pub async fn delete_content(
     }))
 }
 
-// Adds a peice of content given data for the new content
+// Adds a piece of content given data for the new content
 pub async fn add_content(
     db_pool: web::Data<DbPool>,
     add_info: web::Json<NewFullContent>,
@@ -126,7 +126,7 @@ pub async fn add_content(
 
 /* ---------------------------- Handlers for tags --------------------------- */
 
-// Gets all tags assosicated with a blog
+// Gets all tags associated with a blog
 pub async fn get_tags(
     db_pool: web::Data<DbPool>,
     blog_slug: web::Path<ContentSlug>,
@@ -213,7 +213,7 @@ pub async fn get_devblog_from_id(
     Ok(web::Json(fetched_devblog))
 }
 
-// Given a blog gets next and previous blogs in devlog
+// Given a blog gets next and previous blogs in devblog
 pub async fn get_surrounding_blogs(
     db_pool: web::Data<DbPool>,
     surrounding_data: web::Query<GetSurroundingData>,

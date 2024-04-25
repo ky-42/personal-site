@@ -9,7 +9,7 @@ use validator::Validate;
 
 /*
 Models for the content table
-The content table stores values that all connent
+The content table stores values that all content
 will have no matter what type of content it is
 */
 

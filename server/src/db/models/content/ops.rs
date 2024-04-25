@@ -99,7 +99,7 @@ impl super::NewFullContent {
             .returning(content::id)
             .get_result(db_conn)?;
 
-        // Adds extra content different add statment depending on content type
+        // Adds extra content different add statement depending on content type
         match &self.new_extra_content {
             extra::NewExtraContent::Blog(new_blog_data) => {
                 use crate::schema::blog;
@@ -160,8 +160,8 @@ impl super::FullContent {
     pub fn delete(delete_slug: String, db_conn: &mut PgConnection) -> Result<usize, AppError> {
         use crate::schema::content;
 
-        // Extra content should casscade delete on deltetion of base content
-        // Reutrns number of rows effected
+        // Extra content should cascade delete on deletion of base content
+        // Returns number of rows effected
         Ok(
             diesel::delete(content::table.filter(content::slug.eq(delete_slug)))
                 .execute(db_conn)?,
@@ -214,7 +214,7 @@ impl super::FullContent {
 
 /* -------------------------------- IMPORTANT ------------------------------- */
 // I am aware just how bad the following code is. A lot of code is repeated
-// in 4 places which is just terible. I tried to fix this but it was difficult
+// in 4 places which is just terrible. I tried to fix this but it was difficult
 // to deal with diesel. If anyone wants to try to fix this please do so. Anyways
 // I really do realize how bad this is!
 
@@ -235,7 +235,7 @@ impl super::FullContentList {
                 use crate::schema::devblog;
                 use crate::schema::tag;
 
-                // Creates inital joined query with blog table and content table
+                // Creates initial joined query with blog table and content table
                 let mut blog_list = content::table
                     .inner_join(blog::table.on(blog::id.eq(content::id)))
                     .filter(content::content_type.eq(super::ContentType::Blog))
@@ -253,7 +253,7 @@ impl super::FullContentList {
                     blog_list = blog_list.filter(blog::related_project_id.eq(project_id));
                 }
 
-                // Returns list of blogs that have the same devblog assosication
+                // Returns list of blogs that have the same devblog association
                 if let Some(devblog_id) = &filters.devblog_id {
                     blog_list = blog_list.filter(blog::devblog_id.eq(devblog_id));
                 };
@@ -269,7 +269,7 @@ impl super::FullContentList {
                 };
 
                 // Searches tags, devblogs, title, related project and description that look like a term
-                // This is very basic search and could most definitly be improved
+                // This is very basic search and could most definitely be improved
                 if let Some(search_term) = &filters.search {
                     // Query for devblog title matching
                     let devblog_sub_query = devblog::table
@@ -323,7 +323,7 @@ impl super::FullContentList {
                     .per_page(page_info.content_per_page)
                     .load_and_count_pages::<(base::Content, extra::Blog)>(db_conn)?;
 
-                // Combines the base content and the blog content into one stuct
+                // Combines the base content and the blog content into one struct
                 // and puts it in a list
                 let mut full_content_list: Vec<FullContent> = Vec::new();
 
@@ -343,7 +343,7 @@ impl super::FullContentList {
             super::ContentType::Project => {
                 use crate::schema::project;
 
-                // Creates inital joined query with project table and content table
+                // Creates initial joined query with project table and content table
                 let mut project_list = content::table
                     .inner_join(project::table.on(project::id.eq(content::id)))
                     .filter(content::content_type.eq(super::ContentType::Project))
@@ -390,7 +390,7 @@ impl super::FullContentList {
                     .per_page(page_info.content_per_page)
                     .load_and_count_pages::<(base::Content, extra::Project)>(db_conn)?;
 
-                // Combines the base content and the project content into one stuct
+                // Combines the base content and the project content into one struct
                 // and puts it in a list
                 let mut full_content_list: Vec<FullContent> = Vec::new();
 
@@ -471,14 +471,14 @@ pub mod devblog_ops {
     }
 
     impl DevblogString for String {
-        // Gets a devlog object based of string assumed to be title
+        // Gets a devblog object based of string assumed to be title
         fn get_devblog(&self, db_conn: &mut PgConnection) -> Result<Devblog, AppError> {
             Ok(devblog::table
                 .filter(devblog::title.eq(self))
                 .get_result(db_conn)?)
         }
 
-        // Looks and returns devlog objects based of string assumed to be title
+        // Looks and returns devblog objects based of string assumed to be title
         fn search_devblogs(&self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError> {
             Ok(devblog::table
                 .filter(devblog::title.ilike(format!("{}{}{}", "%", self, "%")))
@@ -520,7 +520,7 @@ pub mod devblog_ops {
         pub fn get_surrounding_blogs(
             devblog_id: i32,
             blog_slug: String,
-            // How many content peice to show in each direction
+            // How many content piece to show in each direction
             direction_count: i64,
             db_conn: &mut PgConnection,
         ) -> Result<SurroundingBlogs, AppError> {

@@ -17,9 +17,9 @@ pub mod extra;
 pub mod ops;
 
 /* ----------------- Models for a complete piece of content ----------------- */
-// Used to combine the base values for a peice
+// Used to combine the base values for a piece
 // of content with the data specific to the type of content
-//
+
 #[derive(Serialize, Deserialize, Validate, Debug)]
 pub struct FullContent {
     #[validate]
@@ -68,7 +68,7 @@ pub enum ContentType {
     Project,
 }
 
-// For convertion to and from sql types for ContentType
+// For conversion to and from sql types for ContentType
 impl ToSql<sql_types::Contenttype, Pg> for ContentType {
     fn to_sql<'b>(&'b self, out: &mut Output<'b, '_, Pg>) -> serialize::Result {
         match *self {
