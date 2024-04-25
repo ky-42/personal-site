@@ -1,624 +1,686 @@
-# Server
+# Table of Contents
 
-## Table of Contents
-
-- [Tests](#tests)
-- [Data Models](#data-models)
-- [Route Data](#route-data)
+- [Running and Building](#running-and-building)
+- [Environment Variables](#environment-variables)
+- [Data Model](#data-model)
+- [Generating Test Content](#generating-test-content)
 - [API Documentation](#api-documentation)
-  - [Content](#content)
-  - [Tags](#tags)
-  - [Devblog](#devblog)
-
-## Tests
-
-There are four tests that can be run with `cargo test`:
-
-- `single_content` - Tests all CRUD functionality for a single peice of content
-- `list_test` - Tests adding multiple peice of content and using the list route
-- Ignored: `add_test_content` Adds 16 peices of generated content to the database for testing purposes
-- Ignored: `print_json_content` Prints a peice of generated content to the console
-
-## Data Models
-
-Content is a parent table with a blog and project child table. The blog and project table have a one to one relationship with the content table (via id and content_type). Only one of a blog or project can be related to a peice of content and this is enforced by the database. The tags table has a many to one relationship with the blog table. And the devblog has a one to many relationship with the blog table.
-
-## Data Models
-
-The `ContentType` enum represents the type of content stored in the database.
-
-| Enum Name | Description                     |
-| --------- | ------------------------------- |
-| `blog`    | Represents a blog content type. |
-
-| Enum Name | Description |
-| --------- | ----------- |
-
-The `NewContent` struct represents a new content record that can be inserted into the database.
-| `project` | Represents a project content type. |
-| Field Name | Type | Validation Rules | Description |
-| -------------- | --------------------------------- | ------------------- | --------------------------------------- |
-| `content_type` | [ContentType](#content-type-enum) | N/A | The type of content. |
-| `slug` | `String` | Minimum length of 1 | The unique slug for the content. |
-| `title` | `String` | Minimum length of 1 | The title of the content. |
-| `content_desc` | `Option<String>` | N/A | An optional description of the content. |
-| `body` | `String` | Minimum length of 1 | The body content of the content. |
-| `content_type` | [ContentType](#content-type-enum) | N/A | The type of content. |
-| `slug` | `String` | Minimum length of 1 | The unique slug for the content. |
-
-The `Content` struct represents a content record in the database.
-| `content_desc` | `Option<String>` | N/A | An optional description of the content. |
-| Field Name | Type | Validation Rules | Description |
-| -------------- | --------------------------------- | ------------------- | ----------------------------------------------- |
-| `id` | `i32` | N/A | The unique identifier of the content. |
-| `content_type` | [ContentType](#content-type-enum) | N/A | The type of content. |
-| `slug` | `String` | Minimum length of 1 | The unique slug for the content. |
-| `title` | `String` | Minimum length of 1 | The title of the content. |
-| `content_desc` | `Option<String>` | N/A | An optional description of the content. |
-| `body` | `String` | Minimum length of 1 | The body content of the content. |
-| `created_at` | `DateTime<Utc>` | N/A | The date and time the content was created. |
-| `updated_at` | `DateTime<Utc>` | N/A | The date and time the content was last updated. |
-| `slug` | `String` | Minimum length of 1 | The unique slug for the content. |
-
-### NewBlog Struct
-
-| `content_desc` | `Option<String>` | N/A | An optional description of the content. |
-| `body` | `String` | Minimum length of 1 | The body content of the content. |
-| Field Name | Type | Validation Rules | Description |
-| -------------------- | ------------- | ---------------- | ------------------------------------------------ |
-| `related_project_id` | `Option<i32>` | N/A | The optional foreign key to the related project. |
-| `devblog_id` | `Option<i32>` | N/A | The optional foreign key to the related devblog. |
-
-### Blog Struct
-
-The`New`s represents a new blog record that can be inserted into the database.
-The `Blog` struct represents a blog record in the database.
-| Field Name | Type | Validation Rules | Description |
-| Field Name | Type | Validation Rules | Description |
-| -------------------- | --------------------------------- | ---------------- | ------------------------------------------------ |
-| `id` | `i32` | N/A | The unique identifier of the blog. |
-| `content_type` | [ContentType](#content-type-enum) | N/A | The type of content. |
-| `related_project_id` | `Option<i32>` | N/A | The optional foreign key to the related project. |
-| `devblog_id` | `Option<i32>` | N/A | The optional foreign key to the related devblog. |
-The `Blog` struct represents a blog record in the database.
-
-The `Tag` struct represents a tag record in the database.
-| -------------------- | --------------------------------- | ---------------- | ------------------------------------------------ |
-| Field Name | Type | Validation Rules | Description |
-| ---------- | -------- | ---------------- | ------------------------------------ |
-| `id` | `i32` | N/A | The unique identifier of the tag. |
-| `blog_id` | `i32` | N/A | The foreign key to the related blog. |
-| `title` | `String` | N/A | The title of the tag. |
-
-### Tag Struct
-
-### NewDevblog Struct
-
-The `NewDevblog` struct represents a new devblog record that can be inserted into the database.
-Tata
-| Field Name | Type | Validation Rules | Description |
-| ---------- | -------- | ------------------- | ------------------------- |
-| `title` | `String` | Minimum length of 1 | The title of the devblog. |
-| `blog_id` | `i32` | N/A | The foreign key to the related blog. |
-| `title` | `String` | N/A | The title of the tag. |
-
-The `Devblog` struct represents a devblog record in the database.
-
-### NewDevblog Struct
-
-| Field Name | Type     | Validation Rules    | Description                           |
-| ---------- | -------- | ------------------- | ------------------------------------- |
-| `id`       | `i32`    | N/A                 | The unique identifier of the devblog. |
-| `title`    | `String` | Minimum length of 1 | The title of the devblog.             |
-| ---------- | -------- | ------------------- | -------------------------             |
-| `title`    | `String` | Minimum length of 1 | The title of the devblog.             |
-
-The `CurrentStatus` enum represents the current status of a project.
-
-### Devblog Struct
-
-| Enum Variant        | Description                                 |
-| ------------------- | ------------------------------------------- |
-| `under_development` | The project is currently under development. |
-
-| ---------- | -------- | ------------------- | ------------------------------------- |
-
-### NewProject Struct
-
-The `NewProject` struct represents a new project record that can be inserted into the database.
-|titl | `Sig`|Miimumlnghf1|Thtlfvblog |
-| Field Name | Type | Validation Rules | Description |
-| ---------------- | ------------------------------------ | --------------------------------------- | ---------------------------------------- |
-| `current_status` | [CurrentStatus](#currentstatus-enum) | N/A | The current status of the project. |
-| `github_link` | `Option<String>` | Deserialize with `empty_string_as_none` | The optional GitHub link of the project. |
-| `url` | `Option<String>` | Deserialize with `empty_string_as_none` | The optional URL of the project. |
-| `start_date` | `Option<DateTime<Utc>>` | N/A | The optional start date of the project. |
-| `under_development` | The project is currently under development. |
-
-### Project Struct
-
-### NewProject Struct
-
-| Field Name       | Type                                 | Validation Rules                        | Description                              |
-| ---------------- | ------------------------------------ | --------------------------------------- | ---------------------------------------- |
-| `id`             | `i32`                                | N/A                                     | The unique identifier of the project.    |
-| `current_status` | [CurrentStatus](#currentstatus-enum) | N/A                                     | The current status of the project.       |
-| `content_type`   | [ContentType](#content-type-enum)    | N/A                                     | The type of content.                     |
-| `github_link`    | `Option<String>`                     | Deserialize with `empty_string_as_none` | The optional GitHub link of the project. |
-| `url`            | `Option<String>`                     | Deserialize with `empty_string_as_none` | The optional URL of the project.         |
-| `start_date`     | `Option<DateTime<Utc>>`              | N/A                                     | The optional start date of the project.  |
-| `start_date`     | `Option<DateTime<Utc>>`              | N/A                                     | The optional start date of the project.  |
-
-The `ExtraContent` enum represents extra content associated with a base content.
+  - [Content endpoints](#content-endpoints)
+  - [Tag endpoints](#tag-endpoints)
+  - [Devblog endpoints](#devblog-endpoints)
+- [Data types](#data-types)
 
-| Enum Variant               | Description                                               |
-| -------------------------- | --------------------------------------------------------- | --------------------------------------- | ---------------------------------------- |
-| blog([Blog](#blog-struct)) | Represents a blog content associated with a base content. |
-| ----------------           | ------------------------------------                      | --------------------------------------- | ---------------------------------------- |
-| `id`                       | `i32`                                                     | N/A                                     | The unique identifier of the project.    |
-
-### NewExtraContent Enum
+<br/>
+<br/>
 
-| `content_type` | [ContentType](#content-type-enum) | N/A | The type of content. |
-| `github_link` | `Option<String>` | Deserialize with `empty_string_as_none` | The optional GitHub link of the project. |
-| Enum Variant | Description |
-| -------------------------------------- | ---------------------------------------------------------------- |
-| blog([NewBlog](#newblog-struct)) | Represents a new blog content associated with a base content. |
-| project([NewProject](#newblog-struct)) | Represents a new project content associated with a base content. |
-##ExaCEum
+## Running and Building
 
-### FullContent Struct
+Information for running and building is in the projects top-level README. Refer [here](../README.md#run-locally) for information on running locally and [here](../README.md#building) for information on building.
 
-The`Extra`enum represents exa onent associated with a base content.
-The `FullContent` struct represents a full content object that includes a base content and extra content.
-| Enum Variant | Description |
-| Field Name | Type | Validation Rules | Description |
-| --------------- | ---------------------------------- | ------------------------------------------------------------------------------ | --------------------------------------------------- |
-| `base_content` | [Content](#content) | Must be valid according to [Content](#content) validation rules | The base content associated with the full content. |
-
-### NewExtraContent Enum
+<br/>
+<br/>
 
-The `NewFullContent` struct represents a new full content object that includes a new base content and new extra content.
-
-| Field Name          | Type                                     | Validation Rules                                                                     | Description                                                 |
-| ------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| `new_base_content`  | [NewContent](#newcontent-struct)         | Must be valid according to [NewContent](#newcontent-struct) validation rules         | The new base content associated with the new full content.  |
-| `new_extra_content` | [NewExtraContent](#newextracontent-enum) | Must be valid according to [NewExtraContent](#newextracontent-enum) validation rules | The new extra content associated with the new full content. |
-
-pjc(Pjcblog-su)Rpssprojcabas
+# Environment Variables
 
-### FullContentList Struct
+- POSTGRES_USER: Postgres user the server should use.
+- POSTGRES_PASSWORD: Password for the Postgres user.
+- DATABASE_URL: URI used to connect to database.
+- ADMIN_PASSWORD: Password used to manage content.
+- URL: Domain allowed through CORS. 
 
-The `FullContentList` struct represents a list of full content objects along with the count of total content items without pagination.
-The `FullContent` struct represents a full content object that includes a base content and extra content.
-| Field Name | Type | Description |
-| ------------------- | --------------------------------------- | ---------------------------------------------------- |
-| `full_content_list` | Vec<[FullContent](#fullcontent-struct)> | The list of full content objects. |
-| `content_count` | `i64` | The total count of content items without pagination. |
-| `extra_content` | [ExtraContent](#extracontent-enum) | Must be valid according to [ExtraContent](#extracontent-enum) validation rules | The extra content associated with the full content. |
+<br/>
+<br/>
 
-### NewFullContent Struct
+# Data Model
 
-### DbRows Struct
+Each piece of content on the site is comprised of two components. The first component contains fundamental information thats shared by all content, such as title and body. This component is represented by the [Content](#content) object. The second component denotes the specific type of content, which can be either a blog or a project. This component is represented by either the [Blog](#blog) or [Project](#project) object.
 
-The `DbRows` struct represents a result of a database operation that indicates the number of rows affected.
-NeFullContentnw flcnntbjcludaew ascntentand nextra onnt
-| Field Name | Type | Description |
-| --------------- | ----- | ------------------------------------------------------ |
-| `new_base_content` | [NewContent](#newcontent-struct) | Must be valid according to [NewContent](#newcontent-struct) validation rules | The new base content associated with the new full content. |
-| `new_extra_content` | [NewExtraContent](#newextracontent-enum) | Must be valid according to [NewExtraContent](#newextracontent-enum) validation rules | The new extra content associated with the new full content. |
+Devblogs offer a means to organize a series of interconnected blogs. When you create new content with a content type of blog, you can incorporate it into a devblog. This enables you to filter blogs to include only those within the devblog and facilitates accessing the next and previous blog in the series.
 
-### ShowOrder Enum
+Tags function similarly to how they do in most other applications. You can assign tags to content with a content type of blog, allowing you to filter blogs by selecting specific tags.
 
-The `ShowOrder` enum represents different ways to order content for display.
-###FllCoLitSu
-| Enum Variant | Description |
-| -------------------- | ------------------------------------------------------------------------- |
-| `Newest` | Represents displaying content in the newest order. |
-| `Oldest` | Represents displaying content in the oldest order. |
-| `full_content_list` | Vec<[FullContent](#fullcontent-struct)> | The list of full content objects. |
-| `content_count` | `i64` | The total count of content items without pagination. |
+On the server side, the `content` table serves as the parent table, with both the `blog` and `project` tables acting as its children. The `blog` and `project` tables maintain a one-to-one relationship with the `content` table, utilizing the `id` and `content_type` fields as foreign keys. This means the `id` field for content and its related blog or project share the same value. This setup enforces that each piece of content is associated with either a blog or a project, but not both.
 
-### PageInfo Struct
+The `tags` table establishes a many-to-one relationship with the `blog` table, allowing multiple tags to be assigned to a single blog. While the `devblog` table maintains a one-to-many relationship with the `blog` table, allowing multiple blogs to be assigned to a single `devblog`. 
 
-Re Data
-The `PageInfo` struct represents information about pagination and content display order.
+<br/>
+<br/>
 
-### DbRows Struct
+# Generating Test Content
 
-| Field Name         | Type                         | Description                                            |
-| ------------------ | ---------------------------- | ------------------------------------------------------ |
-| `content_per_page` | `i64`                        | The number of content items to display per page.       |
-| `page`             | `i64`                        | The current page number.                               |
-| `show_order`       | [ShowOrder](#showorder-enum) | The order in which to display content.                 |
-| `rows_effected`    | `i32`                        | The number of rows affected by the database operation. |
+There are two tests that can be run with `cargo test` to create test content:
 
-The `ContentSlug` struct represents a content slug, which is a string identifier for a specific content item.
+- `add_test_content` - Adds 16 pieces of generated content to the database for testing purposes
+- `print_json_content` - Prints a piece of generated content to the console
 
-| Field Name           | Type                                                                      | Description                                    |
-| -------------------- | ------------------------------------------------------------------------- | ---------------------------------------------- |
-| `slug`               | `String`                                                                  | The string representation of the content slug. |
-| -------------------- | ------------------------------------------------------------------------- |
+<br/>
+<br/>
 
-### CountReturn Struct
+# API documentation
 
-| `Oldest` | Represents displaying content in the oldest order. |
-| `ProjectStartNewest` | Represents displaying content in the newest order based on project start. |
-| Field Name | Type | Description |
-| ---------- | ----- | -------------------------------------------- |
-| `count` | `i64` | The count value returned from the operation. |
+## Content endpoints
 
-### Id Struct
-
-| Field Name | Type | Description |
-| Field Name | Type | Description |
-| ---------- | ----- | ------------------------------------ |
-| `id` | `i32` | The identifier value for the entity. |
-| `show_order` | [ShowOrder](#showorder-enum) | The order in which to display content. |
-
-The `TagsToAdd` struct represents a list of tags to be added to a bloblog item.
-
-| Field Name | Type          | Description                                       |
-| ---------- | ------------- | ------------------------------------------------- |
-| `tags`     | `Vec<String>` | The list of tags to be added to the content item. |
-| ---------- | --------      | ----------------------------------------------    |
-| `slug`     | `String`      | The string representation of the content slug.    |
-
-The `DevblogTitle` struct represents the title of a development blog.
-
-### CountReturn Struct
-
-| Field Name | Type     | Description                                  |
-| ---------- | -------- | -------------------------------------------- |
-| `title`    | `String` | The title of the development blog.           |
-| Field Name | Type     | Description                                  |
-| ---------- | -----    | -------------------------------------------- |
-
-The `GetSurroundingData` struct represents data used to retrieve surrounding blog items for a specific blog item.
-
-| Field Name        | Type     | Description                                         |
-| ----------------- | -------- | --------------------------------------------------- |
-| `devblog_id`      | `i32`    | The identifier of the development blog.             |
-| `blog_slug`       | `String` | The slug of the content item.                       |
-| `direction_count` | `i64`    | The count of surrounding content items to retrieve. |
-| ----------        | -----    | ------------------------------------                |
-| `id`              | `i32`    | The identifier value for the entity.                |
-
-The `SurroundingBlogs` struct represents the surrounding blogs for a specific blog item.
-
-### TagsToAdd Struct
-
-| Field Name | Type | Description |
-| ---------- | ---- | ----------- |
-
-| `after_blogs` | Vec<[FullContent](#fullcontent-struct)> | The list of content items that come after the specific content item. |
-| ------------- | --------------------------------------- | -------------------------------------------------------------------- |
-
-### ContentFilter Struct
-
-### DevblogTitle Struct
-
-| Field Name       | Type                                         | Description                                                        |
-| ---------------- | -------------------------------------------- | ------------------------------------------------------------------ |
-| `content_type`   | `ContentType`                                | The type of content items to retrieve.                             |
-| `project_status` | Option<[CurrentStatus](#currentstatus-enum)> | The current status of the project to filter content items by.      |
-| `project_blogs`  | `Option<i32>`                                | The identifier of the project to filter content items by.          |
-| `blog_tag`       | `Option<String>`                             | The tag of the blog to filter content items by.                    |
-| `devblog_id`     | `Option<i32>`                                | The identifier of the development blog to filter content items by. |
-| `search`         | `Option<String>`                             | The search query to filter content items by.                       |
-
-The `GetSurroundingData` struct represents data used to retrieve surrounding blog items for a specific blog item.
-
-| Field Name | Type | Description |
-| ---------- | ---- | ----------- |
-
-### Get content
-
-| `blog_slug` | `String` | The slug of the content item. |
-| `direction_count` | `i64` | The count of surrounding content items to retrieve. |
-
-### SurroundingBlogs Struct
-
-Path Parameters:
-
-The `SurroundingBlogs` struct represents the surrounding blogs for a specific blog item.
-
-Response:
-
-| -------------- | --------------------------------------- | --------------------------------------------------------------------- |
-| `before_blogs` | Vec<[FullContent](#fullcontent-struct)> | The list of content items that come before the specific content item. |
-
-### Get content by id
-
-### ContentFilter Struct
-
-The `ContentFilter` struct represents filters to be applied when retrieving a list of content.
-Path Parameters:
-
-| Field Name     | Type          | Description                            |
-| -------------- | ------------- | -------------------------------------- |
-| `content_type` | `ContentType` | The type of content items to retrieve. |
-
-- [Full Content](#FullContent-Struct)
-  | `project_blogs` | `Option<i32>` | The identifier of the project to filter content items by. |
-
-### Get list of content
-
-| `devblog_id` | `Option<i32>` | The identifier of the development blog to filter content items by. |
-| `search` | `Option<String>` | The search query to filter content items by. |
-
-## API Documentation
-
-Query Parameters:
-
-## Content
-
-### Get content
-
-- [Full Content List](#FullContentList-Struct)
-  GET /content/${slug}
-
-### Create content
-
-Path Parameters:
-
-- [Content Slug](#ContentSlug-Struct)
-  Headers:
-
-Response:
-
-- [Full Content](#FullContent-Struct)
-
-- [New Full Content](#NewFullContent-Struct)
-
-### Get content by id
-
-### Update content
+### Add content
+Adds content to the server.
 
 ```http
-  GET /content/view-from-id/${id}
+POST /content/add
 ```
 
-Headers:
+**Headers**
 
-- [Id](#Id-Struct)
+AUTHORIZATION: Server password configured in env file.
 
-- Old [Content Slug](#ContentSlug-Struct)
+**Request Body**
 
-Json Body:
+[New Full Content](#new-full-content)
 
-### Get list of content
+<hr/>
+
+### Get content (slug)
+Returns a piece of content who's slug matches the provided slug.
+
+```http
+GET /content/{slug}
+```
+
+**Path Parameters**
+
+slug: Slug of the content to find.
+
+**Response**
+
+[Full Content](#full-content)
+
+<hr/>
+
+### Get content (id)
+Returns a piece of content who's id matches the provided id.
+
+```http
+GET /content/view-from-id/{id}
+```
+
+**Path Parameters**
+
+id: Id of the content to find.
+
+**Response**
+
+[Full Content](#full-content)
+
+<hr/>
+
+### List content
+Returns a list of content. Query parameters are used to both filter for specific content and paginate. First filters will be applied then the content will be ordered then the remaining content will be split into pages.
+
+Paginating works like so, if of you had content a-g and you wanted max page lengths of 2 it would be split like this: [[a, b], [c, d], [e, f], [g]]. So in this example page 1 would be [c, d]. Along with the content [c, d] this endpoint also returns the number of pages which in this example would be 4 as its (amount of content after filters / page length) rounded up.
+
+```http
+GET /content/list
+```
+
+**Query Parameters**
+
+| Field            | Type                                                                                   | Description
+|------------------|----------------------------------------------------------------------------------------|------------
+| content_per_page | Integer                                                                                | Max page length. Will also be the length of the array of content returned. Must be 1 or greater.
+| page             | Integer                                                                                | Page number to be returned. Starts at 0.
+| show_order       | String Literal ("newest", "oldest", "project_start_newest", or "project_start_oldest") | Method to order the content. Newest and oldest order by [Contents](#content) created_at field. Project_start_x goes by [Projects](#project) start_date field and if used on blogs it will behave like regular newest and oldest. 
+| content_type     | String Literal ("project" or "blog")                                                   | Filter to include only content with this content type.
+| project_status   | Optional, String Literal ("under_development" or "finished")                           | Filter to include only content with this project status (if content_type filter is "blog" will do nothing).
+| project_blogs    | Optional, Integer                                                                      | Id of a [Project](#project) used as a filter to include only content linked to the project with this specific id (if content_type filter is "project" will do nothing).
+| blog_tag         | Optional, String                                                                       | Filter to include only content with this tag (if content_type filter is "project" will do nothing).
+| devblog_id       | Optional, Integer                                                                      | Id of a [Devblog](#devblog) used as a filter to include only content linked to the devblog with this specific id (if content_type filter is "project" will do nothing).
+| search           | Optional, String                                                                       | Filter to include only content that contains this specific substring within its title, description, tags, and/or linked devblog or project titles.
+
+Example:
+```
+/content/list?content_per_page=4&page=1&show_order=newest&content_type=blog&search=help
+```
+
+**Response**
+
+| Field             | Type                                   | Description
+|-------------------|----------------------------------------|------------
+| full_content_list | Array of [Full Content](#full-content) | All the content in the requested page.
+| page_count        | Integer                                | Total number of pages of content there are.
+
+Example:
+```json
+{
+  "full_content_list": [{...}, {...}, {...}, {...}],
+  "page_count": 3
+}
+```
+
+<hr/>
+
+### Update content
+Updates content. In the server the id of the content and extra_content is used to find and update. So whatever you do MAKE SURE THE ID'S IN YOUR DATA ARE CORRECT or else you could update the wrong content.
+
+```http
+PUT /content/{slug}
+```
+
+**Headers**
+
+AUTHORIZATION: Server password configured in env file.
+
+**Path Parameters**
+
+slug: Slug of content to update.
+
+**Request Body**
+
+[Full Content](#full-content)
+- Should have same id as original content. If its not the wrong content could be updated.
+- Server will throw error if content-type is changed.
+
+<hr/>
 
 ### Delete content
+Deletes content from server.
 
 ```http
-  GET /content/list
+DELETE /content/{slug}
 ```
 
-Query Parameters:
+**Headers**
 
-- Authorization: Admin Password
-- [Page Info](#PageInfo-Struct)
-- [Content Filter](#ContentFilter-Struct)
+AUTHORIZATION: Server password configured in env file.
 
-Response:
-Response:
+**Path Parameters**
 
-- [Full Content List](#FullContentList-Struct)
+slug: Slug of content to delete.
 
-### Create content
+**Response**
 
-### Get list of tags for blog
+| Field         | Type    | Description
+|---------------|---------|------------
+| rows_effected | Integer | Number of content pieces deleted.
 
-```http
-  POST /content/add
+Example:
+```json
+{
+  "rows_effected": 1
+}
 ```
 
-Path Parameters:
+## Tag endpoints
 
-- Authorization: Admin Password
-
-- Array of [tags](#Tag-Struct)
-
-## Tags
-
-### Add tags to blog
-
-### Update content
+### Add tags
+Adds tags to a piece of content. Only works if the content has a content type of blog.
 
 ```http
-  PUT /content/${slug}
+POST /tag/{slug}
 ```
 
-- Authorization: Admin Password
-  Headers:
-  Path Parameters:
+**Headers**
 
-- Authorization: Admin Password
+AUTHORIZATION: Server password configured in env file.
 
-Json Body:
+**Path Parameters**
 
-- Old [Content Slug](#ContentSlug-Struct)
-
-````http
-
-- [Full Content](#FullContent-Struct)
-
-Headers:
+slug: Slug of content to add tags to.
 
 
-```http
-Path Parameters:
+**Request Body**
 
-````
+| Field  | Type             | Description
+|--------|------------------|------------
+|  tags  | Array of Strings | Tags to add to the content.
 
-Headers:
-
-### Get devblog
-
-- Authorization: Admin Password
-
-Path Parameters:
-PahPaams:
-Path Parameters:
-
-Response:
-
-- [Devblog](#Devblog-Struct)
-
-### Get devblog from id
-
-### Get list of tags for blog
-
-```http
-Path Parameters:
-
+Example:
+```json
+{
+  "tags": ["I", "am", "a", "tag!"]
+}
 ```
 
-Path Parameters:
+<hr/>
 
-- [Devblog](#Devblog-Struct)
-- [Content Slug](#ContentSlug-Struct)
+### Get tag
+Gets the tags related to a piece of content.
 
-### Get next and previous blogs in devblog
+```http
+GET /tag/{slug}
+```
 
-Response:
+**Path Parameters**
 
-- Array of [tags](#Tag-Struct)
+slug: Slug of content to get tags for.
 
-Query Parameters:
+**Response**
 
-### Add tags to blog
+Array of [Tags](#tag).
 
-- [Surrounding Blogs](#SurroundingBlogs-Struct)
-  POST /tag/${slug}
+<hr/>
 
-### Create devblog
+### Delete tag
+Deletes all tags a piece of content has.
 
-Headers:
+```http
+DELETE /tag/{slug}
+```
 
-- Authorization: Admin Password
-  Headers:
+**Headers**
 
-Path Parameters:
+AUTHORIZATION: Server password configured in env file.
 
-- [Content Slug](#ContentSlug-Struct)
+**Path Parameters**
 
-- [New Devblog](#NewDevblog-Struct)
-  Json Body:
+slug: Slug of content to delete all tags for.
+
+**Response**
+
+| Field         | Type    | Description
+|---------------|---------|------------
+| rows_effected | Integer | Number of tags deleted.
+
+Example:
+```json
+{
+  "rows_effected": 2
+}
+```
+
+## Devblog endpoints
+
+### Add devblog
+Adds devblog to server.
+
+```http
+POST /devblog/add
+```
+
+**Headers**
+
+AUTHORIZATION: Server password configured in env file.
+
+**Request Body**
+
+[New Devblog](#new-devblog)
+
+<hr/>
+
+### Get devblog (title)
+Returns a devblog who's title matches the provided title.
+
+```http
+GET /devblog/{title}
+```
+
+**Path Parameters**
+
+title: Title of the devblog to return.
+
+**Response**
+
+[Devblog](#devblog)
+
+<hr/>
+
+### Get devblog (id)
+Returns a devblog who's id matches the provided id.
+
+```http
+GET /devblog/view-from-id/{id}
+```
+
+**Path Parameters**
+
+id: Id of the devblog to return.
+
+**Response**
+
+[Devblog](#devblog)
+
+<hr/>
+
+### Get next and previous blog
+Given a blog gets the next and previous blogs in the devblog (ordering is chronological using [Contents](#content) created_at field).
+
+For example imagine a devblog has content [c, h, j, i, m, q] created in that order. Then if you picked h as the pivot and wanted 1 piece of content in each direction then you would get [c] as blogs before and [j] as blogs after.
+
+```http
+GET /devblog/get-next-prev-blog
+```
+
+**Query Parameters**
+
+| Field           | Type    | Description
+|-----------------|---------|------------
+| devblog_id      | Integer | Id of the devblog to get the blogs in.
+| blog_slug       | String  | Blog to get the surrounding blogs for (the pivot). Must be part of the provided devblog.
+| direction_count | Integer | Number of content to get in each direction. Will be length of the two arrays in response.
+
+Example:
+```
+/devblog/get-next-prev-blog?devblog_id=3&blog_slug=hi&direction_count=2
+```
+
+**Response**
+
+| Field        | Type                                   | Description
+|--------------|----------------------------------------|------------
+| before_blogs | Array of [Full Content](#full-content) | Blogs before pivot blog
+| after_blogs  | Array of [Full Content](#full-content) | Blogs after pivot blog
+
+Example:
+```json
+{
+  "before_blogs": [{...}, {...}],
+  "after_blogs": [{...}, {...}]
+}
+```
+
+<hr/>
 
 ### Update devblog
+Updates devblog. In the server the id of the devblog is used to find and update so whatever you do MAKE SURE THE ID IS CORRECT or else you could update the wrong devblog.
 
-- [Tags To Add](#TagsToAdd-Struct)
+```http
+PUT /devblog/{title}
+```
 
-### Delete tags from blog
+**Headers**
 
-Headers:
+AUTHORIZATION: Server password configured in env file.
 
-DELETE /tag/${slug}
+**Path Parameters**
 
-````
+title: Title of devblog to update.
 
+**Request Body**
 
-- Old [title](#DevblogTitle-Struct)
+[Devblog](#devblog)
+  - Do not change id field or else the wrong devblog could be updated.
 
-Json Body:
+<hr/>
 
-
-Path Parameters:
 ### Delete devblog
+Deletes a devblog.
 
-- [Content Slug](#ContentSlug-Struct)
+```http
+DELETE /devblog/{title}
+```
+
+**Headers**
+
+AUTHORIZATION: Server password configured in env file.
+
+**Path Parameters**
+
+title: Title of devblog to delete.
+
+**Response**
+
+| Field         | Type    | Description
+|---------------|---------|------------
+| rows_effected | Integer | Number of devblogs deleted.
+
+<br/>
+<br/>
+
+# Data types
+
+## New Content
+Contains the basic information needed to add any type of content to the server.
+
+| Field        | Type                                 | Description
+|--------------|--------------------------------------|------------
+| content_type | String Literal ("blog" or "project") | Type of content.
+| slug         | String                               | Unique identifier for the content, used in URLs. Meant as a more user friendly identifier then a number. Must have a length of at least 1 character.
+| title        | String                               | Title of the content. Must have a length of at least 1 character.
+| content_desc | Optional, String                     | Short description of the content.
+| body         | String                               | The actual content in markdown format. Must have a length of at least 1 character.
+
+
+Example new content:
+```json
+{
+  "content_type": "blog",
+  "slug": "making-friends",
+  "title": "How To Make Friends",
+  "content_desc": "It can be tough but theres a simple solution",
+  "body": "# Its simple\n\nTalk to people"
+}
+```
+
+## Content
+Contains the basic information for any type of content already stored by the server.
+
+| Field        | Type                                 | Description
+|--------------|--------------------------------------|------------
+| id           | Integer                              | Unique identifier used by the server.
+| content_type | String Literal ("blog" or "project") | Type of content.
+| slug         | String                               | Unique identifier for the content used in URLs. Meant as a more user friendly identifier then a number. Will have a length of at least 1 character.
+| title        | String                               | Title of the content. Will have a length of at least 1 character.
+| content_desc | Optional, String                     | Short description of the content.
+| body         | String                               | The actual content in markdown format. Will have a length of at least 1 character.
+| created_at   | DateTime                             | Date content was created on server. In ISO 8601 combined date and time with time zone format.
+| updated_at   | DateTime                             | Date content was last updated/modified. When unmodified this will be the same created_at. In ISO 8601 combined date and time with time zone format.
+
+Example content:
+```json
+{
+  "id": 42,
+  "content_type": "project",
+  "slug": "meaning-of-life",
+  "title": "What is the meaning of life?",
+  "content_desc": "Does it matter?",
+  "body": "# How to find the meaning of life?\n\nI really don't know  ...",
+  "created_at": "2024-04-21 23:12:56.918889+00",
+  "updated_at": "2024-04-21 23:12:56.918889+00"
+}
+```
+
+## New Blog
+Contains information about the blog specific parts of content needed to add a blog to the server.
+
+| Field              | Type              | Description
+|--------------------|-------------------|------------
+| related_project_id | Optional, Integer | Unique identifier of project that the blog relates to. This would be the id field in the [Project](#project) or its related [Content](#content) object.
+| devblog_id         | Optional, Integer | Unique identifier of devblog that blog is a part of. This would be the id field in the [Devblog](#devblog) object.
+
+Example content:
+```json
+{
+  "related_project_id": 90,
+  "devblog_id": 55
+}
+```
+
+## Blog
+Contains information about the blog specific parts of content already stored on the server.
+
+| Field              | Type                    | Description
+|--------------------|-------------------------|------------
+| id                 | Integer                 | Unique identifier used by the server. Will be the same as the id of the [Content](#content) this object is related to.
+| content_type       | String Literal ("blog") | Type of content. 
+| related_project_id | Optional, Integer       | Unique identifier of project that the blog relates to. This would be the id field in the [Project](#project) or its related [Content](#content) object.
+| devblog_id         | Optional, Integer       | Unique identifier of devblog that blog is a part of. This would be the id field in the related [Devblog](#devblog) object.
+
+Example content:
+```json
+{
+  "id": 20,
+  "content_type": "blog",
+  "related_project_id": 17
+}
+```
+
+## New Project
+Contains information about the project specific parts of content needed to add a project to the server.
+
+| Field          | Type                                               | Description
+|----------------|----------------------------------------------------|------------
+| current_status | String Literal ("under_development" or "finished") | Current state of the project.
+| github_link    | Optional, String                                   | URL of the projects git repo.
+| url            | Optional, String                                   | URL of the projects website.
+| start_date     | Optional, DateTime                                 | Date the project was started. In ISO 8601 combined date and time with time zone format.
+
+Example new project:
+```json
+{
+  "current_status": "under_development",
+  "github_link": "https://github.com/ky-42/personal-site",
+  "start_date": "2024-04-19 15:34:57.767+00"
+}
+```
+
+## Project
+Contains information about the project specific parts of content already stored on the server.
+
+| Field          | Type                                               | Description
+|----------------|----------------------------------------------------|------------
+| id             | Integer                                            | Unique identifier used by the server. Will be the same as the id of the [Content](#content) this object is related to.
+| current_status | String Literal ("under_development" or "finished") | Current state of the project.
+| content_type   | String Literal ("project")                         | Type of content. 
+| github_link    | Optional, String                                   | URL of the projects git repo.
+| url            | Optional, String                                   | URL of the projects website.
+| start_date     | Optional, DateTime                                 | Date the project was started. In ISO 8601 combined date and time with time zone format.
+
+Example new project:
+```json
+{
+  "id": 31,
+  "content_type": "project",
+  "current_status": "under_development",
+  "github_link": "https://github.com/ky-42/personal-site",
+  "url": "https://kyledenief.me"
+}
+```
+
+## New Full Content
+Contains all the information needed to add a piece of content to the server.
+
+| Field             | Type                                                                        | Description
+|-------------------|-----------------------------------------------------------------------------|------------
+| new_base_content  | [New Content](#new-content)                                                 | The basic information about the content.
+| new_extra_content | {"blog": [New Blog](#new-blog)} or {"project": [New Project](#new-project)} | The type specific information about the content.
+
+Example new full content with the content type as blog:
+```json
+{
+  "base_content": {
+    "content_type": "blog",
+    "slug": "cheese",
+    "...": "..."
+  },
+  "extra_content": {
+    "blog": {}
+  }
+}
+```
+
+Example new full content with the content type as project:
+```json
+{
+  "base_content": {
+    "content_type": "project",
+    "slug": "building-flowers",
+    "...": "..."
+  },
+  "extra_content": {
+    "project": {
+      "current_status": "under-development",
+      "...": "..."
+    }
+  }
+}
+```
+
+## Full Content
+Contains all the information about a piece of content already stored on the server.
+
+| Field         | Type                                                        | Description
+|---------------|-------------------------------------------------------------|------------
+| base_content  | [Content](#content)                                         | The basic information about the content.
+| extra_content | {"blog": [Blog](#blog)} or {"project": [Project](#project)} | The type specific information about the content.
+
+Example full content with the content type as blog:
+```json
+{
+  "base_content": {
+    "id": 31,
+    "content_type": "blog",
+    "slug": "hello-world",
+    "...": "..."
+  },
+  "extra_content": {
+    "blog": {
+      "id": 31,
+      "content_type": "blog",
+      "related_project_id": 99
+    }
+  }
+}
+```
+
+Example full content with the content type as project:
+```json
+{
+  "base_content": {
+    "id": 122,
+    "content_type": "project",
+    "slug": "goodbye-world",
+    "...": "..."
+  },
+  "extra_content": {
+    "project": {
+      "id": 122,
+      "content_type": "project",
+      "current_status": "finished",
+      "...": "..."
+    }
+  }
+}
+```
+
+## Tag
+| Field   | Type    | Description
+|---------|---------|------------
+| id      | Integer | Unique identifier used by server.
+| blog_id | Integer | Id of blog the tag is linked to.
+| title   | String  | Title of the tag.
+
+Example tag:
+```json
+{
+  "id": 3,
+  "blog_id": 21,
+  "title": "games"
+}
+```
+
+## New Devblog
+Contains information needed to add a devblog to the server.
+
+| Field | Type   | Description
+|-------|--------|------------
+| title | String | Title of the of devblog.
+
+Example new devblog:
+```json
+{
+  "title": "How to start a unicorn!"
+}
+```
 
 ## Devblog
+Contains information about a devblog already stored on the server.
 
-### Get devblog
+| Field | Type    | Description
+|-------|---------|------------
+| id    | Integer | Unique identifier used by server.
+| title | String  | Title of the of devblog.
 
-- Authorization: Admin Password
-```http
-Path Parameters:
-
-- [Devblog Title](#DevblogTitle-Struct)
-
-
-Path Parameters:
-
-- [Devblog Title](#DevblogTitle-Struct)
-
-Response:
-
-- [Devblog](#Devblog-Struct)
-
-### Get devblog from id
-
-```http
-  GET /devblog/view-from-id/${id}
-````
-
-Path Parameters:
-
-- [Id](#Id-Struct)
-
-Response:
-
-- [Devblog](#Devblog-Struct)
-
-### Get next and previous blogs in devblog
-
-```http
-  GET /devblog/get-next-prev-blog
+Example devblog:
+```json
+{
+  "id": 29,
+  "title": "How to get rich!"
+}
 ```
-
-Query Parameters:
-
-- [Get Surrounding Data](#GetSurroundingData-Struct)
-
-Response:
-
-- [Surrounding Blogs](#SurroundingBlogs-Struct)
-
-### Create devblog
-
-```http
-  POST /devblog/add
-```
-
-Headers:
-
-- Authorization: Admin Password
-
-Json Body:
-
-- [New Devblog](#NewDevblog-Struct)
-
-### Update devblog
-
-```http
-  PUT /devblog/${title}
-```
-
-Headers:
-
-- Authorization: Admin Password
-
-Path Parameters:
-
-- Old [title](#DevblogTitle-Struct)
-
-Json Body:
-
-- [Devblog](#Devblog-Struct)
-
-### Delete devblog
-
-```http
-  DELETE /devblog/${title}
-```
-
-Headers:
-
-- Authorization: Admin Password
-
-Path Parameters:
-
-- [Devblog Title](#DevblogTitle-Struct)

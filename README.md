@@ -1,6 +1,6 @@
 # Personal Site
 
-This is the repo for a personal website that anyone can customize and use. I created this site as a way to showcase my work, share my knowledge with others, and as a fun side project. You can see an example of the website at [kyledenief.me](https://kyledenief.me/).
+This is a personal website that anyone can customize and use. I created this site as a way to showcase my work, share my knowledge with others, and as a fun side project. You can see an example of the website at [kyledenief.me](https://kyledenief.me/).
 
 ## Features
 
@@ -15,7 +15,7 @@ This is the repo for a personal website that anyone can customize and use. I cre
 
 ## Roadmap
 
-After almost a year of development, I'm pleased to say that my personal website is essentially complete. I've learned a lot in the process, and I'm satisfied with the features I've incorporated. Although I had hoped to add the ability to play asteroids in the background of the site, I won't be able to do so anytime soon.
+After almost a year of development, I'm pleased to say that my personal website is essentially complete. I've learned a lot in the process, and I'm satisfied with the features I've incorporated. I do hope to add the ability to play asteroids in the background of the site sometime in the near future but that will be a big task.
 
 ## Technologies Used
 
@@ -34,13 +34,13 @@ After almost a year of development, I'm pleased to say that my personal website 
 
 ## Other READMEs
 
-- [More on customization and configuration](/config/README.md)
-- [More on client](/client/README.md)
-- [More on server](/server/README.md)
+- [Customization/Configuration Documentation](/config/README.md)
+- [Client Documentation](/client/README.md)
+- [Server Documentation](/server/README.md)
 
 ## Content Management
 
-The manage page can be found at /manage on the client. For more information check out [the client readme](/client/README.md)
+The manage page can be found at /manage on the client. For more information check out the [client documentation](/client/README.md).
 
 ## Run Locally
 
@@ -48,25 +48,25 @@ The manage page can be found at /manage on the client. For more information chec
 
 - Rust
 - libpq-dev/postgresql-libs
-- Diesel cli
-- Yarn or npm
+- Diesel CLI
+- Yarn (can use npm as well)
 - A PostgreSQL server
 
-### Running client (using yarn)
+### Running Client
 
-1. Navigate to the `client` directory
-2. Install dependencies using `yarn install`
-3. Start the client server using `yarn start`
+1. Navigate to the `client` directory.
+2. Install dependencies using `yarn install`.
+3. Start the client server using `yarn start`.
 
 Note: If you change the client server port, make sure to update the URL in the `.env` file in the `server` directory.
 
-### Running server
+### Running Server
 
-1. Navigate to the `server` directory
-2. Ensure that you have a PostgreSQL database up and running
-3. Edit the `.env` file with your database information
-4. Install the Diesel CLI and run `diesel database setup`
-5. Bring up the server with `cargo run`
+1. Navigate to the `server` directory.
+2. Edit the `.env` file with your database information.
+3. Ensure that you have a PostgreSQL database up and running (can use the docker compose file if you like).
+4. Install the Diesel CLI and run `diesel database setup` in the servers root directory. Click [here](https://diesel.rs/guides/getting-started) for more information on installing the Diesel CLI.
+5. Bring up the server with `cargo run`.
 
 Note: If you change the server port or ip, make sure to update the URL in `client/src/adapters/index.ts`.
 
@@ -78,22 +78,22 @@ Note: If you change the server port or ip, make sure to update the URL in `clien
 - libpq-dev/postgresql-libs
 - Yarn or npm
 
-### Building client (using yarn)
+### Building Client
 
-1. Update the `config/config.json` file with the production URLs of your frontend and backend servers, and optionally add your Plausible Analytics information
-2. Navigate to the `client` directory
-3. Build the client with `yarn build`
+1. Update the `config/config.json` file with the production URLs of your frontend and backend servers, and optionally add your Plausible Analytics information.
+2. Navigate to the `client` directory.
+3. Build the client with `yarn build`.
 
-### Building server
+### Building Server
 
-1. Navigate to the `server` directory
-2. Build the server with `cargo build --release` (Note if you get error that ends in `= note: /usr/bin/ld: cannot find -lpq: No such file or directory` it means you don't have libpq-dev/postgresql-libs installed which you will need to install)
+1. Navigate to the `server` directory.
+2. Build the server with `cargo build --release` (note if you get error that ends in `= note: /usr/bin/ld: cannot find -lpq: No such file or directory` it means you don't have libpq-dev/postgresql-libs installed).
 
 Note: Database migrations are included in the release build so they will be ran when the server is run.
 
 ### Deployment
 
-I have decided not to have a standard deployment method for the app, leaving it up to each individual. I personally have the client deployed on a Digital Ocean VM using NGINX as a reverse proxy. The server is deployed on another VM that also runs the PostgreSQL database. The server is run by a service on startup and PostgreSQL runs in a Docker container that is also brought up by a server. You need the same but updated `.env` file from the `server` directory in the same folder as the release executable when it is ran. If you are having trouble deploying, don't be afraid to contact me.
+Theres no standard deployment method for the app, leaving it up to you. I personally have everything deployed on a Digital Ocean VM using NGINX as a reverse proxy. The server is run by a service on startup and PostgreSQL runs in a Docker container that is also brought up by a service. Make sure you have an updated `.env` file in the same folder as the release executable when it is ran. If you are having trouble deploying, don't be afraid to contact me.
 
 ## Contributing
 
