@@ -206,7 +206,7 @@ export const DevblogOperations = {
 
   update_devblog: async (params: DevblogUpdateInfo): Promise<RequestState<boolean>> => {
     const response = await GeneralOperation<boolean>({
-      url: '/devblog/update',
+      url: `/devblog/${params.title}`,
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

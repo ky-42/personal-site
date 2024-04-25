@@ -108,12 +108,13 @@ mod tests {
         let update_request = test::TestRequest::put()
             .uri(&format!(
                 "/content/{}",
-                view_response.base_content.get_slug()
+                add_data.new_base_content.get_slug()
             ))
             .set_json(&view_response)
             .insert_header(("Authorization", admin_info.admin_password.to_owned()))
             .to_request();
-        test::call_service(&app, update_request).await;
+        let update_response = test::call_service(&app, update_request).await;
+        assert_eq!(update_response.status(), 200);
 
         // Re-requests content now that its updated
         // We know the slug updated if the request worked cause we request with the slug
@@ -130,6 +131,7 @@ mod tests {
             .to_request();
         let delete_response: handlers::route_data::DbRows =
             test::call_and_read_body_json(&app, delete_request).await;
+
         assert!(delete_response.rows_effected == 1);
     }
 
@@ -172,16 +174,16 @@ mod tests {
 
         // Request for the content that was just added
         let list_request_project = test::TestRequest::get()
-            .uri("/content/list?content_per_page=6&page=0&show_order=Newest&content_type=project")
+            .uri("/content/list?content_per_page=6&page=0&show_order=newest&content_type=project")
             .to_request();
         let list_request_project_two = test::TestRequest::get()
-            .uri("/content/list?content_per_page=6&page=1&show_order=Newest&content_type=project")
+            .uri("/content/list?content_per_page=6&page=1&show_order=newest&content_type=project")
             .to_request();
         let list_request_blog = test::TestRequest::get()
-            .uri("/content/list?content_per_page=6&page=0&show_order=Newest&content_type=blog")
+            .uri("/content/list?content_per_page=6&page=0&show_order=newest&content_type=blog")
             .to_request();
         let list_request_blog_two = test::TestRequest::get()
-            .uri("/content/list?content_per_page=6&page=1&show_order=Newest&content_type=blog")
+            .uri("/content/list?content_per_page=6&page=1&show_order=newest&content_type=blog")
             .to_request();
         let projects_returned: FullContentList =
             test::call_and_read_body_json(&app, list_request_project).await;

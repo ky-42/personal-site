@@ -157,7 +157,7 @@ Example:
 <hr/>
 
 ### Update content
-Updates content. In the server the id of the content and extra_content is used to find and update. So whatever you do MAKE SURE THE ID'S IN YOUR DATA ARE CORRECT or else you could update the wrong content.
+Updates content.
 
 ```http
 PUT /content/{slug}
@@ -174,8 +174,7 @@ slug: Slug of content to update.
 **Request Body**
 
 [Full Content](#full-content)
-- Should have same id as original content. If its not the wrong content could be updated.
-- Server will throw error if content-type is changed.
+- Server will throw error code 400 if id or content-type is changed.
 
 <hr/>
 
@@ -378,7 +377,7 @@ Example:
 <hr/>
 
 ### Update devblog
-Updates devblog. In the server the id of the devblog is used to find and update so whatever you do MAKE SURE THE ID IS CORRECT or else you could update the wrong devblog.
+Updates devblog.
 
 ```http
 PUT /devblog/{title}
@@ -395,7 +394,7 @@ title: Title of devblog to update.
 **Request Body**
 
 [Devblog](#devblog)
-  - Do not change id field or else the wrong devblog could be updated.
+- Server will throw error code 400 if id is changed.
 
 <hr/>
 

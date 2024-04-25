@@ -41,7 +41,7 @@ pub fn route_config(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/devblog")
             .service(web::resource("/add").route(web::post().to(content::add_devblog)))
-            // Given a blog gets next and previous blogs in devlog
+            // Given a blog gets next and previous blogs in devblog
             .service(
                 web::resource("/get-next-prev-blog")
                     .route(web::get().to(content::get_surrounding_blogs)),

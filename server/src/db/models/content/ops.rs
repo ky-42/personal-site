@@ -5,7 +5,7 @@ use crate::{
         errors::AppError,
         route_data::{self, ShowOrder},
     },
-    schema,
+    schema::{self, content},
 };
 use diesel::{
     insert_into,
@@ -92,7 +92,6 @@ where
 
 impl super::NewFullContent {
     pub fn add(&self, db_conn: &mut PgConnection) -> Result<(), AppError> {
-        use crate::schema::content;
         // Adds base content and gets new id
         let base_content_id: i32 = insert_into(content::table)
             .values(&self.new_base_content)
@@ -122,8 +121,6 @@ impl super::NewFullContent {
 
 impl super::FullContent {
     pub fn id_to_slug(id: i32, db_conn: &mut PgConnection) -> Result<String, AppError> {
-        use crate::schema::content;
-
         Ok(content::table
             .find(id)
             .select(content::slug)
@@ -131,26 +128,42 @@ impl super::FullContent {
     }
 
     pub fn slug_to_id(slug: &String, db_conn: &mut PgConnection) -> Result<i32, AppError> {
-        use crate::schema::content;
-
         Ok(content::table
             .filter(content::slug.eq(slug))
             .select(content::id)
             .first(db_conn)?)
     }
 
-    pub fn update(self, db_conn: &mut PgConnection) -> Result<(), AppError> {
+    pub fn update(self, old_slug: &String, db_conn: &mut PgConnection) -> Result<(), AppError> {
         use extra::ExtraContent;
+
+        // Used to make sure id is not changed in update
+        let old_content_id = content::table
+            .filter(content::slug.eq(old_slug))
+            .first::<base::Content>(db_conn)?;
 
         // Update extra content
         match self.extra_content {
             ExtraContent::Blog(updated) => {
+                if old_content_id.get_id() != updated.get_id() {
+                    return Err(AppError::ContentValidationError);
+                }
+
                 updated.save_changes::<extra::Blog>(db_conn)?;
             }
+
             ExtraContent::Project(updated) => {
+                if old_content_id.get_id() != updated.get_id() {
+                    return Err(AppError::ContentValidationError);
+                }
+
                 updated.save_changes::<extra::Project>(db_conn)?;
             }
         };
+
+        if old_content_id.get_id() != self.base_content.get_id() {
+            return Err(AppError::ContentValidationError);
+        }
 
         // Update base content
         // This is second so that if user changes content type it will error
@@ -161,7 +174,6 @@ impl super::FullContent {
     }
 
     pub fn delete(delete_slug: String, db_conn: &mut PgConnection) -> Result<usize, AppError> {
-        use crate::schema::content;
 
         // Extra content should cascade delete on deletion of base content
         // Returns number of rows effected
@@ -175,7 +187,6 @@ impl super::FullContent {
         view_slug: String,
         db_conn: &mut PgConnection,
     ) -> Result<super::FullContent, AppError> {
-        use crate::schema::content;
 
         // Runs query to get base content
         let base_content: base::Content = content::table
@@ -229,8 +240,6 @@ impl super::FullContentList {
     ) -> Result<Self, AppError> {
         // Returns a list of content and the count of that content
         // with filters applied
-
-        use crate::schema::content;
 
         match filters.content_type {
             super::ContentType::Blog => {
@@ -505,7 +514,17 @@ pub mod devblog_ops {
             Ok(diesel::delete(devblog::table.filter(devblog::title.eq(title))).execute(db_conn)?)
         }
 
-        pub fn update(&self, db_conn: &mut PgConnection) -> Result<(), AppError> {
+        pub fn update(&self, old_title: &String, db_conn: &mut PgConnection) -> Result<(), AppError> {
+
+            // Used to make sure id is not changed in update
+            let old_devblog = devblog::table
+                .filter(devblog::title.eq(old_title))
+                .first::<Devblog>(db_conn)?;
+
+            if old_devblog.get_id() != self.get_id(){
+                return Err(AppError::ContentValidationError);
+            }
+
             self.save_changes::<Devblog>(db_conn)?;
             Ok(())
         }
@@ -527,7 +546,7 @@ pub mod devblog_ops {
             direction_count: i64,
             db_conn: &mut PgConnection,
         ) -> Result<SurroundingBlogs, AppError> {
-            use crate::schema::{blog, content};
+            use crate::schema::blog;
 
             let compare_date: DateTime<Utc> = content::table
                 .filter(content::slug.eq(blog_slug))

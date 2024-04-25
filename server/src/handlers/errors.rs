@@ -29,7 +29,7 @@ pub enum AppError {
 
 // Makes content errors returnable by an actix web handler
 impl ResponseError for AppError {
-    //Creates a response to return when therer is a content error
+    //Creates a response to return when there is a content error
     fn error_response(&self) -> HttpResponse {
         HttpResponse::build(self.status_code())
             .insert_header(header::ContentType::html())
@@ -54,7 +54,7 @@ impl ResponseError for AppError {
 /*                        Content Error implementations                       */
 /* -------------------------------------------------------------------------- */
 
-// Implementations to convert possible errors from other libaries to a content error
+// Implementations to convert possible errors from other libraries to a content error
 
 impl From<r2d2::Error> for AppError {
     fn from(_: r2d2::Error) -> Self {

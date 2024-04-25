@@ -72,7 +72,7 @@ pub async fn view_from_id(
 // not just the updated properties
 pub async fn update_content(
     db_pool: web::Data<DbPool>,
-    _old_slug: web::Path<ContentSlug>,
+    old_slug: web::Path<ContentSlug>,
     update_info: web::Json<FullContent>,
     _: AuthUser,
 ) -> Result<HttpResponse, AppError> {
@@ -82,7 +82,7 @@ pub async fn update_content(
     update_data.base_content.update_edit_at();
     web::block(move || {
         let mut db_conn = db_pool.get()?;
-        update_data.update(&mut db_conn)
+        update_data.update(&old_slug.into_inner().slug, &mut db_conn)
     })
     .await??;
 
@@ -252,7 +252,7 @@ pub async fn add_devblog(
 
 pub async fn update_devblog(
     db_pool: web::Data<DbPool>,
-    _old_title: web::Path<DevblogTitle>,
+    old_title: web::Path<DevblogTitle>,
     update_info: web::Json<Devblog>,
     _: AuthUser,
 ) -> Result<HttpResponse, AppError> {
@@ -261,7 +261,7 @@ pub async fn update_devblog(
 
     web::block(move || {
         let mut db_conn = db_pool.get()?;
-        update_data.update(&mut db_conn)
+        update_data.update(&old_title.into_inner().title, &mut db_conn)
     })
     .await??;
 
