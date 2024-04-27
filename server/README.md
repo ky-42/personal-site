@@ -24,7 +24,7 @@ Information for running and building is in the projects top-level README. Refer 
 
 - POSTGRES_USER: Postgres user the server should use. Only needed if using the provided docker compose file.
 - POSTGRES_PASSWORD: Password for the Postgres user. Only needed if using the provided docker compose file.
-- DATABASE_URI: URI used to connect to database.
+- DATABASE_URL: URL used to connect to database.
 - ADMIN_PASSWORD: Password used to manage content.
 - CLIENT_DOMAIN: Domain allowed through CORS. 
 
