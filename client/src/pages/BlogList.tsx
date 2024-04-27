@@ -192,7 +192,8 @@ const BlogList = () => {
   // State for all the blogs the site has retrieved
   // Uses sessionStorage to keep state when user navigates back
   const [receivedBlogs, setReceivedBlogs] = useState<Record<number, FullContentList>>(
-    sessionStorage.getItem('blogListReceivedBlogs') !== null && navigationType === NavigationType.Pop
+    sessionStorage.getItem('blogListReceivedBlogs') !== null &&
+      navigationType === NavigationType.Pop
       ? JSON.parse(sessionStorage.getItem('blogListReceivedBlogs') as string, jsonParser)
       : {},
   );

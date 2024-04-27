@@ -84,7 +84,7 @@ export interface BlogSlugPassword extends BlogSlug {
 }
 
 export interface TagAddInfo extends BlogSlugPassword {
-  tags: string[];
+  tags: Set<string>;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -24,7 +24,7 @@ const ContentBody = styled(ReactMarkdown)`
   }
   a {
     color: ${(props) => props.theme.bodyLinkColour};
-  }  
+  }
   a:hover {
     text-decoration: underline;
   }

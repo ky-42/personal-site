@@ -5,11 +5,6 @@ use crate::db::models::content::FullContent;
 /* -------------------------------------------------------------------------- */
 // Data used in routes to extract data from request and return data to requester
 
-#[derive(Deserialize, Serialize, Debug)]
-pub struct DbRows {
-    pub rows_effected: i32,
-}
-
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "snake_case")]
 pub enum ShowOrder {

@@ -66,7 +66,7 @@ pub fn cors_config() -> actix_cors::Cors {
             // Allows any origin from any subdomain on a specified URL set in .env
             origin
                 .as_bytes()
-                .ends_with(env::var("URL").expect("Please set URL in .env").as_bytes())
+                .ends_with(env::var("CLIENT_DOMAIN").expect("Please set URL in .env").as_bytes())
         })
         .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
         .allow_any_header()

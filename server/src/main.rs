@@ -129,10 +129,10 @@ mod tests {
             .uri("/content/new-slug")
             .insert_header(("Authorization", admin_info.admin_password.to_owned()))
             .to_request();
-        let delete_response: handlers::route_data::DbRows =
-            test::call_and_read_body_json(&app, delete_request).await;
+        let delete_response  =
+            test::call_service(&app, delete_request).await;
 
-        assert!(delete_response.rows_effected == 1);
+        assert_eq!(delete_response.status(),  200);
     }
 
     #[actix_web::test]
@@ -255,9 +255,9 @@ mod tests {
                 .uri(&format!("/content/{}", value.new_base_content.get_slug()))
                 .insert_header(("Authorization", admin_info.admin_password.to_owned()))
                 .to_request();
-            let delete_response: handlers::route_data::DbRows =
-                test::call_and_read_body_json(&app, delete_request).await;
-            assert!(delete_response.rows_effected == 1);
+            let delete_response =
+                test::call_service(&app, delete_request).await;
+            assert_eq!(delete_response.status(), 200);
         }
     }
 

@@ -22,11 +22,11 @@ Information for running and building is in the projects top-level README. Refer 
 
 # Environment Variables
 
-- POSTGRES_USER: Postgres user the server should use.
-- POSTGRES_PASSWORD: Password for the Postgres user.
-- DATABASE_URL: URI used to connect to database.
+- POSTGRES_USER: Postgres user the server should use. Only needed if using the provided docker compose file.
+- POSTGRES_PASSWORD: Password for the Postgres user. Only needed if using the provided docker compose file.
+- DATABASE_URI: URI used to connect to database.
 - ADMIN_PASSWORD: Password used to manage content.
-- URL: Domain allowed through CORS. 
+- CLIENT_DOMAIN: Domain allowed through CORS. 
 
 <br/>
 <br/>
@@ -193,19 +193,6 @@ AUTHORIZATION: Server password configured in env file.
 
 slug: Slug of content to delete.
 
-**Response**
-
-| Field         | Type    | Description
-|---------------|---------|------------
-| rows_effected | Integer | Number of content pieces deleted.
-
-Example:
-```json
-{
-  "rows_effected": 1
-}
-```
-
 ## Tag endpoints
 
 ### Add tags
@@ -226,16 +213,7 @@ slug: Slug of content to add tags to.
 
 **Request Body**
 
-| Field  | Type             | Description
-|--------|------------------|------------
-|  tags  | Array of Strings | Tags to add to the content.
-
-Example:
-```json
-{
-  "tags": ["I", "am", "a", "tag!"]
-}
-```
+Array of Strings. Each string representing a tag.
 
 <hr/>
 
@@ -252,7 +230,7 @@ slug: Slug of content to get tags for.
 
 **Response**
 
-Array of [Tags](#tag).
+Array of Strings. Each string representing a tag.
 
 <hr/>
 
@@ -270,19 +248,6 @@ AUTHORIZATION: Server password configured in env file.
 **Path Parameters**
 
 slug: Slug of content to delete all tags for.
-
-**Response**
-
-| Field         | Type    | Description
-|---------------|---------|------------
-| rows_effected | Integer | Number of tags deleted.
-
-Example:
-```json
-{
-  "rows_effected": 2
-}
-```
 
 ## Devblog endpoints
 
@@ -412,12 +377,6 @@ AUTHORIZATION: Server password configured in env file.
 **Path Parameters**
 
 title: Title of devblog to delete.
-
-**Response**
-
-| Field         | Type    | Description
-|---------------|---------|------------
-| rows_effected | Integer | Number of devblogs deleted.
 
 <br/>
 <br/>
@@ -635,22 +594,6 @@ Example full content with the content type as project:
       "...": "..."
     }
   }
-}
-```
-
-## Tag
-| Field   | Type    | Description
-|---------|---------|------------
-| id      | Integer | Unique identifier used by server.
-| blog_id | Integer | Id of blog the tag is linked to.
-| title   | String  | Title of the tag.
-
-Example tag:
-```json
-{
-  "id": 3,
-  "blog_id": 21,
-  "title": "games"
 }
 ```
 

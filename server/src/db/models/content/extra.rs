@@ -122,6 +122,12 @@ pub struct Tag {
     title: String,
 }
 
+impl Tag {
+    pub fn get_title(self) -> String {
+        self.title
+    }
+}
+
 #[derive(Insertable, Serialize, Deserialize, Validate, Debug)]
 #[diesel(table_name = devblog)]
 pub struct NewDevblog {

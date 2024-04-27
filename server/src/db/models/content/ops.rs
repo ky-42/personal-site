@@ -425,6 +425,8 @@ impl super::FullContentList {
 /* ----------------------------- Tag Operations ----------------------------- */
 
 mod tag_ops {
+    use std::collections::HashSet;
+
     use super::*;
     use crate::{db::models::content::extra::Tag, schema::tag};
 
@@ -433,10 +435,16 @@ mod tag_ops {
         pub fn get_blogs_tags(
             blog_id: i32,
             db_conn: &mut PgConnection,
-        ) -> Result<Vec<Tag>, AppError> {
-            Ok(tag::table
-                .filter(tag::blog_id.eq(blog_id))
-                .get_results(db_conn)?)
+        ) -> Result<HashSet<String>, AppError> {
+            Ok(
+                // Turns the tags into a HashSet of strings
+                HashSet::from_iter(tag::table
+                    .filter(tag::blog_id.eq(blog_id))
+                    .get_results::<Tag>(db_conn)?
+                    .into_iter()
+                    .map(|tag| tag.get_title())
+                )
+            )
         }
 
         // Removes all tags related to a blog
@@ -446,7 +454,7 @@ mod tag_ops {
 
         // Adds list of tags to a blog
         pub fn add_tags(
-            tag_strings: &Vec<String>,
+            tag_strings: &HashSet<String>,
             blog_id: i32,
             db_conn: &mut PgConnection,
         ) -> Result<(), AppError> {

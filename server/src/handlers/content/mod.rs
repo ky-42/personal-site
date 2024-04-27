@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use super::{errors::AppError, extractors::AuthUser, route_data::*};
 use crate::db::{
     models::content::{
@@ -94,7 +96,7 @@ pub async fn delete_content(
     db_pool: web::Data<DbPool>,
     delete_slug: web::Path<ContentSlug>,
     _: AuthUser,
-) -> Result<web::Json<DbRows>, AppError> {
+) -> Result<HttpResponse, AppError> {
     // Returns the number of rows deleted
     let rows_deleted = web::block(move || {
         let mut db_conn = db_pool.get()?;
@@ -102,9 +104,11 @@ pub async fn delete_content(
     })
     .await?? as i32;
 
-    Ok(web::Json(DbRows {
-        rows_effected: rows_deleted,
-    }))
+    if rows_deleted == 0 {
+        return Err(AppError::ContentNotFound);
+    }
+
+    Ok(HttpResponse::Ok().finish())
 }
 
 // Adds a piece of content given data for the new content
@@ -130,8 +134,8 @@ pub async fn add_content(
 pub async fn get_tags(
     db_pool: web::Data<DbPool>,
     blog_slug: web::Path<ContentSlug>,
-) -> Result<web::Json<Vec<Tag>>, AppError> {
-    let fetched_content: Vec<Tag> = web::block(move || {
+) -> Result<web::Json<HashSet<String>>, AppError> {
+    let fetched_content: HashSet<String> = web::block(move || {
         let mut db_conn = db_pool.get()?;
         Tag::get_blogs_tags(
             FullContent::slug_to_id(&blog_slug.into_inner().slug, &mut db_conn)?,
@@ -147,13 +151,13 @@ pub async fn get_tags(
 pub async fn add_tags(
     db_pool: web::Data<DbPool>,
     blog_add_slug: web::Path<ContentSlug>,
-    tags_list: web::Json<TagsToAdd>,
+    tags_list: web::Json<HashSet<String>>,
     _: AuthUser,
 ) -> Result<HttpResponse, AppError> {
     web::block(move || {
         let mut db_conn = db_pool.get()?;
         Tag::add_tags(
-            &tags_list.into_inner().tags,
+            &tags_list.into_inner(),
             FullContent::slug_to_id(&blog_add_slug.into_inner().slug, &mut db_conn)?,
             &mut db_conn,
         )
@@ -168,7 +172,7 @@ pub async fn delete_tags(
     db_pool: web::Data<DbPool>,
     blog_delete_slug: web::Path<ContentSlug>,
     _: AuthUser,
-) -> Result<web::Json<DbRows>, AppError> {
+) -> Result<HttpResponse, AppError> {
     // Returns the number of rows deleted
     let rows_deleted = web::block(move || {
         let mut db_conn = db_pool.get()?;
@@ -179,9 +183,11 @@ pub async fn delete_tags(
     })
     .await?? as i32;
 
-    Ok(web::Json(DbRows {
-        rows_effected: rows_deleted,
-    }))
+    if rows_deleted == 0 {
+        return Err(AppError::ContentNotFound);
+    }
+
+    Ok(HttpResponse::Ok().finish())
 }
 
 /* -------------------------- Handlers for devblogs ------------------------- */
@@ -272,7 +278,7 @@ pub async fn delete_devblog(
     db_pool: web::Data<DbPool>,
     devblog_title: web::Path<DevblogTitle>,
     _: AuthUser,
-) -> Result<web::Json<DbRows>, AppError> {
+) -> Result<HttpResponse, AppError> {
     // Returns the number of rows deleted
     let rows_deleted = web::block(move || {
         let mut db_conn = db_pool.get()?;
@@ -280,7 +286,9 @@ pub async fn delete_devblog(
     })
     .await?? as i32;
 
-    Ok(web::Json(DbRows {
-        rows_effected: rows_deleted,
-    }))
+    if rows_deleted == 0 {
+        return Err(AppError::ContentNotFound);
+    }
+
+    Ok(HttpResponse::Ok().finish())
 }

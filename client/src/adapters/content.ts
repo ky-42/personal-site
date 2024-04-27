@@ -1,6 +1,6 @@
 import axios from 'axios';
 import backend_axios from '.';
-import { Devblog, FullContent, Tag } from '../types/Content';
+import { Devblog, FullContent } from '../types/Content';
 import {
   ContentAddParams,
   RequestState,
@@ -123,12 +123,20 @@ export const ContentOperations = {
 /* ------------------------- Tag operation adapters ------------------------- */
 
 export const TagOperations = {
-  get_blog_tags: async (params: BlogSlug): Promise<RequestState<Set<Tag>>> => {
-    return await GeneralOperation<Set<Tag>>({
+  get_blog_tags: async (params: BlogSlug): Promise<RequestState<Set<string>>> => {
+    // This actually returns an array of strings, but we want it to have the set type
+    const response = await GeneralOperation<Set<string>>({
       url: `/tag/${params.blog_slug}`,
       method: 'GET',
       headers: {},
     });
+
+    // Updates the array of stings to a set of stings
+    if (response.requestStatus === RequestStatus.Success) {
+      response.requestedData = new Set(response.requestedData);
+    }
+
+    return response;
   },
 
   add_tags: async (params: TagAddInfo): Promise<RequestState<boolean>> => {
@@ -139,9 +147,7 @@ export const TagOperations = {
         authorization: params.password,
         'Content-Type': 'application/json',
       },
-      data: {
-        tags: params.tags,
-      },
+      data: Array.from(params.tags),
     });
     if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
     return response;

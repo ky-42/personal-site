@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { ContentOperations, DevblogOperations, TagOperations } from '../adapters/content';
-import { ContentType, FullContent, Tag } from '../types/Content';
+import { ContentType, FullContent } from '../types/Content';
 import { RequestState, RequestStatus, SurroundingBlogs } from '../types/RequestContent';
 import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
 import MetaData from '../components/Shared/MetaData';
@@ -147,7 +147,7 @@ const ContentView = () => {
     requestStatus: RequestStatus.Loading,
   });
 
-  const [blogTags, setBlogTags] = useState<RequestState<Set<Tag>>>({
+  const [blogTags, setBlogTags] = useState<RequestState<Set<string>>>({
     requestStatus: RequestStatus.Loading,
   });
   const [devblog, setDevblog] = useState<RequestState<Devblog>>({
@@ -180,7 +180,7 @@ const ContentView = () => {
     if (data.base_content.content_type === 'blog' && 'blog' in data.extra_content) {
       // Gets tags for blog
       TagOperations.get_blog_tags({ blog_slug: data.base_content.slug }).then(
-        (value: RequestState<Set<Tag>>) => {
+        (value: RequestState<Set<string>>) => {
           setBlogTags(value);
         },
       );
@@ -232,7 +232,7 @@ const ContentView = () => {
 
   /* ------ Render components for extra data associated with the content ------ */
 
-  const RenderBlogTags = ({ data }: { data: Set<Tag> }) => {
+  const RenderBlogTags = ({ data }: { data: Set<string> }) => {
     return (
       <TagDiv>
         {/*
@@ -242,9 +242,9 @@ const ContentView = () => {
         {Array.from(data).map((tag) => {
           return (
             <ShowTag
-              tagString={tag.title}
-              url={`/blogs?${new URLSearchParams({ blog_tag: tag.title }).toString()}`}
-              key={tag.id}
+              tagString={tag}
+              url={`/blogs?${new URLSearchParams({ blog_tag: tag }).toString()}`}
+              key={tag}
             />
           );
         })}

@@ -70,12 +70,6 @@ export interface NewFullContent {
 
 /* --------------------------- Content extensions -------------------------- */
 
-export interface Tag {
-  id: number;
-  blog_id: number;
-  title: string;
-}
-
 export interface NewDevblog {
   title: string;
 }

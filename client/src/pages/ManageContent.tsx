@@ -292,10 +292,10 @@ const ManageContent = () => {
         }).then((base_content_request) => {
           switch (base_content_request.requestStatus) {
             case RequestStatus.Success:
-              if (extraContentType === ContentType.Blog) {
+              if (extraContentType === ContentType.Blog && tags.size > 0) {
                 TagOperations.add_tags({
                   blog_slug: baseNewData.slug,
-                  tags: Array.from(tags),
+                  tags: tags,
                   password: serverPassword,
                 }).then((tag_request) => {
                   switch (tag_request.requestStatus) {
@@ -358,7 +358,7 @@ const ManageContent = () => {
                     case RequestStatus.Success:
                       TagOperations.add_tags({
                         blog_slug: baseNewData.slug,
-                        tags: Array.from(tags),
+                        tags: tags,
                         password: serverPassword,
                       }).then((tag_add_request) => {
                         switch (tag_add_request.requestStatus) {
@@ -386,7 +386,8 @@ const ManageContent = () => {
                     case RequestStatus.Error:
                     case RequestStatus.Loading:
                       notifications.addNotification({
-                        message: 'Error updating tags. Old tags still exist try re-updating content',
+                        message:
+                          'Error updating tags. Old tags still exist try re-updating content',
                         type: NotificationType.Error,
                       });
 
@@ -567,9 +568,7 @@ const ManageContent = () => {
                   switch (tag_request.requestStatus) {
                     case RequestStatus.Success:
                       if (tag_request.requestStatus === RequestStatus.Success) {
-                        setTags(
-                          new Set(Array.from(tag_request.requestedData).map((tag) => tag.title)),
-                        );
+                        setTags(tag_request.requestedData);
                       }
 
                       notifications.addNotification({
