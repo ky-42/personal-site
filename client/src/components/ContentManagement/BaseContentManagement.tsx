@@ -75,15 +75,15 @@ const BaseContentManagement = ({
 
         <InputArea
           labelText={'Description'}
-          error={validationErrors['content_desc']}
+          error={validationErrors['description']}
           InputElement={
             <ShortTextInput
               type='text'
-              value={baseContentData.content_desc || ''}
+              value={baseContentData.description || ''}
               onChange={(e) =>
                 setBaseContentData({
                   action: ReducerAction.Update,
-                  field: 'content_desc',
+                  field: 'description',
                   value: e.target.value,
                 })
               }

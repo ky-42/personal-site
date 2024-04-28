@@ -18,7 +18,7 @@ pub enum ShowOrder {
 pub struct PageInfo {
     pub content_per_page: i64,
     pub page: i64,
-    pub show_order: ShowOrder,
+    pub ordering: ShowOrder,
 }
 
 impl Default for PageInfo {
@@ -26,7 +26,7 @@ impl Default for PageInfo {
         PageInfo {
             content_per_page: 4,
             page: 1,
-            show_order: ShowOrder::Newest,
+            ordering: ShowOrder::Newest,
         }
     }
 }

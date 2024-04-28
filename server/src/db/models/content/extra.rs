@@ -76,9 +76,9 @@ pub struct Blog {
 pub struct NewProject {
     current_status: CurrentStatus,
     #[serde(default, deserialize_with = "empty_string_as_none")]
-    github_link: Option<String>,
+    repository_url: Option<String>,
     #[serde(default, deserialize_with = "empty_string_as_none")]
-    url: Option<String>,
+    website_url: Option<String>,
     start_date: Option<DateTime<Utc>>,
 }
 
@@ -91,9 +91,9 @@ pub struct Project {
     current_status: CurrentStatus,
     content_type: ContentType,
     #[serde(default, deserialize_with = "empty_string_as_none")]
-    github_link: Option<String>,
+    repository_url: Option<String>,
     #[serde(default, deserialize_with = "empty_string_as_none")]
-    url: Option<String>,
+    website_url: Option<String>,
     start_date: Option<DateTime<Utc>>,
 }
 
@@ -249,8 +249,8 @@ pub mod tests {
 
             NewProject {
                 current_status,
-                github_link,
-                url,
+                repository_url: github_link,
+                website_url: url,
                 start_date,
             }
         }

@@ -174,16 +174,16 @@ mod tests {
 
         // Request for the content that was just added
         let list_request_project = test::TestRequest::get()
-            .uri("/content/list?content_per_page=6&page=0&show_order=newest&content_type=project")
+            .uri("/content/list?content_per_page=6&page=0&ordering=newest&content_type=project")
             .to_request();
         let list_request_project_two = test::TestRequest::get()
-            .uri("/content/list?content_per_page=6&page=1&show_order=newest&content_type=project")
+            .uri("/content/list?content_per_page=6&page=1&ordering=newest&content_type=project")
             .to_request();
         let list_request_blog = test::TestRequest::get()
-            .uri("/content/list?content_per_page=6&page=0&show_order=newest&content_type=blog")
+            .uri("/content/list?content_per_page=6&page=0&ordering=newest&content_type=blog")
             .to_request();
         let list_request_blog_two = test::TestRequest::get()
-            .uri("/content/list?content_per_page=6&page=1&show_order=newest&content_type=blog")
+            .uri("/content/list?content_per_page=6&page=1&ordering=newest&content_type=blog")
             .to_request();
         let projects_returned: FullContentList =
             test::call_and_read_body_json(&app, list_request_project).await;

@@ -47,17 +47,17 @@ const ProjectManagement = ({
 
       <InputGroup>
         <InputArea
-          labelText={'Github Link'}
-          error={validationErrors['github_link']}
+          labelText={'Repository URL'}
+          error={validationErrors['repository_url']}
           InputElement={
             <ShortTextInput
               type='text'
               placeholder='https://github.com/ky-42/personal-site'
-              value={projectData.github_link ? projectData.github_link : ''}
+              value={projectData.repository_url ? projectData.repository_url : ''}
               onChange={(e) =>
                 setProjectData({
                   action: ReducerAction.Update,
-                  field: 'github_link',
+                  field: 'repository_url',
                   value: e.target.value,
                 })
               }
@@ -66,17 +66,17 @@ const ProjectManagement = ({
         />
 
         <InputArea
-          labelText={'Website Link'}
-          error={validationErrors['url']}
+          labelText={'Website URL'}
+          error={validationErrors['website_url']}
           InputElement={
             <ShortTextInput
               type='text'
               placeholder='https://kyledenief.me/'
-              value={projectData.url ? projectData.url : ''}
+              value={projectData.website_url ? projectData.website_url : ''}
               onChange={(e) =>
                 setProjectData({
                   action: ReducerAction.Update,
-                  field: 'url',
+                  field: 'website_url',
                   value: e.target.value,
                 })
               }

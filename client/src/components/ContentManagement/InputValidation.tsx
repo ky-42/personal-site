@@ -5,7 +5,7 @@ export const validateContent = (data: NewContent, validationErrors: Record<strin
   let key: keyof NewContent;
   for (key in data) {
     if (!emptyToUndefined(data[key])) {
-      if (key !== 'content_desc') {
+      if (key !== 'description') {
         validationErrors[key] = 'Value needed';
       }
     }
@@ -27,7 +27,7 @@ export const validateProject = (data: NewProject, validationErrors: Record<strin
   let key: keyof NewProject;
   for (key in data) {
     if (!emptyToUndefined(data[key])) {
-      if (key === 'url' || key === 'github_link' || key === 'start_date') {
+      if (key === 'website_url' || key === 'repository_url' || key === 'start_date') {
         data[key] = undefined;
       } else {
         validationErrors[key] = 'Value needed';

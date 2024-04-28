@@ -254,14 +254,14 @@ impl super::FullContentList {
                     .into_boxed();
 
                 // Changes order of blogs returned
-                blog_list = match page_info.show_order {
+                blog_list = match page_info.ordering {
                     ShowOrder::Newest => blog_list.order_by(content::created_at.desc()),
                     ShowOrder::Oldest => blog_list.order_by(content::created_at.asc()),
                     _ => blog_list.order_by(content::created_at.desc()),
                 };
 
                 // Get blogs only related to a certain project
-                if let Some(project_id) = &filters.project_blogs {
+                if let Some(project_id) = &filters.project_id {
                     blog_list = blog_list.filter(blog::related_project_id.eq(project_id));
                 }
 
@@ -314,7 +314,7 @@ impl super::FullContentList {
                                 .field(content::title)
                                 .ilike(format!("{}{}{}", "%", search_term, "%"))
                                 .or(content_alias
-                                    .field(content::content_desc)
+                                    .field(content::description)
                                     .ilike(format!("{}{}{}", "%", search_term, "%"))),
                         );
 
@@ -324,7 +324,7 @@ impl super::FullContentList {
                             .or(diesel::dsl::exists(tag_sub_query))
                             .or(diesel::dsl::exists(project_sub_query))
                             .or(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
-                            .or(content::content_desc
+                            .or(content::description
                                 .ilike(format!("{}{}{}", "%", search_term, "%"))),
                     );
                 };
@@ -362,7 +362,7 @@ impl super::FullContentList {
                     .into_boxed();
 
                 // Changes order of project returned
-                project_list = match page_info.show_order {
+                project_list = match page_info.ordering {
                     ShowOrder::Newest => project_list.order_by(content::created_at.desc()),
                     ShowOrder::Oldest => project_list.order_by(content::created_at.asc()),
                     // Will sort by start date then by created at
@@ -392,7 +392,7 @@ impl super::FullContentList {
                     project_list = project_list
                         .filter(content::title.ilike(format!("{}{}{}", "%", search_term, "%")))
                         .or_filter(
-                            content::content_desc.ilike(format!("{}{}{}", "%", search_term, "%")),
+                            content::description.ilike(format!("{}{}{}", "%", search_term, "%")),
                         );
                 };
 

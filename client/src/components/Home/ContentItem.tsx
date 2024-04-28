@@ -63,7 +63,7 @@ const ContentItem = ({ content }: ContentItemProps) => {
     <ContentLink to={`/${content.base_content.content_type}s/${content.base_content.slug}`}>
       <ContentTitle>{content.base_content.title}</ContentTitle>
       <ContentCreateDate>{ContentDate}</ContentCreateDate>
-      <ContentDesc>{content.base_content.content_desc}</ContentDesc>
+      <ContentDesc>{content.base_content.description}</ContentDesc>
     </ContentLink>
   );
 };

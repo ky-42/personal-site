@@ -260,8 +260,8 @@ const BlogList = () => {
     const pageInfo: PageInfo = {
       content_per_page: contentPerPage,
       page,
-      show_order: (searchParams.get('show_order') as showOrder)
-        ? (searchParams.get('show_order') as showOrder)
+      ordering: (searchParams.get('ordering') as showOrder)
+        ? (searchParams.get('ordering') as showOrder)
         : showOrder.Newest,
     };
 
@@ -358,7 +358,7 @@ const BlogList = () => {
 
   // What happens when the show order of blogs changes
   const orderChange = (direction: showOrder) => {
-    searchParams.set('show_order', direction);
+    searchParams.set('ordering', direction);
     setSearchParams(searchParams);
     clearPages();
   };
@@ -421,7 +421,7 @@ const BlogList = () => {
           />
         </SearchBarWrapper>
         <DropDown
-          value={getSearchParam('show_order') ? getSearchParam('show_order') : showOrder.Newest}
+          value={getSearchParam('ordering') ? getSearchParam('ordering') : showOrder.Newest}
           onChange={(e) => orderChange(e.target.value as showOrder)}
         >
           <option value={showOrder.Newest}>Newest</option>

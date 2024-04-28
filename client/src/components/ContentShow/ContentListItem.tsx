@@ -139,7 +139,7 @@ const ContentListItem = ({ content, startColumnTwo, startColumnThree }: ContentI
     >
       <ItemTitle>{content.base_content.title}</ItemTitle>
       <ItemDate>{ContentDate}</ItemDate>
-      <ItemDesc>{content.base_content.content_desc}</ItemDesc>
+      <ItemDesc>{content.base_content.description}</ItemDesc>
     </ContentItemDiv>
   );
 };

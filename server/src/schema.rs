@@ -31,7 +31,7 @@ diesel::table! {
         content_type -> Contenttype,
         slug -> Text,
         title -> Text,
-        content_desc -> Nullable<Text>,
+        description -> Nullable<Text>,
         body -> Text,
         created_at -> Timestamptz,
         updated_at -> Timestamptz,
@@ -54,8 +54,8 @@ diesel::table! {
         id -> Int4,
         current_status -> Projectstatus,
         content_type -> Contenttype,
-        github_link -> Nullable<Text>,
-        url -> Nullable<Text>,
+        repository_url -> Nullable<Text>,
+        website_url -> Nullable<Text>,
         start_date -> Nullable<Timestamptz>,
     }
 }

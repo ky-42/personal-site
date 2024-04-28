@@ -70,8 +70,8 @@ export const searchParamsToContentFilter = (
       'project_status',
     ) as ContentFilter['project_status'];
   }
-  if (searchParams.has('project_blogs')) {
-    contentFilter.project_blogs = parseInt(searchParams.get('project_blogs') as string);
+  if (searchParams.has('project_id')) {
+    contentFilter.project_id = parseInt(searchParams.get('project_id') as string);
   }
   if (searchParams.has('blog_tag')) {
     contentFilter.blog_tag = searchParams.get('blog_tag') as ContentFilter['blog_tag'];

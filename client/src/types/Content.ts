@@ -47,7 +47,7 @@ export interface NewContent {
   content_type: ContentType;
   slug: string;
   title: string;
-  content_desc?: string;
+  description?: string;
   body: string;
 }
 
@@ -58,8 +58,8 @@ export interface NewBlog {
 
 export interface NewProject {
   current_status: ProjectStatus;
-  github_link?: string;
-  url?: string;
+  repository_url?: string;
+  website_url?: string;
   start_date?: Date;
 }
 

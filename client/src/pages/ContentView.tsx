@@ -218,11 +218,11 @@ const ContentView = () => {
         page_info: {
           content_per_page: 1,
           page: 0,
-          show_order: listOrder.Newest,
+          ordering: listOrder.Newest,
         },
         content_filters: {
           content_type: ContentType.Blog,
-          project_blogs: data.base_content.id,
+          project_id: data.base_content.id,
         },
       }).then((value: RequestState<FullContentList>) => {
         setLinkedBlogs(value);
@@ -306,7 +306,7 @@ const ContentView = () => {
         <ShowLink
           button_text={'Related Blogs'}
           url={`/blogs?${new URLSearchParams({
-            project_blogs: `${link_id}`,
+            project_id: `${link_id}`,
           }).toString()}`}
         />
       );
@@ -348,11 +348,11 @@ const ContentView = () => {
 
       ExtraTopSection = (
         <TopLinks>
-          {data.extra_content.project.github_link !== undefined && (
-            <ShowLink button_text={'Github'} url={data.extra_content.project.github_link} />
+          {data.extra_content.project.repository_url !== undefined && (
+            <ShowLink button_text={'Repository'} url={data.extra_content.project.repository_url} />
           )}
-          {data.extra_content.project.url !== undefined && (
-            <ShowLink button_text={'Visit Site'} url={data.extra_content.project.url} />
+          {data.extra_content.project.website_url !== undefined && (
+            <ShowLink button_text={'Visit Website'} url={data.extra_content.project.website_url} />
           )}
           {
             // Only show button if there is a blogs linked to it and if there is
@@ -414,7 +414,7 @@ const ContentView = () => {
         */}
         <MetaData
           title={data.base_content.title}
-          description={data.base_content.content_desc ? data.base_content.content_desc : ''}
+          description={data.base_content.description ? data.base_content.description : ''}
           type='article'
         />
         <TopSection>
@@ -435,7 +435,7 @@ const ContentView = () => {
               }
             `}
           </ContentDate>
-          <ContentDesc>{data.base_content.content_desc}</ContentDesc>
+          <ContentDesc>{data.base_content.description}</ContentDesc>
           {ExtraTopSection}
         </TopSection>
         <LowerSection>

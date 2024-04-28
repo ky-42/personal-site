@@ -97,7 +97,7 @@ const HomeRight = styled.div`
 const latestContentPageInfo: PageInfo = {
   content_per_page: 1,
   page: 0,
-  show_order: listOrder.Newest,
+  ordering: listOrder.Newest,
 };
 
 const projectFilter: ContentFilter = {

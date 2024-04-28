@@ -172,7 +172,7 @@ const ProjectList = () => {
         page_info: {
           content_per_page: 12,
           page: 0,
-          show_order: listOrder.ProjectStartNewest,
+          ordering: listOrder.ProjectStartNewest,
         },
         content_filters: {
           content_type: ContentType.Project,
@@ -192,7 +192,7 @@ const ProjectList = () => {
         page_info: {
           content_per_page: contentPerPage,
           page,
-          show_order: listOrder.ProjectStartNewest,
+          ordering: listOrder.ProjectStartNewest,
         },
         content_filters: {
           content_type: ContentType.Project,

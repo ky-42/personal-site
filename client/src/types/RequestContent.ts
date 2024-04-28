@@ -52,7 +52,7 @@ export enum listOrder {
 export interface PageInfo {
   content_per_page: number;
   page: number;
-  show_order: listOrder;
+  ordering: listOrder;
 }
 
 export interface FullContentList {
@@ -65,7 +65,7 @@ export interface ContentFilter {
   content_type: ContentType;
   project_status?: ProjectStatus;
   // Id for project to get blogs for
-  project_blogs?: number;
+  project_id?: number;
   blog_tag?: string;
   devblog_id?: number;
   search?: string;

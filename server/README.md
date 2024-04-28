@@ -126,17 +126,17 @@ GET /content/list
 |------------------|----------------------------------------------------------------------------------------|------------
 | content_per_page | Integer                                                                                | Max page length. Will also be the length of the array of content returned. Must be 1 or greater.
 | page             | Integer                                                                                | Page number to be returned. Starts at 0.
-| show_order       | String Literal ("newest", "oldest", "project_start_newest", or "project_start_oldest") | Method to order the content. Newest and oldest order by [Contents](#content) created_at field. Project_start_x goes by [Projects](#project) start_date field and if used on blogs it will behave like regular newest and oldest. 
+| ordering         | String Literal ("newest", "oldest", "project_start_newest", or "project_start_oldest") | Method to order the content. Newest and oldest order by [Contents](#content) created_at field. Project_start_x goes by [Projects](#project) start_date field and if used on blogs it will behave like regular newest and oldest. 
 | content_type     | String Literal ("project" or "blog")                                                   | Filter to include only content with this content type.
 | project_status   | Optional, String Literal ("under_development" or "finished")                           | Filter to include only content with this project status (if content_type filter is "blog" will do nothing).
-| project_blogs    | Optional, Integer                                                                      | Id of a [Project](#project) used as a filter to include only content linked to the project with this specific id (if content_type filter is "project" will do nothing).
+| project_id       | Optional, Integer                                                                      | Id of a [Project](#project) used as a filter to include only content linked to the project with this specific id (if content_type filter is "project" will do nothing).
 | blog_tag         | Optional, String                                                                       | Filter to include only content with this tag (if content_type filter is "project" will do nothing).
 | devblog_id       | Optional, Integer                                                                      | Id of a [Devblog](#devblog) used as a filter to include only content linked to the devblog with this specific id (if content_type filter is "project" will do nothing).
 | search           | Optional, String                                                                       | Filter to include only content that contains this specific substring within its title, description, tags, and/or linked devblog or project titles.
 
 Example:
 ```
-/content/list?content_per_page=4&page=1&show_order=newest&content_type=blog&search=help
+/content/list?content_per_page=4&page=1&ordering=newest&content_type=blog&search=help
 ```
 
 **Response**
@@ -391,7 +391,7 @@ Contains the basic information needed to add any type of content to the server.
 | content_type | String Literal ("blog" or "project") | Type of content.
 | slug         | String                               | Unique identifier for the content, used in URLs. Meant as a more user friendly identifier then a number. Must have a length of at least 1 character.
 | title        | String                               | Title of the content. Must have a length of at least 1 character.
-| content_desc | Optional, String                     | Short description of the content.
+| description  | Optional, String                     | Short description of the content.
 | body         | String                               | The actual content in markdown format. Must have a length of at least 1 character.
 
 
@@ -401,7 +401,7 @@ Example new content:
   "content_type": "blog",
   "slug": "making-friends",
   "title": "How To Make Friends",
-  "content_desc": "It can be tough but theres a simple solution",
+  "description": "It can be tough but theres a simple solution",
   "body": "# Its simple\n\nTalk to people"
 }
 ```
@@ -415,7 +415,7 @@ Contains the basic information for any type of content already stored by the ser
 | content_type | String Literal ("blog" or "project") | Type of content.
 | slug         | String                               | Unique identifier for the content used in URLs. Meant as a more user friendly identifier then a number. Will have a length of at least 1 character.
 | title        | String                               | Title of the content. Will have a length of at least 1 character.
-| content_desc | Optional, String                     | Short description of the content.
+| description  | Optional, String                     | Short description of the content.
 | body         | String                               | The actual content in markdown format. Will have a length of at least 1 character.
 | created_at   | DateTime                             | Date content was created on server. In ISO 8601 combined date and time with time zone format.
 | updated_at   | DateTime                             | Date content was last updated/modified. When unmodified this will be the same created_at. In ISO 8601 combined date and time with time zone format.
@@ -427,7 +427,7 @@ Example content:
   "content_type": "project",
   "slug": "meaning-of-life",
   "title": "What is the meaning of life?",
-  "content_desc": "Does it matter?",
+  "description": "Does it matter?",
   "body": "# How to find the meaning of life?\n\nI really don't know  ...",
   "created_at": "2024-04-21 23:12:56.918889+00",
   "updated_at": "2024-04-21 23:12:56.918889+00"
@@ -474,16 +474,16 @@ Contains information about the project specific parts of content needed to add a
 
 | Field          | Type                                               | Description
 |----------------|----------------------------------------------------|------------
-| current_status | String Literal ("under_development" or "finished") | Current state of the project.
-| github_link    | Optional, String                                   | URL of the projects git repo.
-| url            | Optional, String                                   | URL of the projects website.
+| current_status | String Literal ("under_development" or "finished") | Current status of the project.
+| repository_url | Optional, String                                   | URL of the projects git repo.
+| website_url    | Optional, String                                   | URL of the projects website.
 | start_date     | Optional, DateTime                                 | Date the project was started. In ISO 8601 combined date and time with time zone format.
 
 Example new project:
 ```json
 {
   "current_status": "under_development",
-  "github_link": "https://github.com/ky-42/personal-site",
+  "repository_url": "https://github.com/ky-42/personal-site",
   "start_date": "2024-04-19 15:34:57.767+00"
 }
 ```
@@ -494,20 +494,20 @@ Contains information about the project specific parts of content already stored 
 | Field          | Type                                               | Description
 |----------------|----------------------------------------------------|------------
 | id             | Integer                                            | Unique identifier used by the server. Will be the same as the id of the [Content](#content) this object is related to.
-| current_status | String Literal ("under_development" or "finished") | Current state of the project.
+| current_status | String Literal ("under_development" or "finished") | Current status of the project.
 | content_type   | String Literal ("project")                         | Type of content. 
-| github_link    | Optional, String                                   | URL of the projects git repo.
-| url            | Optional, String                                   | URL of the projects website.
+| repository_url | Optional, String                                   | URL of the projects git repo.
+| website_url    | Optional, String                                   | URL of the projects website.
 | start_date     | Optional, DateTime                                 | Date the project was started. In ISO 8601 combined date and time with time zone format.
 
 Example new project:
 ```json
 {
   "id": 31,
-  "content_type": "project",
   "current_status": "under_development",
-  "github_link": "https://github.com/ky-42/personal-site",
-  "url": "https://kyledenief.me"
+  "content_type": "project",
+  "repository_url": "https://github.com/ky-42/personal-site",
+  "website_url": "https://kyledenief.me"
 }
 ```
 
