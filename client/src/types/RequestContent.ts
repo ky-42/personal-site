@@ -110,8 +110,8 @@ export interface DevblogUpdateInfo extends DevblogPassword {
 
 export interface SurroundingData {
   devblog_id: number;
-  blog_slug: string;
-  direction_count: number;
+  pivot_blog_slug: string;
+  neighbor_blog_count: number;
 }
 
 export interface SurroundingBlogs {

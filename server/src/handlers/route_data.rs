@@ -59,8 +59,8 @@ pub struct DevblogTitle {
 #[derive(Deserialize, Debug)]
 pub struct GetSurroundingData {
     pub devblog_id: i32,
-    pub blog_slug: String,
-    pub direction_count: i64,
+    pub pivot_blog_slug: String,
+    pub neighbor_blog_count: i64,
 }
 
 #[derive(Serialize, Debug)]

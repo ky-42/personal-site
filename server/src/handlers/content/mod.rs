@@ -231,8 +231,8 @@ pub async fn get_surrounding_blogs(
             let mut db_conn = db_pool.get()?;
             Devblog::get_surrounding_blogs(
                 request_data.devblog_id,
-                request_data.blog_slug,
-                request_data.direction_count,
+                request_data.pivot_blog_slug,
+                request_data.neighbor_blog_count,
                 &mut db_conn,
             )
         })

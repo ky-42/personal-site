@@ -195,8 +195,8 @@ const ContentView = () => {
 
         DevblogOperations.get_surrounding_blogs({
           devblog_id: data.extra_content.blog.devblog_id,
-          blog_slug: data.base_content.slug,
-          direction_count: 1,
+          pivot_blog_slug: data.base_content.slug,
+          neighbor_blog_count: 1,
         }).then((value: RequestState<SurroundingBlogs>) => {
           setSurroundingBlogs(value);
         });

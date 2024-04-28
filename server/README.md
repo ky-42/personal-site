@@ -313,11 +313,11 @@ GET /devblog/get-next-prev-blog
 
 **Query Parameters**
 
-| Field           | Type    | Description
-|-----------------|---------|------------
-| devblog_id      | Integer | Id of the devblog to get the blogs in.
-| blog_slug       | String  | Blog to get the surrounding blogs for (the pivot). Must be part of the provided devblog.
-| direction_count | Integer | Number of content to get in each direction. Will be length of the two arrays in response.
+| Field               | Type    | Description
+|---------------------|---------|------------
+| devblog_id          | Integer | Id of the devblog to get the blogs in.
+| pivot_blog_slug     | String  | Slug of blog to get the surrounding blogs for (the pivot). Must be part of the provided devblog.
+| neighbor_blog_count | Integer | Number of content to get in each direction. Will be length of the two arrays in response.
 
 Example:
 ```
