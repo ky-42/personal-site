@@ -352,7 +352,7 @@ const ContentView = () => {
             <ShowLink button_text={'Repository'} url={data.extra_content.project.repository_url} />
           )}
           {data.extra_content.project.website_url !== undefined && (
-            <ShowLink button_text={'Visit Website'} url={data.extra_content.project.website_url} />
+            <ShowLink button_text={'Website'} url={data.extra_content.project.website_url} />
           )}
           {
             // Only show button if there is a blogs linked to it and if there is
