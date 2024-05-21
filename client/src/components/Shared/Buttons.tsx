@@ -120,7 +120,7 @@ const DevblogLinkHolder = styled(ButtonHolder)`
 const DevblogLinkText = styled.p`
   font-size: 1.4rem;
   padding: 0;
-  margin: 0;
+  margin: 0.75rem 0;
   max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -136,7 +136,6 @@ export const DevblogLink = ({ button_text, url, isPrevious }: DevblogLinkProps) 
     <ButtonLink to={url}>
       <DevblogLinkHolder>
         <TagText>{isPrevious ? 'Previous Blog:' : 'Next Blog:'}</TagText>
-        <br />
         <DevblogLinkText>{button_text}</DevblogLinkText>
       </DevblogLinkHolder>
     </ButtonLink>

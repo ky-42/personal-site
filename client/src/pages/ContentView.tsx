@@ -88,6 +88,7 @@ const TagDiv = styled.div`
 const NextDevblogSection = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   row-gap: 2rem;
   column-gap: 2rem;
   margin-top: 2rem;
@@ -104,7 +105,6 @@ const DevblogTitleArea = styled(Link)`
   justify-content: center;
   font-size: 2.4rem;
   color: ${(props) => props.theme.textColour};
-  text-decoration: underline;
   text-align: center;
   width: 25rem;
 
@@ -115,7 +115,7 @@ const DevblogTitleArea = styled(Link)`
 `;
 
 const DevblogTitleText = styled.p`
-  font-size: 1rem;
+  font-size: 1.25rem;
   margin: 0;
 `;
 
@@ -123,9 +123,7 @@ const DevblogTitle = styled.p`
   font-size: 1.75rem;
   margin: 0;
   margin-top: 0.5rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  text-decoration: underline;
 `;
 
 /* -------------------------------------------------------------------------- */
