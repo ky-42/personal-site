@@ -47,7 +47,7 @@ const About = () => {
     return v.name + ', ' + v.author;
   });
 
-  const ToRead = jsonConfig.pages.about.toRead.map((v) => {
+  const ToRead = jsonConfig.pages.about.futureReads.map((v) => {
     return v.name + ', ' + v.author;
   });
 
@@ -68,8 +68,8 @@ const About = () => {
         <ReadingTitle>What I&apos;m Reading</ReadingTitle>
         <CurrentlyReading />
         <BookListDiv>
-          <ReadingList ReadingTitle='Finished' BookList={FinishedReading} />
-          <ReadingList ReadingTitle='To Read' BookList={ToRead} />
+          <ReadingList ReadingTitle='Finished Books (Favorites)' BookList={FinishedReading} />
+          <ReadingList ReadingTitle="Future Reads" BookList={ToRead} />
         </BookListDiv>
       </ReadingSection>
     </AboutBody>
