@@ -5,8 +5,8 @@
   "metaData": {
     "description": "My little corner of the internet",
     "analytics": {
-      "dataDomain": "kyledenief.me",
-      "analyticsSrc": "https://plausible.kyledenief.me/js/plausible.js"
+      "websiteId": "19bee73f-477c-4539-9e69-e88e4b1ce01e",
+      "analyticsSrc": "umami.kyledenief.me/script.js"
     }
   },
   "colours": {

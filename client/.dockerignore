@@ -1,0 +1,13 @@
+node_modules
+dist
+build
+*.log
+.env
+.vscode
+.git
+.gitignore
+tsconfig.json
+.eslintrc.json
+.prettierrc
+.eslintignore
+.prettierignore
