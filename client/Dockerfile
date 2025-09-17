@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS builder
+FROM node:alpine AS builder
 
 WORKDIR /app
 RUN mkdir -p /app/config
@@ -19,7 +19,7 @@ RUN yarn install --immutable
 
 RUN yarn build
 
-FROM nginx:lts-alpine
+FROM nginx:alpine
 
 COPY --from=builder /app/client/build /usr/share/nginx/html
 COPY --from=builder /app/config/nginx.conf /etc/nginx/conf.d/default.conf
