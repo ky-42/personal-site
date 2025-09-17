@@ -18,8 +18,8 @@ export default defineConfig({
           'name': jsonConfig.name,
           'themeColour': jsonConfig.colours.backgroundColour,
           'description': jsonConfig.metaData.description,
-          'dataDomain': jsonConfig.metaData.analytics.dataDomain,
-          'analyticsSrc': jsonConfig.metaData.analytics.analyticsSrc
+          'analyticsSrc': jsonConfig.metaData.analytics.analyticsSrc,
+          'websiteId': jsonConfig.metaData.analytics.websiteId
         }
       }
     })
