@@ -6,7 +6,7 @@
     "description": "My little corner of the internet",
     "analytics": {
       "websiteId": "19bee73f-477c-4539-9e69-e88e4b1ce01e",
-      "analyticsSrc": "umami.kyledenief.me/script.js"
+      "analyticsSrc": "https://umami.kyledenief.me/script.js"
     }
   },
   "colours": {
