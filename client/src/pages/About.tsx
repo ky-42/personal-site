@@ -69,7 +69,7 @@ const About = () => {
         <CurrentlyReading />
         <BookListDiv>
           <ReadingList ReadingTitle='Finished Books (Favorites)' BookList={FinishedReading} />
-          <ReadingList ReadingTitle="Future Reads" BookList={ToRead} />
+          <ReadingList ReadingTitle='Future Reads' BookList={ToRead} />
         </BookListDiv>
       </ReadingSection>
     </AboutBody>

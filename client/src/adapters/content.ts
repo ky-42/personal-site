@@ -1,5 +1,4 @@
-import axios from 'axios';
-import backend_axios from '.';
+import backendFetch from '.';
 import { Devblog, FullContent } from '../types/Content';
 import {
   ContentAddParams,
@@ -37,17 +36,15 @@ const GeneralOperation = async <FetchType>(
   params: OperationOptions,
 ): Promise<RequestState<FetchType>> => {
   try {
-    const response = await backend_axios.request<FetchType>({
-      url: params.url,
+    const response = await backendFetch<FetchType>(params.url, params.params, {
       method: params.method,
-      data: params.data,
+      body: params.data ? JSON.stringify(params.data) : undefined,
       headers: params.headers,
-      params: params.params,
     });
 
-    return { requestStatus: RequestStatus.Success, requestedData: response.data };
+    return { requestStatus: RequestStatus.Success, requestedData: response };
   } catch (err) {
-    return HandleAxiosError(err);
+    return HandleError(err);
   }
 };
 
@@ -239,19 +236,16 @@ export const DevblogOperations = {
 
 /* -------------------------------------------------------------------------- */
 
-const HandleAxiosError = (err: any): RequestState<any> => {
-  if (axios.isAxiosError(err)) {
-    if (err.response?.status && err.response?.statusText) {
-      return {
-        requestStatus: RequestStatus.Error,
-        requestError: `${err.response?.status}: ${err.response?.statusText}`,
-      };
-    } else {
-      return {
-        requestStatus: RequestStatus.Error,
-        requestError: 'It worked on my machine... mostly',
-      };
-    }
+const HandleError = (err: any): RequestState<any> => {
+  if (err.response?.status && err.response?.statusText) {
+    return {
+      requestStatus: RequestStatus.Error,
+      requestError: `${err.response?.status}: ${err.response?.statusText}`,
+    };
+  } else {
+    return {
+      requestStatus: RequestStatus.Error,
+      requestError: 'It worked on my machine... mostly',
+    };
   }
-  return { requestStatus: RequestStatus.Error, requestError: 'It worked on my machine...' };
 };

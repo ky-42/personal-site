@@ -12,7 +12,6 @@
     "@types/react-dom": "^18.0.0",
     "@types/styled-components": "^5.1.25",
     "@vitejs/plugin-react": "^3.1.0",
-    "axios": "^0.27.2",
     "date-fns": "^2.29.3",
     "react": "^18.2.0",
     "react-device-detect": "^2.2.2",
@@ -62,5 +61,5 @@
     "prettier": "2.8.7",
     "vite-plugin-html": "^3.2.0"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "pnpm@11.5.0"
 }
