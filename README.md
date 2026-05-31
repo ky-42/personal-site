@@ -49,14 +49,14 @@ The manage page can be found at /manage on the client. For more information chec
 - Rust
 - libpq-dev/postgresql-libs
 - Diesel CLI
-- Yarn (can use npm as well)
+- pnpm
 - A PostgreSQL server
 
 ### Running Client
 
 1. Navigate to the `client` directory.
-2. Install dependencies using `yarn install`.
-3. Start the client server using `yarn start`.
+2. Install dependencies using `pnpm install`.
+3. Start the client server using `pnpm start`.
 
 Note: If you change the client server port, make sure to update the URL in the `.env` file in the `server` directory.
 

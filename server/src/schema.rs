@@ -72,10 +72,4 @@ diesel::joinable!(blog -> devblog (devblog_id));
 diesel::joinable!(blog -> project (related_project_id));
 diesel::joinable!(tag -> blog (blog_id));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    blog,
-    content,
-    devblog,
-    project,
-    tag,
-);
+diesel::allow_tables_to_appear_in_same_query!(blog, content, devblog, project, tag,);

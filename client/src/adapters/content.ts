@@ -38,7 +38,9 @@ const GeneralOperation = async <FetchType>(
   try {
     const response = await backendFetch<FetchType>(params.url, params.params, {
       method: params.method,
-      body: params.data ? JSON.stringify(params.data) : undefined,
+      body: params.data
+        ? JSON.stringify(params.data, (_, v) => (v === undefined ? null : v))
+        : undefined,
       headers: params.headers,
     });
 
@@ -84,7 +86,7 @@ export const ContentOperations = {
         authorization: params.password,
         'Content-Type': 'application/json',
       },
-      data: JSON.stringify(params.addContent, (_, v) => (v === undefined ? null : v)),
+      data: params.addContent,
     });
     if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
     return response;
@@ -98,7 +100,7 @@ export const ContentOperations = {
         'Content-Type': 'application/json',
         authorization: params.password,
       },
-      data: JSON.stringify(params.updated_content, (_, v) => (v === undefined ? null : v)),
+      data: params.updated_content,
     });
     if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
     return response;

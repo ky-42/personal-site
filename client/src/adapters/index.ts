@@ -21,14 +21,24 @@ const backendFetch = async <FetchType>(
     headers,
   });
 
+  // Used text instead of json to handle cases where the response is empty,
+  // which would cause json parsing to fail
+  const text = await response.text();
+
   if (!response.ok) {
-    const errorData = await response.json();
+    let errorData;
+    try {
+      errorData = text ? JSON.parse(text) : {};
+    } catch {
+      errorData = {};
+    }
     throw new Error(errorData.message || 'An error occurred while fetching data.');
   }
 
-  const cleanedRespone: FetchType = handleDatesAndNull(await response.json());
-
-  return cleanedRespone;
+  if (!text) return {} as FetchType;
+  const cleanedResponse: FetchType = JSON.parse(text);
+  handleDatesAndNull(cleanedResponse);
+  return cleanedResponse;
 };
 
 export default backendFetch;
