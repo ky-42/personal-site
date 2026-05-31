@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { BrowserView } from 'react-device-detect';
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ContentContainer from '../components/Home/ContentSection';
 import { ContentOperations } from '../adapters/content';
@@ -17,6 +16,7 @@ import CurrentlyReading from '../components/ContentShow/CurrentlyReading';
 import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
 import MetaData from '../components/Shared/MetaData';
 import jsonConfig from '@config/config.json';
+import MobileContext from '../contexts/Mobile';
 
 /* -------------------------------------------------------------------------- */
 
@@ -54,17 +54,15 @@ const IntroText = styled.p`
   line-height: 1.5;
 `;
 
-// Wrapper for asteroid button (below)
-const BrowserOnly = styled(BrowserView)`
-  margin-left: 7.2rem;
-  @media (max-width: 1250px) {
-    margin-left: 0;
-    align-self: center;
-  }
+const CenterButton = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 // Currently does nothing cause game is not implemented
 const AsteroidsButton = styled.button`
+  max-width: 36rem;
+  margin-right: 4rem;
   background-color: ${(props) => props.theme.backgroundColour};
   font-size: 1.6rem;
   padding: 1.5rem 7.5rem;
@@ -119,6 +117,8 @@ const Home = () => {
     requestStatus: RequestStatus.Loading,
   });
 
+  const isMobile = useContext(MobileContext);
+
   useEffect(() => {
     // Gets latest project
     ContentOperations.get_content_list({
@@ -162,9 +162,11 @@ const Home = () => {
         <IntroText>{jsonConfig.pages.home.mainParagraph}</IntroText>
 
         {/* Button to start asteroids game (only works on desktop) */}
-        <BrowserOnly>
-          <AsteroidsButton>(Coming Soon)</AsteroidsButton>
-        </BrowserOnly>
+        {!isMobile && (
+          <CenterButton>
+            <AsteroidsButton>(Coming Soon)</AsteroidsButton>
+          </CenterButton>
+        )}
       </LeftPageColumn>
 
       <HomeRight>
