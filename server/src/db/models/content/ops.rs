@@ -174,7 +174,6 @@ impl super::FullContent {
     }
 
     pub fn delete(delete_slug: String, db_conn: &mut PgConnection) -> Result<usize, AppError> {
-
         // Extra content should cascade delete on deletion of base content
         // Returns number of rows effected
         Ok(
@@ -187,7 +186,6 @@ impl super::FullContent {
         view_slug: String,
         db_conn: &mut PgConnection,
     ) -> Result<super::FullContent, AppError> {
-
         // Runs query to get base content
         let base_content: base::Content = content::table
             .filter(content::slug.eq(view_slug))
@@ -438,12 +436,13 @@ mod tag_ops {
         ) -> Result<HashSet<String>, AppError> {
             Ok(
                 // Turns the tags into a HashSet of strings
-                HashSet::from_iter(tag::table
-                    .filter(tag::blog_id.eq(blog_id))
-                    .get_results::<Tag>(db_conn)?
-                    .into_iter()
-                    .map(|tag| tag.get_title())
-                )
+                HashSet::from_iter(
+                    tag::table
+                        .filter(tag::blog_id.eq(blog_id))
+                        .get_results::<Tag>(db_conn)?
+                        .into_iter()
+                        .map(|tag| tag.get_title()),
+                ),
             )
         }
 
@@ -487,7 +486,7 @@ pub mod devblog_ops {
 
     pub trait DevblogString {
         fn get_devblog(&self, db_conn: &mut PgConnection) -> Result<Devblog, AppError>;
-        fn search_devblogs(&self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError>;
+        fn _search_devblogs(&self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError>;
     }
 
     impl DevblogString for String {
@@ -499,7 +498,7 @@ pub mod devblog_ops {
         }
 
         // Looks and returns devblog objects based of string assumed to be title
-        fn search_devblogs(&self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError> {
+        fn _search_devblogs(&self, db_conn: &mut PgConnection) -> Result<Vec<Devblog>, AppError> {
             Ok(devblog::table
                 .filter(devblog::title.ilike(format!("{}{}{}", "%", self, "%")))
                 .get_results::<Devblog>(db_conn)?)
@@ -522,14 +521,17 @@ pub mod devblog_ops {
             Ok(diesel::delete(devblog::table.filter(devblog::title.eq(title))).execute(db_conn)?)
         }
 
-        pub fn update(&self, old_title: &String, db_conn: &mut PgConnection) -> Result<(), AppError> {
-
+        pub fn update(
+            &self,
+            old_title: &String,
+            db_conn: &mut PgConnection,
+        ) -> Result<(), AppError> {
             // Used to make sure id is not changed in update
             let old_devblog = devblog::table
                 .filter(devblog::title.eq(old_title))
                 .first::<Devblog>(db_conn)?;
 
-            if old_devblog.get_id() != self.get_id(){
+            if old_devblog.get_id() != self.get_id() {
                 return Err(AppError::ContentValidationError);
             }
 
