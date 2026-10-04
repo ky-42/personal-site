@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Link, useLocation } from 'react-router-dom';
+import styled from "styled-components";
+import { Link, useLocation } from "react-router-dom";
 
 interface LinkNavBarProps {
   className?: string;
@@ -21,7 +21,7 @@ const NavLink = styled(Link)<{ active: number }>`
   display: table-cell;
   vertical-align: middle;
   color: ${(props) => (props.active ? props.theme.highlight : props.theme.textColour)};
-  text-decoration: ${(props) => (props.active ? `underline ${props.theme.highlight}` : 'none')};
+  text-decoration: ${(props) => (props.active ? `underline ${props.theme.highlight}` : "none")};
   font-size: 2rem;
 `;
 

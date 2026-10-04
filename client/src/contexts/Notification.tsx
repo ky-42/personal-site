@@ -1,12 +1,12 @@
-import { ReactNode, createContext, useRef, useState } from 'react';
+import { ReactNode, createContext, useRef, useState } from "react";
 
 /* -------------------------------------------------------------------------- */
 
 export enum NotificationType {
-  Error = 'error',
-  Success = 'success',
-  Info = 'info',
-  Warning = 'warning',
+  Error = "error",
+  Success = "success",
+  Info = "info",
+  Warning = "warning",
 }
 
 export interface NotificationInfo {
@@ -33,8 +33,12 @@ export const NotificationContext = createContext({
 /* -------------------------------------------------------------------------- */
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
-  const [notifications, setNotifications] = useState<Record<number, NotificationInfo>>({});
-  const [notificationTimers, setNotificationTimers] = useState<Record<number, number>>({});
+  const [notifications, setNotifications] = useState<
+    Record<number, NotificationInfo>
+  >({});
+  const [notificationTimers, setNotificationTimers] = useState<
+    Record<number, number>
+  >({});
 
   // Used to create unique notification ids starts high and lowers as notifications
   // are iterated through so that the most recent notification is always highest
@@ -84,7 +88,13 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <NotificationContext.Provider
-      value={{ notifications, startTimer, stopTimer, deleteNotification, addNotification }}
+      value={{
+        notifications,
+        startTimer,
+        stopTimer,
+        deleteNotification,
+        addNotification,
+      }}
     >
       {children}
     </NotificationContext.Provider>

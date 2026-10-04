@@ -1,16 +1,29 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import { ContentOperations, DevblogOperations, TagOperations } from '../adapters/content';
-import { ContentType, FullContent } from '../types/Content';
-import { RequestState, RequestStatus, SurroundingBlogs } from '../types/RequestContent';
-import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
-import MetaData from '../components/Shared/MetaData';
-import ContentBody from '../components/Shared/ContentBody';
-import { Devblog } from '../types/Content';
-import { DevblogLink, EmptyDevblogLink, ShowLink, ShowTag } from '../components/Shared/Buttons';
-import { listOrder } from '../types/RequestContent';
-import { FullContentList } from '../types/RequestContent';
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import styled from "styled-components";
+import {
+  ContentOperations,
+  DevblogOperations,
+  TagOperations,
+} from "../adapters/content";
+import { ContentType, FullContent } from "../types/Content";
+import {
+  RequestState,
+  RequestStatus,
+  SurroundingBlogs,
+} from "../types/RequestContent";
+import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
+import MetaData from "../components/Shared/MetaData";
+import ContentBody from "../components/Shared/ContentBody";
+import { Devblog } from "../types/Content";
+import {
+  DevblogLink,
+  EmptyDevblogLink,
+  ShowLink,
+  ShowTag,
+} from "../components/Shared/Buttons";
+import { listOrder } from "../types/RequestContent";
+import { FullContentList } from "../types/RequestContent";
 
 /* -------------------------------------------------------------------------- */
 
@@ -139,11 +152,15 @@ const ContentView = () => {
   });
 
   // The slug of the project that the blog is linked to
-  const [linkedProjectSlug, setLinkedProjectSlug] = useState<string | undefined>(undefined);
+  const [linkedProjectSlug, setLinkedProjectSlug] = useState<
+    string | undefined
+  >(undefined);
   // The whether to show the linked blogs button depending on if blog there are linked blogs
-  const [linkedBlogs, setLinkedBlogs] = useState<RequestState<FullContentList>>({
-    requestStatus: RequestStatus.Loading,
-  });
+  const [linkedBlogs, setLinkedBlogs] = useState<RequestState<FullContentList>>(
+    {
+      requestStatus: RequestStatus.Loading,
+    },
+  );
 
   const [blogTags, setBlogTags] = useState<RequestState<Set<string>>>({
     requestStatus: RequestStatus.Loading,
@@ -151,7 +168,9 @@ const ContentView = () => {
   const [devblog, setDevblog] = useState<RequestState<Devblog>>({
     requestStatus: RequestStatus.Loading,
   });
-  const [surroundingBlogs, setSurroundingBlogs] = useState<RequestState<SurroundingBlogs>>({
+  const [surroundingBlogs, setSurroundingBlogs] = useState<
+    RequestState<SurroundingBlogs>
+  >({
     requestStatus: RequestStatus.Loading,
   });
 
@@ -175,7 +194,10 @@ const ContentView = () => {
   // If the content is successfully loaded then gets extra data
   // associated with the content
   const successEffect = ({ data }: { data: FullContent }) => {
-    if (data.base_content.content_type === 'blog' && 'blog' in data.extra_content) {
+    if (
+      data.base_content.content_type === "blog" &&
+      "blog" in data.extra_content
+    ) {
       // Gets tags for blog
       TagOperations.get_blog_tags({ blog_slug: data.base_content.slug }).then(
         (value: RequestState<Set<string>>) => {
@@ -210,7 +232,10 @@ const ContentView = () => {
           }
         });
       }
-    } else if (data.base_content.content_type === 'project' && 'project' in data.extra_content) {
+    } else if (
+      data.base_content.content_type === "project" &&
+      "project" in data.extra_content
+    ) {
       // Check if the project has any blogs
       ContentOperations.get_content_list({
         page_info: {
@@ -280,7 +305,11 @@ const ContentView = () => {
     }
 
     return (
-      <DevblogLink button_text={blogTitle} url={`/blogs/${blogSlug}`} isPrevious={isPrevious} />
+      <DevblogLink
+        button_text={blogTitle}
+        url={`/blogs/${blogSlug}`}
+        isPrevious={isPrevious}
+      />
     );
   };
 
@@ -298,11 +327,17 @@ const ContentView = () => {
   };
 
   // Renders button to linked blogs if there are any
-  const RenderLinkedBlogs = ({ data, link_id }: { data: FullContentList; link_id: number }) => {
+  const RenderLinkedBlogs = ({
+    data,
+    link_id,
+  }: {
+    data: FullContentList;
+    link_id: number;
+  }) => {
     if (data.page_count > 0) {
       return (
         <ShowLink
-          button_text={'Related Blogs'}
+          button_text={"Related Blogs"}
           url={`/blogs?${new URLSearchParams({
             project_id: `${link_id}`,
           }).toString()}`}
@@ -318,15 +353,15 @@ const ContentView = () => {
   // What is rendered when content is gotten successfully
   const RenderContent = ({ data }: { data: FullContent }) => {
     // Formatted dates for creation and editing
-    const createDateString = new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    const createDateString = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     }).format(data.base_content.created_at);
-    const editDateString = new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    const editDateString = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     }).format(data.base_content.updated_at);
     let projectStartString: undefined | string;
 
@@ -334,23 +369,32 @@ const ContentView = () => {
     let ExtraTopSection: JSX.Element = <></>;
     let ExtraBottomSection: JSX.Element = <></>;
 
-    if (data.base_content.content_type === 'project' && 'project' in data.extra_content) {
+    if (
+      data.base_content.content_type === "project" &&
+      "project" in data.extra_content
+    ) {
       // Formatted date for project start
       if (data.extra_content.project.start_date !== undefined) {
-        projectStartString = new Intl.DateTimeFormat('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
+        projectStartString = new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
         }).format(data.extra_content.project.start_date);
       }
 
       ExtraTopSection = (
         <TopLinks>
           {data.extra_content.project.repository_url !== undefined && (
-            <ShowLink button_text={'Repository'} url={data.extra_content.project.repository_url} />
+            <ShowLink
+              button_text={"Repository"}
+              url={data.extra_content.project.repository_url}
+            />
           )}
           {data.extra_content.project.website_url !== undefined && (
-            <ShowLink button_text={'Website'} url={data.extra_content.project.website_url} />
+            <ShowLink
+              button_text={"Website"}
+              url={data.extra_content.project.website_url}
+            />
           )}
           {
             // Only show button if there is a blogs linked to it and if there is
@@ -358,18 +402,29 @@ const ContentView = () => {
             <LoadErrorHandle
               requestInfo={linkedBlogs}
               successElement={(linkedData) => {
-                return RenderLinkedBlogs({ data: linkedData.data, link_id: data.base_content.id });
+                return RenderLinkedBlogs({
+                  data: linkedData.data,
+                  link_id: data.base_content.id,
+                });
               }}
-              errorElement={() => <TopLinkError>Error checking for related blogs</TopLinkError>}
+              errorElement={() => (
+                <TopLinkError>Error checking for related blogs</TopLinkError>
+              )}
             />
           }
         </TopLinks>
       );
-    } else if (data.base_content.content_type === 'blog' && 'blog' in data.extra_content) {
+    } else if (
+      data.base_content.content_type === "blog" &&
+      "blog" in data.extra_content
+    ) {
       ExtraTopSection = (
         <TopLinks>
           {linkedProjectSlug !== undefined && (
-            <ShowLink button_text={'Related Project'} url={`/projects/${linkedProjectSlug}`} />
+            <ShowLink
+              button_text={"Related Project"}
+              url={`/projects/${linkedProjectSlug}`}
+            />
           )}
         </TopLinks>
       );
@@ -377,7 +432,10 @@ const ContentView = () => {
       ExtraBottomSection = (
         <BlogBottomData>
           {/* Renders tags */}
-          <LoadErrorHandle requestInfo={blogTags} successElement={RenderBlogTags} />
+          <LoadErrorHandle
+            requestInfo={blogTags}
+            successElement={RenderBlogTags}
+          />
           {data.extra_content.blog.devblog_id !== undefined && (
             <>
               <Separator />
@@ -386,16 +444,25 @@ const ContentView = () => {
                 <LoadErrorHandle
                   requestInfo={surroundingBlogs}
                   successElement={(data) =>
-                    RenderSurroundingBlogsButton({ data: data.data, isPrevious: true })
+                    RenderSurroundingBlogsButton({
+                      data: data.data,
+                      isPrevious: true,
+                    })
                   }
                 />
                 {/* Renders devblog title */}
-                <LoadErrorHandle requestInfo={devblog} successElement={RenderDevblogName} />
+                <LoadErrorHandle
+                  requestInfo={devblog}
+                  successElement={RenderDevblogName}
+                />
                 {/* Renders next blog button */}
                 <LoadErrorHandle
                   requestInfo={surroundingBlogs}
                   successElement={(data) =>
-                    RenderSurroundingBlogsButton({ data: data.data, isPrevious: false })
+                    RenderSurroundingBlogsButton({
+                      data: data.data,
+                      isPrevious: false,
+                    })
                   }
                 />
               </NextDevblogSection>
@@ -412,8 +479,10 @@ const ContentView = () => {
         */}
         <MetaData
           title={data.base_content.title}
-          description={data.base_content.description ? data.base_content.description : ''}
-          type='article'
+          description={
+            data.base_content.description ? data.base_content.description : ""
+          }
+          type="article"
         />
         <TopSection>
           <ContentTitle>{data.base_content.title}</ContentTitle>
@@ -423,13 +492,13 @@ const ContentView = () => {
               ${
                 projectStartString !== undefined
                   ? `Project Started On: ${projectStartString} |`
-                  : ''
+                  : ""
               }
               Posted On: ${createDateString}
               ${
                 data.base_content.created_at === data.base_content.updated_at
                   ? `| Edited On: ${editDateString}`
-                  : ''
+                  : ""
               }
             `}
           </ContentDate>
@@ -445,8 +514,8 @@ const ContentView = () => {
   };
 
   const errorEffect = ({ errorString }: { errorString: string }) => {
-    if (errorString.startsWith('404')) {
-      navigate('/404', { replace: true });
+    if (errorString.startsWith("404")) {
+      navigate("/404", { replace: true });
     }
   };
 

@@ -1,25 +1,34 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
-import styled, { css, keyframes } from 'styled-components';
-import { ContentOperations } from '../adapters/content';
-import { ContentType } from '../types/Content';
+import { useContext, useEffect, useMemo, useState } from "react";
+import styled, { css, keyframes } from "styled-components";
+import { ContentOperations } from "../adapters/content";
+import { ContentType } from "../types/Content";
 import {
   FullContentList,
   listOrder as showOrder,
   PageInfo,
   RequestState,
   RequestStatus,
-} from '../types/RequestContent';
-import PageTitle from '../components/Shared/PageTitle';
-import ContentListItem, { getColumnStart } from '../components/ContentShow/ContentListItem';
-import MetaData from '../components/Shared/MetaData';
-import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
-import { ShowLink } from '../components/Shared/Buttons';
-import jsonConfig from '@config/config.json';
-import { searchParamsToContentFilter } from '../types/HelperFuncs';
-import useQuery from '../hooks/useQueryParams';
-import { NavigationType, useLocation, useNavigationType } from 'react-router-dom';
-import { jsonParser } from '../adapters/helpers';
-import { NotificationContext, NotificationType } from '../contexts/Notification';
+} from "../types/RequestContent";
+import PageTitle from "../components/Shared/PageTitle";
+import ContentListItem, {
+  getColumnStart,
+} from "../components/ContentShow/ContentListItem";
+import MetaData from "../components/Shared/MetaData";
+import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
+import { ShowLink } from "../components/Shared/Buttons";
+import jsonConfig from "@config/config.json";
+import { searchParamsToContentFilter } from "../types/HelperFuncs";
+import useQuery from "../hooks/useQueryParams";
+import {
+  NavigationType,
+  useLocation,
+  useNavigationType,
+} from "react-router-dom";
+import { jsonParser } from "../adapters/helpers";
+import {
+  NotificationContext,
+  NotificationType,
+} from "../contexts/Notification";
 
 /* -------------------------------------------------------------------------- */
 
@@ -64,7 +73,7 @@ const LoadBar = styled.div<{ reload: boolean | null }>`
   padding: 0 0.4rem;
   background-color: ${(props) => props.theme.highlight};
   z-index: 100;
-  ${(props) => (props.reload === null ? '' : loadAnimation)}
+  ${(props) => (props.reload === null ? "" : loadAnimation)}
 `;
 
 const SearchBar = styled.input`
@@ -183,40 +192,53 @@ const BlogList = () => {
   // Info about pages of blogs
   // Uses sessionStorage to keep state when user navigates back
   const [page, setPage] = useState(
-    sessionStorage.getItem('blogListPage') !== null && navigationType === NavigationType.Pop
-      ? JSON.parse(sessionStorage.getItem('blogListPage') as string)
+    sessionStorage.getItem("blogListPage") !== null &&
+      navigationType === NavigationType.Pop
+      ? JSON.parse(sessionStorage.getItem("blogListPage") as string)
       : 0,
   );
   const [maxPage, setMaxPage] = useState(1);
 
   // State for all the blogs the site has retrieved
   // Uses sessionStorage to keep state when user navigates back
-  const [receivedBlogs, setReceivedBlogs] = useState<Record<number, FullContentList>>(
-    sessionStorage.getItem('blogListReceivedBlogs') !== null &&
+  const [receivedBlogs, setReceivedBlogs] = useState<
+    Record<number, FullContentList>
+  >(
+    sessionStorage.getItem("blogListReceivedBlogs") !== null &&
       navigationType === NavigationType.Pop
-      ? JSON.parse(sessionStorage.getItem('blogListReceivedBlogs') as string, jsonParser)
+      ? JSON.parse(
+          sessionStorage.getItem("blogListReceivedBlogs") as string,
+          jsonParser,
+        )
       : {},
   );
 
   // The latest set of blogs the site has retrieved
   // Need separate state for latest received for error handling reason
   // Uses sessionStorage to keep state when user navigates back
-  const [latestReceivedBlogs, setLatestReceivedBlogs] = useState<RequestState<FullContentList>>(
-    sessionStorage.getItem('blogListLatestReceivedBlogs') !== null &&
+  const [latestReceivedBlogs, setLatestReceivedBlogs] = useState<
+    RequestState<FullContentList>
+  >(
+    sessionStorage.getItem("blogListLatestReceivedBlogs") !== null &&
       navigationType === NavigationType.Pop
-      ? JSON.parse(sessionStorage.getItem('blogListLatestReceivedBlogs') as string, jsonParser)
+      ? JSON.parse(
+          sessionStorage.getItem("blogListLatestReceivedBlogs") as string,
+          jsonParser,
+        )
       : { requestStatus: RequestStatus.Loading },
   );
 
   // State for when to re-request blogs
-  const [reloadSearchAnimation, setReloadSearchAnimation] = useState<boolean | null>(null);
+  const [reloadSearchAnimation, setReloadSearchAnimation] = useState<
+    boolean | null
+  >(null);
 
   // Used to store search timeout. If the timeout finished the search will
   // be run
   const [searchTimeout, setSearchTimeout] = useState<null | number>(null);
 
   // State for search bar
-  const [currentSearch, setCurrentSearch] = useState<string>('');
+  const [currentSearch, setCurrentSearch] = useState<string>("");
 
   /* ----------------------------- Unmount effects ---------------------------- */
 
@@ -226,9 +248,15 @@ const BlogList = () => {
         clearTimeout(searchTimeout);
       }
 
-      sessionStorage.setItem('blogListPage', page.toString());
-      sessionStorage.setItem('blogListReceivedBlogs', JSON.stringify(receivedBlogs));
-      sessionStorage.setItem('blogListLatestReceivedBlogs', JSON.stringify(latestReceivedBlogs));
+      sessionStorage.setItem("blogListPage", page.toString());
+      sessionStorage.setItem(
+        "blogListReceivedBlogs",
+        JSON.stringify(receivedBlogs),
+      );
+      sessionStorage.setItem(
+        "blogListLatestReceivedBlogs",
+        JSON.stringify(latestReceivedBlogs),
+      );
     };
   });
 
@@ -250,18 +278,21 @@ const BlogList = () => {
     // Checks if the url has changed and sets the current search to the
     // search query in the url. This is so that if the user changes the
     // url by manual input or the back button the search bar will update
-    if (currentContentFilter.search !== currentSearch && currentContentFilter.search) {
+    if (
+      currentContentFilter.search !== currentSearch &&
+      currentContentFilter.search
+    ) {
       setCurrentSearch(currentContentFilter.search);
-    } else if (!currentContentFilter.search && currentSearch !== '') {
-      setCurrentSearch('');
+    } else if (!currentContentFilter.search && currentSearch !== "") {
+      setCurrentSearch("");
     }
 
     // Object passed to request for proper paging of projects
     const pageInfo: PageInfo = {
       content_per_page: contentPerPage,
       page,
-      ordering: (searchParams.get('ordering') as showOrder)
-        ? (searchParams.get('ordering') as showOrder)
+      ordering: (searchParams.get("ordering") as showOrder)
+        ? (searchParams.get("ordering") as showOrder)
         : showOrder.Newest,
     };
 
@@ -295,7 +326,7 @@ const BlogList = () => {
       } else {
         notifications.addNotification({
           type: NotificationType.Info,
-          message: 'Retrying...',
+          message: "Retrying...",
         });
         setRetryLoad(!retryLoad);
       }
@@ -343,7 +374,7 @@ const BlogList = () => {
   const getSearchParam = (param: string): string => {
     const paramReturn = searchParams.get(param);
     if (paramReturn !== null) return paramReturn;
-    return '';
+    return "";
   };
 
   // Clears all the pages of blogs
@@ -358,7 +389,7 @@ const BlogList = () => {
 
   // What happens when the show order of blogs changes
   const orderChange = (direction: showOrder) => {
-    searchParams.set('ordering', direction);
+    searchParams.set("ordering", direction);
     setSearchParams(searchParams);
     clearPages();
   };
@@ -384,10 +415,10 @@ const BlogList = () => {
           search: search,
         });
 
-        if (search === '') {
-          newParams.delete('search');
+        if (search === "") {
+          newParams.delete("search");
         } else {
-          newParams.set('search', search);
+          newParams.set("search", search);
         }
 
         setSearchParams(newParams);
@@ -400,9 +431,9 @@ const BlogList = () => {
   return (
     <BlogListBody>
       <MetaData
-        title='Blogs | Kyle Denief'
+        title="Blogs | Kyle Denief"
         description={jsonConfig.pages.blogList.description}
-        type='website'
+        type="website"
       />
 
       <PageTitle>Blogs</PageTitle>
@@ -410,7 +441,7 @@ const BlogList = () => {
       <ShowOptions>
         <SearchBarWrapper>
           <SearchBar
-            placeholder='Search'
+            placeholder="Search"
             value={currentSearch}
             onChange={(e) => newSearch(e.target.value)}
           />
@@ -421,7 +452,11 @@ const BlogList = () => {
           />
         </SearchBarWrapper>
         <DropDown
-          value={getSearchParam('ordering') ? getSearchParam('ordering') : showOrder.Newest}
+          value={
+            getSearchParam("ordering")
+              ? getSearchParam("ordering")
+              : showOrder.Newest
+          }
           onChange={(e) => orderChange(e.target.value as showOrder)}
         >
           <option value={showOrder.Newest}>Newest</option>
@@ -432,7 +467,7 @@ const BlogList = () => {
           ((Object.values(currentContentFilter).length > 1 &&
             currentContentFilter.search === undefined) ||
             Object.values(currentContentFilter).length > 2) && (
-            <ShowLink button_text={'Clear Filters'} url={'/blogs'} />
+            <ShowLink button_text={"Clear Filters"} url={"/blogs"} />
           )
         }
       </ShowOptions>
@@ -440,14 +475,18 @@ const BlogList = () => {
       {/* Renders previous pages of successful blogs fetched */}
       <ContentList>
         <>
-          {Array.from(Array(Object.keys(receivedBlogs).length).keys()).map((value) => {
-            return (
-              <RenderBlogList
-                data={receivedBlogs[value]}
-                key={receivedBlogs[value].full_content_list[0].base_content.id}
-              />
-            );
-          })}
+          {Array.from(Array(Object.keys(receivedBlogs).length).keys()).map(
+            (value) => {
+              return (
+                <RenderBlogList
+                  data={receivedBlogs[value]}
+                  key={
+                    receivedBlogs[value].full_content_list[0].base_content.id
+                  }
+                />
+              );
+            },
+          )}
         </>
 
         {/* Renders lates blog page requested and handles errors if it fails */}

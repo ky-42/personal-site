@@ -1,8 +1,13 @@
-import { useContext, useReducer, useRef, useState } from 'react';
-import styled from 'styled-components';
-import { AiOutlineRight } from 'react-icons/ai';
-import PageTitle from '../components/Shared/PageTitle';
-import { ActionTypes, ReducerAction, SetReducer, UpdateReducer } from '../types/ManageContent';
+import { useContext, useReducer, useRef, useState } from "react";
+import styled from "styled-components";
+import { AiOutlineRight } from "react-icons/ai";
+import PageTitle from "../components/Shared/PageTitle";
+import {
+  ActionTypes,
+  ReducerAction,
+  SetReducer,
+  UpdateReducer,
+} from "../types/ManageContent";
 import {
   Blog,
   Content,
@@ -13,8 +18,8 @@ import {
   NewFullContent,
   Project,
   ProjectStatus,
-} from '../types/Content';
-import InputArea from '../components/ContentManagement/InputArea';
+} from "../types/Content";
+import InputArea from "../components/ContentManagement/InputArea";
 import {
   ClickButton,
   DropDown,
@@ -27,21 +32,33 @@ import {
   SmallSectionTitle,
   StateButton,
   StyledButton,
-} from '../components/ContentManagement/InputElements';
-import ProjectManagement from '../components/ContentManagement/ProjectManagement';
-import BaseContentManagement from '../components/ContentManagement/BaseContentManagement';
-import BlogManagement from '../components/ContentManagement/BlogManagement';
-import { ContentOperations, DevblogOperations, TagOperations } from '../adapters/content';
-import { blogToNew, contentToNew, devblogToNew, projectToNew } from '../types/HelperFuncs';
-import { RequestStatus } from '../types/RequestContent';
+} from "../components/ContentManagement/InputElements";
+import ProjectManagement from "../components/ContentManagement/ProjectManagement";
+import BaseContentManagement from "../components/ContentManagement/BaseContentManagement";
+import BlogManagement from "../components/ContentManagement/BlogManagement";
+import {
+  ContentOperations,
+  DevblogOperations,
+  TagOperations,
+} from "../adapters/content";
+import {
+  blogToNew,
+  contentToNew,
+  devblogToNew,
+  projectToNew,
+} from "../types/HelperFuncs";
+import { RequestStatus } from "../types/RequestContent";
 import {
   validateBlog,
   validateContent,
   validateDevblog,
   validateProject,
-} from '../components/ContentManagement/InputValidation';
-import DevblogManagement from '../components/ContentManagement/DevblogManagement';
-import { NotificationContext, NotificationType } from '../contexts/Notification';
+} from "../components/ContentManagement/InputValidation";
+import DevblogManagement from "../components/ContentManagement/DevblogManagement";
+import {
+  NotificationContext,
+  NotificationType,
+} from "../contexts/Notification";
 
 /* -------------------------------------------------------------------------- */
 
@@ -59,9 +76,9 @@ const defaultContent: Content = {
   created_at: new Date(),
   updated_at: new Date(),
   content_type: defaultExtraContent,
-  slug: '',
-  title: '',
-  body: '',
+  slug: "",
+  title: "",
+  body: "",
 };
 
 const defaultBlog: Blog = {
@@ -77,7 +94,7 @@ const defaultProject: Project = {
 
 const defaultDevblog: Devblog = {
   id: 0,
-  title: '',
+  title: "",
 };
 
 /* ---------------------------- Reducer function ---------------------------- */
@@ -91,8 +108,8 @@ const contentReducer = <K extends keyof Content>(
       const newState = { ...state };
       newState[action.field] = action.value;
 
-      if (action.field === 'title' && typeof action.value === 'string') {
-        newState.slug = action.value.replaceAll(' ', '-').toLocaleLowerCase();
+      if (action.field === "title" && typeof action.value === "string") {
+        newState.slug = action.value.replaceAll(" ", "-").toLocaleLowerCase();
       }
 
       return newState;
@@ -163,26 +180,38 @@ const ManageContent = () => {
   const [currentAction, setCurrentAction] = useState(ActionTypes.Create);
 
   // Slug or title to be updated or deleted
-  const [modifyItem, setModifyItem] = useState('');
+  const [modifyItem, setModifyItem] = useState("");
 
   // Content form state
-  const [baseContentData, setBaseContentData] = useReducer(contentReducer, defaultContent);
+  const [baseContentData, setBaseContentData] = useReducer(
+    contentReducer,
+    defaultContent,
+  );
   const [blogData, setBlogData] = useReducer(blogReducer, defaultBlog);
-  const [projectData, setProjectData] = useReducer(projectReducer, defaultProject);
+  const [projectData, setProjectData] = useReducer(
+    projectReducer,
+    defaultProject,
+  );
 
-  const [extraContentType, setExtraContentType] = useState<ContentType>(defaultExtraContent);
+  const [extraContentType, setExtraContentType] =
+    useState<ContentType>(defaultExtraContent);
 
   // Tags for blog
   const [tags, setTags] = useState<Set<string>>(new Set());
 
   // Devblog form state
-  const [devblogData, setDevblogData] = useReducer(devblogReducer, defaultDevblog);
+  const [devblogData, setDevblogData] = useReducer(
+    devblogReducer,
+    defaultDevblog,
+  );
 
-  const [serverPassword, setServerPassword] = useState('');
+  const [serverPassword, setServerPassword] = useState("");
 
   // Key in the record will be keys of content, blog, devblog, or project
   // Done this way because we don't need all keys from those types in the object
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
 
   // Needed so when there are validation errors page can scroll to top
   const pageTop = useRef<HTMLHeadingElement>(null);
@@ -202,20 +231,22 @@ const ManageContent = () => {
         const baseData = { ...baseContentData, ...baseNewData };
 
         // Sets up extra content data objects
-        let extraData: FullContent['extra_content'];
-        let extraNewData: NewFullContent['new_extra_content'];
+        let extraData: FullContent["extra_content"];
+        let extraNewData: NewFullContent["new_extra_content"];
 
         switch (extraContentType) {
           case ContentType.Blog:
             extraNewData = { blog: blogToNew(blogData) };
             validateBlog(extraNewData.blog, newValidationErrors);
-            extraData = { blog: { ...blogData, ...extraNewData['blog'] } };
+            extraData = { blog: { ...blogData, ...extraNewData["blog"] } };
             break;
 
           case ContentType.Project:
             extraNewData = { project: projectToNew(projectData) };
             validateProject(extraNewData.project, newValidationErrors);
-            extraData = { project: { ...projectData, ...extraNewData['project'] } };
+            extraData = {
+              project: { ...projectData, ...extraNewData["project"] },
+            };
             break;
         }
 
@@ -226,7 +257,7 @@ const ManageContent = () => {
           pageTop.current?.scrollIntoView();
 
           notifications.addNotification({
-            message: 'There are errors in the form',
+            message: "There are errors in the form",
             type: NotificationType.Error,
           });
 
@@ -251,7 +282,7 @@ const ManageContent = () => {
           pageTop.current?.scrollIntoView();
 
           notifications.addNotification({
-            message: 'There are errors in the form',
+            message: "There are errors in the form",
             type: NotificationType.Error,
           });
 
@@ -265,10 +296,10 @@ const ManageContent = () => {
   };
 
   interface SubmitContentParams {
-    baseData: FullContent['base_content'];
-    baseNewData: NewFullContent['new_base_content'];
-    extraData: FullContent['extra_content'];
-    extraNewData: NewFullContent['new_extra_content'];
+    baseData: FullContent["base_content"];
+    baseNewData: NewFullContent["new_base_content"];
+    extraData: FullContent["extra_content"];
+    extraNewData: NewFullContent["new_extra_content"];
   }
 
   const submitContent = ({
@@ -301,14 +332,15 @@ const ManageContent = () => {
                   switch (tag_request.requestStatus) {
                     case RequestStatus.Success:
                       notifications.addNotification({
-                        message: 'Content added successfully',
+                        message: "Content added successfully",
                         type: NotificationType.Success,
                       });
                       break;
 
                     default:
                       notifications.addNotification({
-                        message: 'Error adding tags. Delete content and try again',
+                        message:
+                          "Error adding tags. Delete content and try again",
                         type: NotificationType.Error,
                       });
 
@@ -318,7 +350,7 @@ const ManageContent = () => {
                 });
               } else {
                 notifications.addNotification({
-                  message: 'Content added successfully',
+                  message: "Content added successfully",
                   type: NotificationType.Success,
                 });
               }
@@ -326,7 +358,7 @@ const ManageContent = () => {
 
             default:
               notifications.addNotification({
-                message: 'Error adding content',
+                message: "Error adding content",
                 type: NotificationType.Error,
               });
 
@@ -364,7 +396,7 @@ const ManageContent = () => {
                         switch (tag_add_request.requestStatus) {
                           case RequestStatus.Success:
                             notifications.addNotification({
-                              message: 'Content updated successfully',
+                              message: "Content updated successfully",
                               type: NotificationType.Success,
                             });
                             break;
@@ -373,7 +405,7 @@ const ManageContent = () => {
                           case RequestStatus.Loading:
                             notifications.addNotification({
                               message:
-                                'Error updating tags. Old tags deleted by new tags added try re-updating content',
+                                "Error updating tags. Old tags deleted by new tags added try re-updating content",
                               type: NotificationType.Error,
                             });
 
@@ -387,7 +419,7 @@ const ManageContent = () => {
                     case RequestStatus.Loading:
                       notifications.addNotification({
                         message:
-                          'Error updating tags. Old tags still exist try re-updating content',
+                          "Error updating tags. Old tags still exist try re-updating content",
                         type: NotificationType.Error,
                       });
 
@@ -397,7 +429,7 @@ const ManageContent = () => {
                 });
               } else {
                 notifications.addNotification({
-                  message: 'Content updated successfully',
+                  message: "Content updated successfully",
                   type: NotificationType.Success,
                 });
               }
@@ -406,7 +438,7 @@ const ManageContent = () => {
             case RequestStatus.Error:
             case RequestStatus.Loading:
               notifications.addNotification({
-                message: 'Error updating content',
+                message: "Error updating content",
                 type: NotificationType.Error,
               });
 
@@ -424,7 +456,7 @@ const ManageContent = () => {
           switch (base_content_request.requestStatus) {
             case RequestStatus.Success:
               notifications.addNotification({
-                message: 'Content deleted successfully',
+                message: "Content deleted successfully",
                 type: NotificationType.Success,
               });
               break;
@@ -432,7 +464,7 @@ const ManageContent = () => {
             case RequestStatus.Error:
             case RequestStatus.Loading:
               notifications.addNotification({
-                message: 'Error deleting content',
+                message: "Error deleting content",
                 type: NotificationType.Error,
               });
 
@@ -462,7 +494,7 @@ const ManageContent = () => {
           switch (devblog_add_request.requestStatus) {
             case RequestStatus.Success:
               notifications.addNotification({
-                message: 'Devblog added successfully',
+                message: "Devblog added successfully",
                 type: NotificationType.Success,
               });
               break;
@@ -470,7 +502,7 @@ const ManageContent = () => {
             case RequestStatus.Error:
             case RequestStatus.Loading:
               notifications.addNotification({
-                message: 'Error adding devblog',
+                message: "Error adding devblog",
                 type: NotificationType.Error,
               });
 
@@ -489,7 +521,7 @@ const ManageContent = () => {
           switch (devblog_update_request.requestStatus) {
             case RequestStatus.Success:
               notifications.addNotification({
-                message: 'Devblog updated successfully',
+                message: "Devblog updated successfully",
                 type: NotificationType.Success,
               });
               break;
@@ -497,7 +529,7 @@ const ManageContent = () => {
             case RequestStatus.Error:
             case RequestStatus.Loading:
               notifications.addNotification({
-                message: 'Error updating devblog',
+                message: "Error updating devblog",
                 type: NotificationType.Error,
               });
 
@@ -515,7 +547,7 @@ const ManageContent = () => {
           switch (devblog_delete_request.requestStatus) {
             case RequestStatus.Success:
               notifications.addNotification({
-                message: 'Devblog deleted successfully',
+                message: "Devblog deleted successfully",
                 type: NotificationType.Success,
               });
               break;
@@ -523,7 +555,7 @@ const ManageContent = () => {
             case RequestStatus.Error:
             case RequestStatus.Loading:
               notifications.addNotification({
-                message: 'Error deleting devblog',
+                message: "Error deleting devblog",
                 type: NotificationType.Error,
               });
 
@@ -554,16 +586,18 @@ const ManageContent = () => {
               });
 
               // Sets the extra content state
-              if ('blog' in base_content_request.requestedData.extra_content) {
+              if ("blog" in base_content_request.requestedData.extra_content) {
                 setExtraContentType(ContentType.Blog);
                 setBlogData({
                   action: ReducerAction.Set,
-                  newState: base_content_request.requestedData.extra_content['blog'],
+                  newState:
+                    base_content_request.requestedData.extra_content["blog"],
                 });
 
                 // Gets the tags for the blog because they are not in the blog data
                 TagOperations.get_blog_tags({
-                  blog_slug: base_content_request.requestedData.base_content.slug,
+                  blog_slug:
+                    base_content_request.requestedData.base_content.slug,
                 }).then((tag_request) => {
                   switch (tag_request.requestStatus) {
                     case RequestStatus.Success:
@@ -572,7 +606,7 @@ const ManageContent = () => {
                       }
 
                       notifications.addNotification({
-                        message: 'Old content loaded successfully',
+                        message: "Old content loaded successfully",
                         type: NotificationType.Success,
                       });
 
@@ -581,7 +615,7 @@ const ManageContent = () => {
                     case RequestStatus.Error:
                     case RequestStatus.Loading:
                       notifications.addNotification({
-                        message: 'Error loading old tags. Try again',
+                        message: "Error loading old tags. Try again",
                         type: NotificationType.Error,
                       });
 
@@ -589,15 +623,18 @@ const ManageContent = () => {
                       break;
                   }
                 });
-              } else if ('project' in base_content_request.requestedData.extra_content) {
+              } else if (
+                "project" in base_content_request.requestedData.extra_content
+              ) {
                 setExtraContentType(ContentType.Project);
                 setProjectData({
                   action: ReducerAction.Set,
-                  newState: base_content_request.requestedData.extra_content['project'],
+                  newState:
+                    base_content_request.requestedData.extra_content["project"],
                 });
 
                 notifications.addNotification({
-                  message: 'Old content loaded successfully',
+                  message: "Old content loaded successfully",
                   type: NotificationType.Success,
                 });
               }
@@ -607,7 +644,7 @@ const ManageContent = () => {
             case RequestStatus.Error:
             case RequestStatus.Loading:
               notifications.addNotification({
-                message: 'Error loading old content',
+                message: "Error loading old content",
                 type: NotificationType.Error,
               });
 
@@ -631,7 +668,7 @@ const ManageContent = () => {
               });
 
               notifications.addNotification({
-                message: 'Old devblog loaded successfully',
+                message: "Old devblog loaded successfully",
                 type: NotificationType.Success,
               });
 
@@ -640,7 +677,7 @@ const ManageContent = () => {
             case RequestStatus.Error:
             case RequestStatus.Loading:
               notifications.addNotification({
-                message: 'Error loading old devblog',
+                message: "Error loading old devblog",
                 type: NotificationType.Error,
               });
 
@@ -679,7 +716,7 @@ const ManageContent = () => {
     });
 
     notifications.addNotification({
-      message: 'Content cleared',
+      message: "Content cleared",
       type: NotificationType.Info,
     });
   };
@@ -702,7 +739,7 @@ const ManageContent = () => {
         <SectionTitle>Extra Content</SectionTitle>
 
         <InputArea
-          labelText={'Content Type'}
+          labelText={"Content Type"}
           InputElement={
             <DropDown
               value={extraContentType}
@@ -710,7 +747,7 @@ const ManageContent = () => {
                 setExtraContentType(e.target.value as ContentType);
                 setBaseContentData({
                   action: ReducerAction.Update,
-                  field: 'content_type',
+                  field: "content_type",
                   value: e.target.value as ContentType,
                 });
               }}
@@ -836,14 +873,15 @@ const ManageContent = () => {
           <InputGroup>
             <InputArea
               labelText={
-                currentAction === ActionTypes.Update || currentAction === ActionTypes.Delete
+                currentAction === ActionTypes.Update ||
+                currentAction === ActionTypes.Delete
                   ? `Slug To ${currentAction} (Enter to load data)`
-                  : `Devblog Title To ${currentAction.split(' ').splice(-1)} (Enter to load data)`
+                  : `Devblog Title To ${currentAction.split(" ").splice(-1)} (Enter to load data)`
               }
               InputElement={
                 <InputButtonHolder>
                   <ShortTextInput
-                    type='text'
+                    type="text"
                     value={modifyItem}
                     onChange={(e) => setModifyItem(e.target.value)}
                   />
@@ -863,10 +901,10 @@ const ManageContent = () => {
         <SectionTitle>Authentication</SectionTitle>
 
         <InputArea
-          labelText={'Server Password'}
+          labelText={"Server Password"}
           InputElement={
             <ShortTextInput
-              type='password'
+              type="password"
               value={serverPassword}
               onChange={(e) => setServerPassword(e.target.value)}
             />
@@ -878,7 +916,7 @@ const ManageContent = () => {
         <SectionTitle>Submit</SectionTitle>
 
         <InputArea
-          labelText={currentAction + ' Above content'}
+          labelText={currentAction + " Above content"}
           InputElement={<StyledButton onClick={onSubmit}>Submit</StyledButton>}
         />
       </InputSection>

@@ -1,8 +1,17 @@
-import styled from 'styled-components';
-import { Project, ProjectStatus } from '../../types/Content';
-import { ReducerAction, SetReducer, UpdateReducer } from '../../types/ManageContent';
-import { DateInput, DropDown, InputGroup, ShortTextInput } from './InputElements';
-import InputArea from './InputArea';
+import styled from "styled-components";
+import { Project, ProjectStatus } from "../../types/Content";
+import {
+  ReducerAction,
+  SetReducer,
+  UpdateReducer,
+} from "../../types/ManageContent";
+import {
+  DateInput,
+  DropDown,
+  InputGroup,
+  ShortTextInput,
+} from "./InputElements";
+import InputArea from "./InputArea";
 
 /* -------------------------------------------------------------------------- */
 
@@ -12,7 +21,9 @@ const ProjectManagementArea = styled.div``;
 
 interface projectManagementProps {
   projectData: Project;
-  setProjectData: React.Dispatch<SetReducer<Project> | UpdateReducer<Project, keyof Project>>;
+  setProjectData: React.Dispatch<
+    SetReducer<Project> | UpdateReducer<Project, keyof Project>
+  >;
   // Possible errors in an input with key being field and value being error message
   validationErrors: Record<string, string>;
 }
@@ -26,20 +37,22 @@ const ProjectManagement = ({
   return (
     <ProjectManagementArea>
       <InputArea
-        labelText={'Project Status'}
-        error={validationErrors['current_status']}
+        labelText={"Project Status"}
+        error={validationErrors["current_status"]}
         InputElement={
           <DropDown
             value={projectData.current_status}
             onChange={(e) =>
               setProjectData({
                 action: ReducerAction.Update,
-                field: 'current_status',
+                field: "current_status",
                 value: e.target.value as ProjectStatus,
               })
             }
           >
-            <option value={ProjectStatus.UnderDevelopment}>Under Development</option>
+            <option value={ProjectStatus.UnderDevelopment}>
+              Under Development
+            </option>
             <option value={ProjectStatus.Finished}>Finished</option>
           </DropDown>
         }
@@ -47,17 +60,19 @@ const ProjectManagement = ({
 
       <InputGroup>
         <InputArea
-          labelText={'Repository URL'}
-          error={validationErrors['repository_url']}
+          labelText={"Repository URL"}
+          error={validationErrors["repository_url"]}
           InputElement={
             <ShortTextInput
-              type='text'
-              placeholder='https://github.com/ky-42/personal-site'
-              value={projectData.repository_url ? projectData.repository_url : ''}
+              type="text"
+              placeholder="https://github.com/ky-42/personal-site"
+              value={
+                projectData.repository_url ? projectData.repository_url : ""
+              }
               onChange={(e) =>
                 setProjectData({
                   action: ReducerAction.Update,
-                  field: 'repository_url',
+                  field: "repository_url",
                   value: e.target.value,
                 })
               }
@@ -66,17 +81,17 @@ const ProjectManagement = ({
         />
 
         <InputArea
-          labelText={'Website URL'}
-          error={validationErrors['website_url']}
+          labelText={"Website URL"}
+          error={validationErrors["website_url"]}
           InputElement={
             <ShortTextInput
-              type='text'
-              placeholder='https://kyledenief.me/'
-              value={projectData.website_url ? projectData.website_url : ''}
+              type="text"
+              placeholder="https://kyledenief.me/"
+              value={projectData.website_url ? projectData.website_url : ""}
               onChange={(e) =>
                 setProjectData({
                   action: ReducerAction.Update,
-                  field: 'website_url',
+                  field: "website_url",
                   value: e.target.value,
                 })
               }
@@ -85,11 +100,11 @@ const ProjectManagement = ({
         />
 
         <InputArea
-          labelText={'Project Start Date'}
-          error={validationErrors['start_date']}
+          labelText={"Project Start Date"}
+          error={validationErrors["start_date"]}
           InputElement={
             <DateInput
-              type='date'
+              type="date"
               value={
                 projectData.start_date
                   ? projectData.start_date.toISOString().slice(0, 10)
@@ -98,7 +113,7 @@ const ProjectManagement = ({
               onChange={(e) =>
                 setProjectData({
                   action: ReducerAction.Update,
-                  field: 'start_date',
+                  field: "start_date",
                   value: new Date(e.target.value),
                 })
               }

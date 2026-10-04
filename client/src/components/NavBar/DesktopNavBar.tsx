@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import LinkNavBar from './LinkDesktopNavBar';
+import styled from "styled-components";
+import LinkNavBar from "./LinkDesktopNavBar";
 
 const NavBarDiv = styled.nav`
   width: calc(100vw - ${(props) => props.theme.borderSize}*2);
@@ -15,11 +15,11 @@ const NavBarDiv = styled.nav`
 const DesktopNavBar = () => {
   return (
     <NavBarDiv>
-      <LinkNavBar to='/about' title='About Me' />
-      <LinkNavBar to='/connect' title='Connect' />
-      <LinkNavBar to='/' title='Kyle Denief' />
-      <LinkNavBar to='/projects' title='Projects' />
-      <LinkNavBar to='/blogs' title='Blogs' />
+      <LinkNavBar to="/about" title="About Me" />
+      <LinkNavBar to="/connect" title="Connect" />
+      <LinkNavBar to="/" title="Kyle Denief" />
+      <LinkNavBar to="/projects" title="Projects" />
+      <LinkNavBar to="/blogs" title="Blogs" />
     </NavBarDiv>
   );
 };

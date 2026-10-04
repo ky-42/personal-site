@@ -1,9 +1,9 @@
-import styled from 'styled-components';
-import CurrentlyReading from '../components/ContentShow/CurrentlyReading';
-import PageTitle from '../components/Shared/PageTitle';
-import ReadingList from '../components/AboutMe/ReadingList';
-import MetaData from '../components/Shared/MetaData';
-import jsonConfig from '@config/config.json';
+import styled from "styled-components";
+import CurrentlyReading from "../components/ContentShow/CurrentlyReading";
+import PageTitle from "../components/Shared/PageTitle";
+import ReadingList from "../components/AboutMe/ReadingList";
+import MetaData from "../components/Shared/MetaData";
+import jsonConfig from "@config/config.json";
 
 /* -------------------------------------------------------------------------- */
 
@@ -44,11 +44,11 @@ const BookListDiv = styled.div`
 const About = () => {
   // Lists of books to be displayed
   const FinishedReading = jsonConfig.pages.about.finishedReading.map((v) => {
-    return v.name + ', ' + v.author;
+    return v.name + ", " + v.author;
   });
 
   const ToRead = jsonConfig.pages.about.futureReads.map((v) => {
-    return v.name + ', ' + v.author;
+    return v.name + ", " + v.author;
   });
 
   return (
@@ -56,7 +56,7 @@ const About = () => {
       <MetaData
         title={`About Me | ${jsonConfig.name}`}
         description={jsonConfig.pages.about.description}
-        type='website'
+        type="website"
       />
 
       <AboutSection>
@@ -68,8 +68,11 @@ const About = () => {
         <ReadingTitle>What I&apos;m Reading</ReadingTitle>
         <CurrentlyReading />
         <BookListDiv>
-          <ReadingList ReadingTitle='Finished Books (Favorites)' BookList={FinishedReading} />
-          <ReadingList ReadingTitle='Future Reads' BookList={ToRead} />
+          <ReadingList
+            ReadingTitle="Finished Books (Favorites)"
+            BookList={FinishedReading}
+          />
+          <ReadingList ReadingTitle="Future Reads" BookList={ToRead} />
         </BookListDiv>
       </ReadingSection>
     </AboutBody>

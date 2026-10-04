@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import jsonConfig from '@config/config.json';
+import styled from "styled-components";
+import jsonConfig from "@config/config.json";
 
 /* -------------------------------------------------------------------------- */
 
@@ -34,7 +34,9 @@ const CurrentlyReading = () => {
         <br />
         {jsonConfig.currentlyReading.author}
       </BookTitle>
-      <StartedDate>Started: {jsonConfig.currentlyReading.dateStarted}</StartedDate>
+      <StartedDate>
+        Started: {jsonConfig.currentlyReading.dateStarted}
+      </StartedDate>
     </CurrentlyReadingBody>
   );
 };

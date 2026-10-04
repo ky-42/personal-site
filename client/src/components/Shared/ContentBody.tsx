@@ -1,5 +1,5 @@
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import styled from 'styled-components';
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import styled from "styled-components";
 
 const ContentBody = styled(ReactMarkdown)`
   font-size: clamp(1.68rem, 4vw, 2rem);

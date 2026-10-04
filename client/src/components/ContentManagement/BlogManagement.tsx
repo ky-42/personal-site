@@ -1,14 +1,25 @@
-import { useContext, useState } from 'react';
-import styled from 'styled-components';
-import { Blog } from '../../types/Content';
-import { EnterButton, InputButtonHolder, ShortTextInput } from './InputElements';
-import { ReducerAction, SetReducer, UpdateReducer } from '../../types/ManageContent';
-import InputArea from './InputArea';
-import { AiOutlineRight } from 'react-icons/ai';
-import { ManageTag } from '../Shared/Buttons';
-import { ContentOperations, DevblogOperations } from '../../adapters/content';
-import { RequestStatus } from '../../types/RequestContent';
-import { NotificationContext, NotificationType } from '../../contexts/Notification';
+import { useContext, useState } from "react";
+import styled from "styled-components";
+import { Blog } from "../../types/Content";
+import {
+  EnterButton,
+  InputButtonHolder,
+  ShortTextInput,
+} from "./InputElements";
+import {
+  ReducerAction,
+  SetReducer,
+  UpdateReducer,
+} from "../../types/ManageContent";
+import InputArea from "./InputArea";
+import { AiOutlineRight } from "react-icons/ai";
+import { ManageTag } from "../Shared/Buttons";
+import { ContentOperations, DevblogOperations } from "../../adapters/content";
+import { RequestStatus } from "../../types/RequestContent";
+import {
+  NotificationContext,
+  NotificationType,
+} from "../../contexts/Notification";
 
 /* ---------------------------- Styled Components --------------------------- */
 
@@ -38,7 +49,9 @@ const TagsList = styled.div`
 
 interface blogManagementProps {
   blogData: Blog;
-  setBlogData: React.Dispatch<SetReducer<Blog> | UpdateReducer<Blog, keyof Blog>>;
+  setBlogData: React.Dispatch<
+    SetReducer<Blog> | UpdateReducer<Blog, keyof Blog>
+  >;
   tags: Set<string>;
   setTags: React.Dispatch<React.SetStateAction<Set<string>>>;
   // Possible errors in an input with key being field and value being error message
@@ -56,11 +69,11 @@ const BlogManagement = ({
   const notifications = useContext(NotificationContext);
 
   // State for current tag being typed
-  const [currentTag, setCurrentTag] = useState<string>('');
+  const [currentTag, setCurrentTag] = useState<string>("");
 
   // State for current slug or title being typed
-  const [projectSlug, setProjectSlug] = useState<string>('');
-  const [devblogTitle, setDevblogTitle] = useState<string>('');
+  const [projectSlug, setProjectSlug] = useState<string>("");
+  const [devblogTitle, setDevblogTitle] = useState<string>("");
 
   /* ------------------------------- Id Requests ------------------------------ */
 
@@ -71,7 +84,7 @@ const BlogManagement = ({
         case RequestStatus.Success:
           setBlogData({
             action: ReducerAction.Update,
-            field: 'related_project_id',
+            field: "related_project_id",
             value: content.requestedData.base_content.id,
           });
           break;
@@ -79,11 +92,11 @@ const BlogManagement = ({
         case RequestStatus.Error:
         case RequestStatus.Loading:
           notifications.addNotification({
-            message: 'Error getting project id',
+            message: "Error getting project id",
             type: NotificationType.Error,
           });
 
-          console.log('Error getting project id');
+          console.log("Error getting project id");
           break;
       }
     });
@@ -96,7 +109,7 @@ const BlogManagement = ({
         case RequestStatus.Success:
           setBlogData({
             action: ReducerAction.Update,
-            field: 'devblog_id',
+            field: "devblog_id",
             value: devblog.requestedData.id,
           });
           break;
@@ -104,11 +117,11 @@ const BlogManagement = ({
         case RequestStatus.Error:
         case RequestStatus.Loading:
           notifications.addNotification({
-            message: 'Error getting devblog id',
+            message: "Error getting devblog id",
             type: NotificationType.Error,
           });
 
-          console.log('Error getting devblog id');
+          console.log("Error getting devblog id");
           break;
       }
     });
@@ -127,12 +140,12 @@ const BlogManagement = ({
   return (
     <BlogManagementArea>
       <InputArea
-        labelText={'Tags'}
+        labelText={"Tags"}
         InputElement={
           <div>
             <InputButtonHolder>
               <ShortTextInput
-                type='text'
+                type="text"
                 value={currentTag}
                 onChange={(e) => setCurrentTag(e.target.value)}
               />
@@ -142,7 +155,7 @@ const BlogManagement = ({
                     current.add(currentTag);
                     return new Set(current);
                   });
-                  setCurrentTag('');
+                  setCurrentTag("");
                 }}
               >
                 Add
@@ -151,7 +164,9 @@ const BlogManagement = ({
             <br />
             <TagsList>
               {Array.from(tags).map((tag) => {
-                return <ManageTag tagString={tag} removeTag={removeTag} key={tag} />;
+                return (
+                  <ManageTag tagString={tag} removeTag={removeTag} key={tag} />
+                );
               })}
             </TagsList>
           </div>
@@ -159,20 +174,20 @@ const BlogManagement = ({
       />
 
       <InputArea
-        labelText={'Slug of Related Project'}
-        error={validationErrors['related_project_id']}
+        labelText={"Slug of Related Project"}
+        error={validationErrors["related_project_id"]}
         InputElement={
           <div>
             <InputButtonHolder>
               <ShortTextInput
-                type='text'
+                type="text"
                 value={projectSlug}
                 onChange={(e) => setProjectSlug(e.target.value)}
               />
               <EnterButton
                 onClick={() => {
                   getProjectId(projectSlug);
-                  setProjectSlug('');
+                  setProjectSlug("");
                 }}
               >
                 <AiOutlineRight />
@@ -184,7 +199,7 @@ const BlogManagement = ({
                 onClick={() =>
                   setBlogData({
                     action: ReducerAction.Update,
-                    field: 'related_project_id',
+                    field: "related_project_id",
                     value: undefined,
                   })
                 }
@@ -197,20 +212,20 @@ const BlogManagement = ({
       />
 
       <InputArea
-        labelText={'Title of Devblog'}
-        error={validationErrors['devblog_id']}
+        labelText={"Title of Devblog"}
+        error={validationErrors["devblog_id"]}
         InputElement={
           <div>
             <InputButtonHolder>
               <ShortTextInput
-                type='text'
+                type="text"
                 value={devblogTitle}
                 onChange={(e) => setDevblogTitle(e.target.value)}
               />
               <EnterButton
                 onClick={() => {
                   getDevblogId(devblogTitle);
-                  setDevblogTitle('');
+                  setDevblogTitle("");
                 }}
               >
                 <AiOutlineRight />
@@ -222,7 +237,7 @@ const BlogManagement = ({
                 onClick={() =>
                   setBlogData({
                     action: ReducerAction.Update,
-                    field: 'devblog_id',
+                    field: "devblog_id",
                     value: undefined,
                   })
                 }

@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import { ContentType, FullContent } from '../../types/Content';
-import { Link } from 'react-router-dom';
+import styled from "styled-components";
+import { ContentType, FullContent } from "../../types/Content";
+import { Link } from "react-router-dom";
 
 /* -------------------------------------------------------------------------- */
 
@@ -42,25 +42,27 @@ const ContentItem = ({ content }: ContentItemProps) => {
 
   if (
     content.base_content.content_type === ContentType.Project &&
-    'project' in content.extra_content &&
+    "project" in content.extra_content &&
     content.extra_content.project.start_date !== undefined
   ) {
-    ContentDate = new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    ContentDate = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     }).format(content.extra_content.project.start_date);
   } else {
-    ContentDate = new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    ContentDate = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     }).format(content.base_content.created_at);
   }
 
   return (
     // Links to content is representing in form /content-type/slug
-    <ContentLink to={`/${content.base_content.content_type}s/${content.base_content.slug}`}>
+    <ContentLink
+      to={`/${content.base_content.content_type}s/${content.base_content.slug}`}
+    >
       <ContentTitle>{content.base_content.title}</ContentTitle>
       <ContentCreateDate>{ContentDate}</ContentCreateDate>
       <ContentDesc>{content.base_content.description}</ContentDesc>

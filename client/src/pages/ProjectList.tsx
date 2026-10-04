@@ -1,17 +1,27 @@
-import { useContext, useEffect, useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
-import { AiFillCaretLeft } from 'react-icons/ai';
-import { ContentOperations } from '../adapters/content';
-import { FullContentList, listOrder, RequestState, RequestStatus } from '../types/RequestContent';
-import { ContentType, ProjectStatus } from '../types/Content';
-import PageTitle from '../components/Shared/PageTitle';
-import ContentListItem, { getColumnStart } from '../components/ContentShow/ContentListItem';
-import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
-import MetaData from '../components/Shared/MetaData';
-import { NavigationType, useNavigationType } from 'react-router-dom';
-import { jsonParser } from '../adapters/helpers';
-import jsonConfig from '@config/config.json';
-import { NotificationContext, NotificationType } from '../contexts/Notification';
+import { useContext, useEffect, useRef, useState } from "react";
+import styled, { css } from "styled-components";
+import { AiFillCaretLeft } from "react-icons/ai";
+import { ContentOperations } from "../adapters/content";
+import {
+  FullContentList,
+  listOrder,
+  RequestState,
+  RequestStatus,
+} from "../types/RequestContent";
+import { ContentType, ProjectStatus } from "../types/Content";
+import PageTitle from "../components/Shared/PageTitle";
+import ContentListItem, {
+  getColumnStart,
+} from "../components/ContentShow/ContentListItem";
+import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
+import MetaData from "../components/Shared/MetaData";
+import { NavigationType, useNavigationType } from "react-router-dom";
+import { jsonParser } from "../adapters/helpers";
+import jsonConfig from "@config/config.json";
+import {
+  NotificationContext,
+  NotificationType,
+} from "../contexts/Notification";
 
 /* -------------------------------------------------------------------------- */
 
@@ -90,7 +100,7 @@ const InactiveArrow = css`
 const Arrow = styled(AiFillCaretLeft)<{ active: number; flip?: number }>`
   font-size: 3.6rem;
   ${(props) => (props.active ? ActiveArrow : InactiveArrow)}
-  ${(props) => (props.flip ? FlipCss : '')}
+  ${(props) => (props.flip ? FlipCss : "")}
 `;
 
 const PageNum = styled.p`
@@ -110,16 +120,23 @@ const ProjectList = () => {
 
   // Uses sessionStorage to keep state when user navigates back
   const [page, setPage] = useState(
-    sessionStorage.getItem('projectListPage') && navigationType === NavigationType.Pop
-      ? parseInt(sessionStorage.getItem('projectListPage') ?? '0')
+    sessionStorage.getItem("projectListPage") &&
+      navigationType === NavigationType.Pop
+      ? parseInt(sessionStorage.getItem("projectListPage") ?? "0")
       : 0,
   );
   const [maxPage, setMaxPage] = useState(0);
 
   // Uses sessionStorage to keep state when user navigates back
-  const [underDevProjects, setUnderDevProjects] = useState<RequestState<FullContentList>>(
-    sessionStorage.getItem('projectListUnderDev') && navigationType === NavigationType.Pop
-      ? JSON.parse(sessionStorage.getItem('projectListUnderDev') as string, jsonParser)
+  const [underDevProjects, setUnderDevProjects] = useState<
+    RequestState<FullContentList>
+  >(
+    sessionStorage.getItem("projectListUnderDev") &&
+      navigationType === NavigationType.Pop
+      ? JSON.parse(
+          sessionStorage.getItem("projectListUnderDev") as string,
+          jsonParser,
+        )
       : { requestStatus: RequestStatus.Loading },
   );
   // Needed cause no dependencies for under dev useEffect and
@@ -128,16 +145,26 @@ const ProjectList = () => {
   const [underDevReload, setUnderDevReload] = useState(false);
 
   // Uses sessionStorage to keep state when user navigates back
-  const [pageFinishedProjects, setPageFinishedProjects] = useState<RequestState<FullContentList>>(
-    sessionStorage.getItem('projectListFinishedPage') && navigationType === NavigationType.Pop
-      ? JSON.parse(sessionStorage.getItem('projectListFinishedPage') as string, jsonParser)
+  const [pageFinishedProjects, setPageFinishedProjects] = useState<
+    RequestState<FullContentList>
+  >(
+    sessionStorage.getItem("projectListFinishedPage") &&
+      navigationType === NavigationType.Pop
+      ? JSON.parse(
+          sessionStorage.getItem("projectListFinishedPage") as string,
+          jsonParser,
+        )
       : { requestStatus: RequestStatus.Loading },
   );
   const [fetchedFinishedProjects, setFetchedFinishedProjects] = useState<
     Record<number, RequestState<FullContentList>>
   >(
-    sessionStorage.getItem('projectListFinishedList') && navigationType === NavigationType.Pop
-      ? JSON.parse(sessionStorage.getItem('projectListFinishedList') as string, jsonParser)
+    sessionStorage.getItem("projectListFinishedList") &&
+      navigationType === NavigationType.Pop
+      ? JSON.parse(
+          sessionStorage.getItem("projectListFinishedList") as string,
+          jsonParser,
+        )
       : {},
   );
 
@@ -156,10 +183,19 @@ const ProjectList = () => {
 
   useEffect(() => {
     return () => {
-      sessionStorage.setItem('projectListPage', page.toString());
-      sessionStorage.setItem('projectListFinishedPage', JSON.stringify(pageFinishedProjects));
-      sessionStorage.setItem('projectListUnderDev', JSON.stringify(underDevProjects));
-      sessionStorage.setItem('projectListFinishedList', JSON.stringify(fetchedFinishedProjects));
+      sessionStorage.setItem("projectListPage", page.toString());
+      sessionStorage.setItem(
+        "projectListFinishedPage",
+        JSON.stringify(pageFinishedProjects),
+      );
+      sessionStorage.setItem(
+        "projectListUnderDev",
+        JSON.stringify(underDevProjects),
+      );
+      sessionStorage.setItem(
+        "projectListFinishedList",
+        JSON.stringify(fetchedFinishedProjects),
+      );
     };
   });
 
@@ -251,7 +287,7 @@ const ProjectList = () => {
   const FinishedPageRetry = () => {
     notifications.addNotification({
       type: NotificationType.Info,
-      message: 'Re-requesting finished page',
+      message: "Re-requesting finished page",
     });
 
     setPageFinishedProjects({ requestStatus: RequestStatus.Loading });
@@ -266,7 +302,7 @@ const ProjectList = () => {
   const UnderDevRetry = () => {
     notifications.addNotification({
       type: NotificationType.Info,
-      message: 'Re-requesting under development page',
+      message: "Re-requesting under development page",
     });
 
     setUnderDevProjects({ requestStatus: RequestStatus.Loading });
@@ -278,9 +314,9 @@ const ProjectList = () => {
   return (
     <ProjectListBody>
       <MetaData
-        title='My Projects | Kyle Denief'
+        title="My Projects | Kyle Denief"
         description={jsonConfig.pages.blogList.description}
-        type='website'
+        type="website"
       />
 
       <PageTitle>Projects</PageTitle>

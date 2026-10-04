@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import styled, { keyframes, css } from 'styled-components';
+import { useState } from "react";
+import styled, { keyframes, css } from "styled-components";
 import {
   AiFillGithub,
   AiFillTwitterCircle,
@@ -8,11 +8,11 @@ import {
   AiFillYoutube,
   AiFillGitlab,
   AiFillCodepenCircle,
-} from 'react-icons/ai';
-import PageTitle from '../components/Shared/PageTitle';
-import ExternalLink from '../components/Connect/ExternalLink';
-import MetaData from '../components/Shared/MetaData';
-import jsonConfig from '@config/config.json';
+} from "react-icons/ai";
+import PageTitle from "../components/Shared/PageTitle";
+import ExternalLink from "../components/Connect/ExternalLink";
+import MetaData from "../components/Shared/MetaData";
+import jsonConfig from "@config/config.json";
 
 /* -------------------------------------------------------------------------- */
 
@@ -83,7 +83,7 @@ const CopyNotificationBubble = styled.div<{ active: boolean }>`
   cursor: default;
 
   // Adds animation and other css when notification is active
-  ${(props) => (props.active ? copyNotificationActive : '')}
+  ${(props) => (props.active ? copyNotificationActive : "")}
 `;
 
 /* -------------------------------------------------------------------------- */
@@ -97,7 +97,7 @@ const Connect = () => {
       <MetaData
         title={`Connect With Me | ${jsonConfig.name}`}
         description={jsonConfig.pages.connect.description}
-        type='website'
+        type="website"
       />
 
       <PageTitle>Connect With Me</PageTitle>
@@ -133,7 +133,9 @@ const Connect = () => {
       </ExternalLinks>
 
       {/* Copy notification element */}
-      <CopyNotificationBubble active={copyNotification}>Email Copied</CopyNotificationBubble>
+      <CopyNotificationBubble active={copyNotification}>
+        Email Copied
+      </CopyNotificationBubble>
     </ConnectBody>
   );
 };

@@ -3,13 +3,13 @@
 /* -------------------------------------------------------------------------- */
 
 export enum ContentType {
-  Blog = 'blog',
-  Project = 'project',
+  Blog = "blog",
+  Project = "project",
 }
 
 export enum ProjectStatus {
-  UnderDevelopment = 'under_development',
-  Finished = 'finished',
+  UnderDevelopment = "under_development",
+  Finished = "finished",
 }
 
 /* -------------------------------------------------------------------------- */

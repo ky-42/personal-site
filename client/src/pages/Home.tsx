@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from 'react';
-import styled from 'styled-components';
-import ContentContainer from '../components/Home/ContentSection';
-import { ContentOperations } from '../adapters/content';
-import { ContentType } from '../types/Content';
-import ContentItem from '../components/Home/ContentItem';
+import { useContext, useEffect, useState } from "react";
+import styled from "styled-components";
+import ContentContainer from "../components/Home/ContentSection";
+import { ContentOperations } from "../adapters/content";
+import { ContentType } from "../types/Content";
+import ContentItem from "../components/Home/ContentItem";
 import {
   RequestState,
   listOrder,
@@ -11,12 +11,12 @@ import {
   PageInfo,
   ContentFilter,
   FullContentList,
-} from '../types/RequestContent';
-import CurrentlyReading from '../components/ContentShow/CurrentlyReading';
-import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
-import MetaData from '../components/Shared/MetaData';
-import jsonConfig from '@config/config.json';
-import MobileContext from '../contexts/Mobile';
+} from "../types/RequestContent";
+import CurrentlyReading from "../components/ContentShow/CurrentlyReading";
+import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
+import MetaData from "../components/Shared/MetaData";
+import jsonConfig from "@config/config.json";
+import MobileContext from "../contexts/Mobile";
 
 /* -------------------------------------------------------------------------- */
 
@@ -110,10 +110,14 @@ const blogFilter: ContentFilter = {
 
 const Home = () => {
   // Data for latest content links
-  const [latestProjectList, setLatestProjectList] = useState<RequestState<FullContentList>>({
+  const [latestProjectList, setLatestProjectList] = useState<
+    RequestState<FullContentList>
+  >({
     requestStatus: RequestStatus.Loading,
   });
-  const [latestBlogList, setLatestBlogList] = useState<RequestState<FullContentList>>({
+  const [latestBlogList, setLatestBlogList] = useState<
+    RequestState<FullContentList>
+  >({
     requestStatus: RequestStatus.Loading,
   });
 
@@ -138,7 +142,11 @@ const Home = () => {
   }, []);
 
   // Element to display when latest blog or project is successfully fetched
-  const contentFetchSuccess = ({ data }: { data: FullContentList }): JSX.Element => {
+  const contentFetchSuccess = ({
+    data,
+  }: {
+    data: FullContentList;
+  }): JSX.Element => {
     if (data.page_count > 0) {
       return <ContentItem content={data.full_content_list[0]} />;
     }
@@ -150,7 +158,7 @@ const Home = () => {
       <MetaData
         title={jsonConfig.name}
         description={jsonConfig.pages.home.description}
-        type='website'
+        type="website"
       />
 
       <LeftPageColumn>
@@ -171,18 +179,27 @@ const Home = () => {
 
       <HomeRight>
         <ContentContainer
-          containerTitle='Latest Project'
+          containerTitle="Latest Project"
           housedElement={
-            <LoadErrorHandle requestInfo={latestProjectList} successElement={contentFetchSuccess} />
+            <LoadErrorHandle
+              requestInfo={latestProjectList}
+              successElement={contentFetchSuccess}
+            />
           }
         />
         <ContentContainer
-          containerTitle='Latest Blog'
+          containerTitle="Latest Blog"
           housedElement={
-            <LoadErrorHandle requestInfo={latestBlogList} successElement={contentFetchSuccess} />
+            <LoadErrorHandle
+              requestInfo={latestBlogList}
+              successElement={contentFetchSuccess}
+            />
           }
         />
-        <ContentContainer containerTitle='Currently Reading' housedElement={<CurrentlyReading />} />
+        <ContentContainer
+          containerTitle="Currently Reading"
+          housedElement={<CurrentlyReading />}
+        />
       </HomeRight>
     </HomeBody>
   );

@@ -1,14 +1,17 @@
-import styled from 'styled-components';
-import { ContentType, FullContent } from '../../types/Content';
-import { Link } from 'react-router-dom';
+import styled from "styled-components";
+import { ContentType, FullContent } from "../../types/Content";
+import { Link } from "react-router-dom";
 
 /* -------------------------------------------------------------------------- */
 
 // start column two and three are used to position the content item within the grid
-const ContentItemDiv = styled(Link)<{ startcolumntwo?: number; startcolumnthree?: number }>`
+const ContentItemDiv = styled(Link)<{
+  startcolumntwo?: number;
+  startcolumnthree?: number;
+}>`
   display: flex;
   flex-direction: column;
-  grid-column: ${(props) => (props.startcolumnthree ? `${props.startcolumnthree} / ` : '')} span 2;
+  grid-column: ${(props) => (props.startcolumnthree ? `${props.startcolumnthree} / ` : "")} span 2;
   max-width: 40rem;
   height: 14rem;
   padding: 2rem;
@@ -17,7 +20,7 @@ const ContentItemDiv = styled(Link)<{ startcolumntwo?: number; startcolumnthree?
   outline-offset: -0.1rem;
 
   @media (max-width: 1500px) {
-    grid-column: ${(props) => (props.startcolumntwo ? '2 / ' : '')} span 2;
+    grid-column: ${(props) => (props.startcolumntwo ? "2 / " : "")} span 2;
   }
 
   // In single column lets item grow vertically and centers it
@@ -98,7 +101,11 @@ interface ContentItemProps {
   startColumnThree?: number;
 }
 
-const ContentListItem = ({ content, startColumnTwo, startColumnThree }: ContentItemProps) => {
+const ContentListItem = ({
+  content,
+  startColumnTwo,
+  startColumnThree,
+}: ContentItemProps) => {
   // Link to a piece of content that also displays info about it
   // For project list and blog list page
 
@@ -108,21 +115,21 @@ const ContentListItem = ({ content, startColumnTwo, startColumnThree }: ContentI
 
   if (
     content.base_content.content_type === ContentType.Project &&
-    'project' in content.extra_content &&
+    "project" in content.extra_content &&
     content.extra_content.project.start_date !== undefined
   ) {
-    ContentDate = new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    ContentDate = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     }).format(content.extra_content.project.start_date);
 
     ContentDate = `Started On: ${ContentDate}`;
   } else {
-    ContentDate = new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    ContentDate = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     }).format(content.base_content.created_at);
 
     if (content.base_content.content_type === ContentType.Project) {

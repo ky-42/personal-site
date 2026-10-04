@@ -1,12 +1,12 @@
-import { ThemeProvider, createGlobalStyle } from 'styled-components';
-import { BrowserRouter } from 'react-router-dom';
-import MobileContext from '../contexts/Mobile';
-import Routing from '../Routing';
-import { HelmetProvider } from 'react-helmet-async';
-import useWindowSize from '../hooks/useWindowSize';
-import jsonConfig from '@config/config.json';
-import { NotificationProvider } from '../contexts/Notification';
-import NotificationList from '../components/Notifications/NotificationList';
+import { ThemeProvider, createGlobalStyle } from "styled-components";
+import { BrowserRouter } from "react-router-dom";
+import MobileContext from "../contexts/Mobile";
+import Routing from "../Routing";
+import { HelmetProvider } from "react-helmet-async";
+import useWindowSize from "../hooks/useWindowSize";
+import jsonConfig from "@config/config.json";
+import { NotificationProvider } from "../contexts/Notification";
+import NotificationList from "../components/Notifications/NotificationList";
 
 // Size in px at which site starts using mobile features
 const MobileWidth = 700;
@@ -14,8 +14,8 @@ const MobileWidth = 700;
 // Styles to pass to all components
 const StyleTheme = {
   mobile: false,
-  borderSize: '0.3rem',
-  navHeight: '4.496rem',
+  borderSize: "0.3rem",
+  navHeight: "4.496rem",
   ...jsonConfig.colours,
 };
 

@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite';
-import jsonConfig from '../config/config.json';
-import react from '@vitejs/plugin-react';
-import viteTsconfigPaths from 'vite-tsconfig-paths';
-import svgrPlugin from 'vite-plugin-svgr';
-import { createHtmlPlugin } from 'vite-plugin-html';
+import { defineConfig } from "vite";
+import jsonConfig from "../config/config.json";
+import react from "@vitejs/plugin-react";
+import viteTsconfigPaths from "vite-tsconfig-paths";
+import svgrPlugin from "vite-plugin-svgr";
+import { createHtmlPlugin } from "vite-plugin-html";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,16 +15,16 @@ export default defineConfig({
     createHtmlPlugin({
       inject: {
         data: {
-          'name': jsonConfig.name,
-          'themeColour': jsonConfig.colours.backgroundColour,
-          'description': jsonConfig.metaData.description,
-          'analyticsSrc': jsonConfig.metaData.analytics.analyticsSrc,
-          'websiteId': jsonConfig.metaData.analytics.websiteId
-        }
-      }
-    })
+          name: jsonConfig.name,
+          themeColour: jsonConfig.colours.backgroundColour,
+          description: jsonConfig.metaData.description,
+          analyticsSrc: jsonConfig.metaData.analytics.analyticsSrc,
+          websiteId: jsonConfig.metaData.analytics.websiteId,
+        },
+      },
+    }),
   ],
   build: {
-    outDir: 'build',
+    outDir: "build",
   },
 });

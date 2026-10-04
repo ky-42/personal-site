@@ -1,7 +1,10 @@
-import styled, { css, keyframes } from 'styled-components';
-import { NotificationInfo, NotificationType } from '../../contexts/Notification';
-import { IoMdClose } from 'react-icons/io';
-import { useState } from 'react';
+import styled, { css, keyframes } from "styled-components";
+import {
+  NotificationInfo,
+  NotificationType,
+} from "../../contexts/Notification";
+import { IoMdClose } from "react-icons/io";
+import { useState } from "react";
 
 /* ------------------ Animation for fading out notification ----------------- */
 
@@ -17,7 +20,10 @@ const fadeOutAnimation = css`
 
 /* -------------------------------------------------------------------------- */
 
-const NotificationContainer = styled.div<{ noteType: NotificationType; hovered: boolean }>`
+const NotificationContainer = styled.div<{
+  noteType: NotificationType;
+  hovered: boolean;
+}>`
   pointer-events: all;
   display: flex;
   justify-content: space-around;
@@ -40,7 +46,7 @@ const NotificationContainer = styled.div<{ noteType: NotificationType; hovered: 
           return props.theme.highlight;
       }
     }};
-  ${(props) => (props.hovered ? '' : fadeOutAnimation)};
+  ${(props) => (props.hovered ? "" : fadeOutAnimation)};
 `;
 
 const Message = styled.p`

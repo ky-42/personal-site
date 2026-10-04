@@ -1,7 +1,7 @@
-import { useContext } from 'react';
-import styled from 'styled-components';
-import { NotificationContext } from '../../contexts/Notification';
-import NotificationBox from './NotificationBox';
+import { useContext } from "react";
+import styled from "styled-components";
+import { NotificationContext } from "../../contexts/Notification";
+import NotificationBox from "./NotificationBox";
 
 /* -------------------------------------------------------------------------- */
 
