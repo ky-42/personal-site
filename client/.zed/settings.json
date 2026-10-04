@@ -1,0 +1,19 @@
+// Folder-specific settings
+//
+// For a full list of overridable settings, and general information on folder-specific settings,
+// see the documentation: https://zed.dev/docs/configuring-zed#settings-files
+{
+  "languages": {
+    "TypeScript": {
+      "language_servers": ["typescript-ls", "biome", "!eslint", "!tailwindcss-language-server", "!vtsls", "!typescript-language-server", "..."]
+    },
+    "TSX": {
+      "language_servers": ["typescript-ls", "biome", "!eslint", "!tailwindcss-language-server", "!vtsls", "!typescript-language-server", "..."]
+    },
+    "JavaScript": {
+      "language_servers": ["typescript-ls", "biome", "!eslint", "!tailwindcss-language-server", "!vtsls", "!typescript-language-server", "..."]
+    },
+    "HTML": { "language_servers": ["!tailwindcss-language-server", "..."] },
+    "CSS":  { "language_servers": ["!tailwindcss-language-server", "..."] }
+  }
+}
