@@ -21,9 +21,9 @@
     "bodyLinkVisitedColour": "#c9e2aa"
   },
   "currentlyReading": {
-    "name": "Perilous Bounty",
-    "author": "Tom Philpott",
-    "dateStarted": "Nov. 27th, 2024"
+    "name": "Dominion: The Railway and the Rise of Canada",
+    "author": "Stephen R. Bown",
+    "dateStarted": "November 2026"
   },
   "pages": {
     "home": {
@@ -54,82 +54,58 @@
       "mainParagraph": "I'm currently attending Memorial University of Newfoundland majoring in Computer Science. The main reason I chose Computer Science is because I just like making cool things. I've always been interested in programming and using computers to make things so it seemed like a natural next step. The first time I tried programming was in grade 6 but I really learned how it all works in grade 9. Ever since I've been learning more and making random stuff. Other than programming I got a few hobbies like hiking, reading, and a few sports. I also play a few games, usually RTS games or shooters.",
       "futureReads": [
         {
-          "name": "Lost and Founder",
-          "author": "Rand Fishkin"
+          "name": "Project Hail Mary",
+          "author": "Andy Weir"
         },
         {
-          "name": "Zero to One",
-          "author": "Peter Thiel & Blake Masters"
+          "name": "Ender's Game",
+          "author": "Orson Scott Card"
         },
         {
-          "name": "Code",
-          "author": "Charles Petzold"
+          "name": "Hackers: Heroes of the Computer Revolution",
+          "author": "Steven Levy"
         },
         {
-          "name": "How Not to Be Wrong",
-          "author": "Jordan Ellenberg"
+          "name": "Brave New World",
+          "author": "Aldous Huxley"
         },
         {
-          "name": "Structures",
-          "author": "J. E. Gordon"
+          "name": "The Way of Kings",
+          "author": "Brandon Sanderson"
         },
         {
-          "name": "Blackwater",
-          "author": "Jeremy Scahill"
-        },
-        {
-          "name": "The Adventures of Tom Sawyer",
-          "author": "Mark Twain"
-        },
-        {
-          "name": "Moby Dick",
-          "author": "Herman Melville"
-        },
-        {
-          "name": "Moon Road",
-          "author": "Sarah Leipciger"
+          "name": "Alright, Alright, Alright: The Oral History of Richard Linklater’s Dazed and Confused",
+          "author": "Melissa Maerz"
         }
       ],
-      "finishedReading": [
+      "favoriteReading": [
         {
-          "name": "Metropolis",
-          "author": "Ben Wilson"
+          "name": "The Hunger Games Series",
+          "author": "Suzanne Collins"
         },
         {
-          "name": "Good Economics for Hard Times",
-          "author": "Abhijit Banerjee & Esther Duflo"
-        },
-        {
-          "name": "Red Rising",
+          "name": "Red Rising Series",
           "author": "Pierce Brown"
         },
         {
-          "name": "Animal Farm",
-          "author": "George Orwell"
-        },
-        {
-          "name": "The Pragmatic Programmer",
-          "author": "David Thomas & Andrew Hunt"
-        },
-        {
-          "name": "Jim Henson: The Biography",
-          "author": "Brian Jones"
-        },
-        {
-          "name": "Atomic Habits",
-          "author": "James Clear"
-        },
-        {
-          "name": "Splinter of the Mind's Eye",
-          "author": "Alan Dean Foster"
-        },
-        {
-          "name": "Business Adventures",
-          "author": "John Brooks"
+          "name": "American Made",
+          "author": "Farah Stockman"
         },
         {
           "name": "Nineteen Eighty-Four",
           "author": "George Orwell"
+        },
+        {
+          "name": "Moon Road",
+          "author": "Sarah Leipciger"
+        },
+        {
+          "name": "Homestand: Small Town Baseball and the Fight for the Soul of America",
+          "author": "Will Bardenwerper"
+        },
+        {
+          "name": "Business Adventures",
+          "author": "John Brooks"
         },
         {
           "name": "The Kite Runner",
@@ -140,16 +116,12 @@
           "author": "Ernest Cline"
         },
         {
-          "name": "Python Crash Course",
-          "author": "Eric Matthes"
+          "name": "Freakonomics",
+          "author": "Stephen J. Dubner & Steven Levitt"
         },
         {
           "name": "The Ultimate Hitchhiker's Guide to the Galaxy",
           "author": "Douglas Adams"
-        },
-        {
-          "name": "The Hunger Games (Books 0-4)",
-          "author": "Suzanne Collins"
         }
       ]
     },

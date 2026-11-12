@@ -30,9 +30,9 @@ const CurrentlyReading = () => {
   return (
     <CurrentlyReadingBody>
       <BookTitle>
-        {jsonConfig.currentlyReading.name},
+        {jsonConfig.currentlyReading.name}
         <br />
-        {jsonConfig.currentlyReading.author}
+        by {jsonConfig.currentlyReading.author}
       </BookTitle>
       <StartedDate>
         Started: {jsonConfig.currentlyReading.dateStarted}

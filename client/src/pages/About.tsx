@@ -43,7 +43,7 @@ const BookListDiv = styled.div`
 
 const About = () => {
   // Lists of books to be displayed
-  const FinishedReading = jsonConfig.pages.about.finishedReading.map((v) => {
+  const FinishedReading = jsonConfig.pages.about.favoriteReading.map((v) => {
     return `${v.name}, ${v.author}`;
   });
 
@@ -69,7 +69,7 @@ const About = () => {
         <CurrentlyReading />
         <BookListDiv>
           <ReadingList
-            ReadingTitle="Finished Books (Favorites)"
+            ReadingTitle="Favorite Books"
             BookList={FinishedReading}
           />
           <ReadingList ReadingTitle="Future Reads" BookList={ToRead} />
