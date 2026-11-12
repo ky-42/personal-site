@@ -1,5 +1,5 @@
-import { Helmet } from "react-helmet-async";
 import jsonConfig from "@config/config.json";
+import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 
 interface MetaDataProps {

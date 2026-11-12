@@ -1,15 +1,13 @@
-import { defineConfig } from "vite";
-import jsonConfig from "../config/config.json";
 import react from "@vitejs/plugin-react";
-import viteTsconfigPaths from "vite-tsconfig-paths";
-import svgrPlugin from "vite-plugin-svgr";
+import { defineConfig } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
+import svgrPlugin from "vite-plugin-svgr";
+import jsonConfig from "../config/config.json" with { type: "json" };
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
-    viteTsconfigPaths(),
     svgrPlugin(),
     // Injects the config data into the index.html
     createHtmlPlugin({
@@ -26,5 +24,8 @@ export default defineConfig({
   ],
   build: {
     outDir: "build",
+  },
+  resolve: {
+    tsconfigPaths: true,
   },
 });

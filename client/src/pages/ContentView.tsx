@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -6,24 +7,23 @@ import {
   DevblogOperations,
   TagOperations,
 } from "../adapters/content";
-import { ContentType, FullContent } from "../types/Content";
-import {
-  RequestState,
-  RequestStatus,
-  SurroundingBlogs,
-} from "../types/RequestContent";
 import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
-import MetaData from "../components/Shared/MetaData";
-import ContentBody from "../components/Shared/ContentBody";
-import { Devblog } from "../types/Content";
 import {
   DevblogLink,
   EmptyDevblogLink,
   ShowLink,
   ShowTag,
 } from "../components/Shared/Buttons";
-import { listOrder } from "../types/RequestContent";
-import { FullContentList } from "../types/RequestContent";
+import ContentBody from "../components/Shared/ContentBody";
+import MetaData from "../components/Shared/MetaData";
+import { ContentType, type Devblog, type FullContent } from "../types/Content";
+import {
+  type FullContentList,
+  listOrder,
+  type RequestState,
+  RequestStatus,
+  type SurroundingBlogs,
+} from "../types/RequestContent";
 
 /* -------------------------------------------------------------------------- */
 
@@ -59,7 +59,7 @@ const ContentDate = styled.p`
 
 const ContentDesc = styled.p`
   font-size: clamp(1.76rem, 5vw, 2.24rem);
-  font-variation-settings: 'wght' 700;
+  font-variation-settings: "wght" 700;
 `;
 
 /* ----------------------- Page lower section elements ---------------------- */
@@ -82,7 +82,7 @@ const TopLinks = styled.div`
 const TopLinkError = styled.p`
   margin: 0;
   font-size: 16;
-  font-variation-settings: 'wght' 550;
+  font-variation-settings: "wght" 550;
 `;
 
 /* -------------------------------- Blog data ------------------------------- */
@@ -282,8 +282,8 @@ const ContentView = () => {
     data: SurroundingBlogs;
     isPrevious: boolean;
   }) => {
-    let blogSlug;
-    let blogTitle;
+    let blogSlug = "";
+    let blogTitle = "";
 
     // Checks if button to be rendered is for previous or next blog
     // then checks if there is a blog to be rendered if not a empty
@@ -344,7 +344,7 @@ const ContentView = () => {
         />
       );
     } else {
-      return <></>;
+      return null;
     }
   };
 
@@ -366,8 +366,8 @@ const ContentView = () => {
     let projectStartString: undefined | string;
 
     // Sections with data that depends on the content type
-    let ExtraTopSection: JSX.Element = <></>;
-    let ExtraBottomSection: JSX.Element = <></>;
+    let ExtraTopSection: ReactElement = <></>;
+    let ExtraBottomSection: ReactElement = <></>;
 
     if (
       data.base_content.content_type === "project" &&

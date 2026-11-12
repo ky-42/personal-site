@@ -1,10 +1,10 @@
+import { useState } from "react";
+import { IoMdClose } from "react-icons/io";
 import styled, { css, keyframes } from "styled-components";
 import {
-  NotificationInfo,
+  type NotificationInfo,
   NotificationType,
 } from "../../contexts/Notification";
-import { IoMdClose } from "react-icons/io";
-import { useState } from "react";
 
 /* ------------------ Animation for fading out notification ----------------- */
 

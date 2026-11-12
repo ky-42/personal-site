@@ -4,9 +4,9 @@ WORKDIR /app
 RUN mkdir -p /app/config
 
 COPY client/package.json ./client/package.json
-COPY client/yarn.lock ./client/yarn.lock
+COPY client/pnpm-lock.yaml ./client/pnpm-lock.yaml
 COPY client/tsconfig.json ./client/tsconfig.json
-COPY client/vite.config.ts ./client/vite.config.ts
+COPY client/vite.config.mts ./client/vite.config.mts
 COPY client/index.html ./client/index.html
 COPY client/src ./client/src
 COPY client/public ./client/public
@@ -15,9 +15,11 @@ COPY config/nginx.conf ./config/nginx.conf
 
 WORKDIR /app/client
 
-RUN yarn install --immutable
+RUN npm install -g pnpm@8.11.0
 
-RUN yarn build
+RUN pnpm install --frozen-lockfile
+
+RUN pnpm build
 
 FROM nginx:alpine
 

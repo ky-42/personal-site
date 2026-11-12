@@ -1,19 +1,19 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { Content } from "../../types/Content";
+import type { Content } from "../../types/Content";
+import {
+  ReducerAction,
+  type SetReducer,
+  type UpdateReducer,
+} from "../../types/ManageContent";
+import ContentBody from "../Shared/ContentBody";
+import InputArea from "./InputArea";
 import {
   InputGroup,
   LongTextInput,
   ShortTextInput,
   StateButton,
 } from "./InputElements";
-import InputArea from "./InputArea";
-import {
-  ReducerAction,
-  SetReducer,
-  UpdateReducer,
-} from "../../types/ManageContent";
-import ContentBody from "../Shared/ContentBody";
 
 /* ---------------------------- Styled Components --------------------------- */
 
@@ -50,7 +50,7 @@ const BaseContentManagement = ({
       <InputGroup>
         <InputArea
           labelText={"Title"}
-          error={validationErrors["title"]}
+          error={validationErrors.title}
           InputElement={
             <ShortTextInput
               type="text"
@@ -68,7 +68,7 @@ const BaseContentManagement = ({
 
         <InputArea
           labelText={"Slug"}
-          error={validationErrors["slug"]}
+          error={validationErrors.slug}
           InputElement={
             <ShortTextInput
               type="text"
@@ -86,7 +86,7 @@ const BaseContentManagement = ({
 
         <InputArea
           labelText={"Description"}
-          error={validationErrors["description"]}
+          error={validationErrors.description}
           InputElement={
             <ShortTextInput
               type="text"
@@ -105,7 +105,7 @@ const BaseContentManagement = ({
 
       <InputArea
         labelText={"Content Body (Markdown)"}
-        error={validationErrors["body"]}
+        error={validationErrors.body}
         InputElement={
           <LongTextInput
             value={baseContentData.body}

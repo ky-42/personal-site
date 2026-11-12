@@ -10,12 +10,12 @@ const ProjectList = React.lazy(() => import("./ProjectList"));
 const NotFound = React.lazy(() => import("./NotFound"));
 
 export {
-  Home,
   About,
+  BlogList,
   Connect,
   ContentView,
-  BlogList,
+  Home,
   ManageContent,
-  ProjectList,
   NotFound,
+  ProjectList,
 };

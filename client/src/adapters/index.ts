@@ -30,12 +30,10 @@ const backendFetch = async <FetchType>(
   const text = await response.text();
 
   if (!response.ok) {
-    let errorData;
+    let errorData: { message?: string } = {};
     try {
       errorData = text ? JSON.parse(text) : {};
-    } catch {
-      errorData = {};
-    }
+    } catch {}
     throw new Error(
       errorData.message || "An error occurred while fetching data.",
     );

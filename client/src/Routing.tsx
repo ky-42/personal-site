@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import PageConfig from "./config/PageConfig";
 import * as Pages from "./pages/_PagesExport";
 import LoadingPage from "./pages/Loading";

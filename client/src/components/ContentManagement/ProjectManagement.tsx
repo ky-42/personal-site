@@ -1,17 +1,17 @@
 import styled from "styled-components";
-import { Project, ProjectStatus } from "../../types/Content";
+import { type Project, ProjectStatus } from "../../types/Content";
 import {
   ReducerAction,
-  SetReducer,
-  UpdateReducer,
+  type SetReducer,
+  type UpdateReducer,
 } from "../../types/ManageContent";
+import InputArea from "./InputArea";
 import {
   DateInput,
   DropDown,
   InputGroup,
   ShortTextInput,
 } from "./InputElements";
-import InputArea from "./InputArea";
 
 /* -------------------------------------------------------------------------- */
 
@@ -38,7 +38,7 @@ const ProjectManagement = ({
     <ProjectManagementArea>
       <InputArea
         labelText={"Project Status"}
-        error={validationErrors["current_status"]}
+        error={validationErrors.current_status}
         InputElement={
           <DropDown
             value={projectData.current_status}
@@ -61,7 +61,7 @@ const ProjectManagement = ({
       <InputGroup>
         <InputArea
           labelText={"Repository URL"}
-          error={validationErrors["repository_url"]}
+          error={validationErrors.repository_url}
           InputElement={
             <ShortTextInput
               type="text"
@@ -82,7 +82,7 @@ const ProjectManagement = ({
 
         <InputArea
           labelText={"Website URL"}
-          error={validationErrors["website_url"]}
+          error={validationErrors.website_url}
           InputElement={
             <ShortTextInput
               type="text"
@@ -101,7 +101,7 @@ const ProjectManagement = ({
 
         <InputArea
           labelText={"Project Start Date"}
-          error={validationErrors["start_date"]}
+          error={validationErrors.start_date}
           InputElement={
             <DateInput
               type="date"

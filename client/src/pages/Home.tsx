@@ -1,22 +1,23 @@
+import jsonConfig from "@config/config.json";
+import type { ReactElement } from "react";
 import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import ContentContainer from "../components/Home/ContentSection";
 import { ContentOperations } from "../adapters/content";
-import { ContentType } from "../types/Content";
-import ContentItem from "../components/Home/ContentItem";
-import {
-  RequestState,
-  listOrder,
-  RequestStatus,
-  PageInfo,
-  ContentFilter,
-  FullContentList,
-} from "../types/RequestContent";
 import CurrentlyReading from "../components/ContentShow/CurrentlyReading";
+import ContentItem from "../components/Home/ContentItem";
+import ContentContainer from "../components/Home/ContentSection";
 import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
 import MetaData from "../components/Shared/MetaData";
-import jsonConfig from "@config/config.json";
 import MobileContext from "../contexts/Mobile";
+import { ContentType } from "../types/Content";
+import {
+  type ContentFilter,
+  type FullContentList,
+  listOrder,
+  type PageInfo,
+  type RequestState,
+  RequestStatus,
+} from "../types/RequestContent";
 
 /* -------------------------------------------------------------------------- */
 
@@ -146,7 +147,7 @@ const Home = () => {
     data,
   }: {
     data: FullContentList;
-  }): JSX.Element => {
+  }): ReactElement => {
     if (data.page_count > 0) {
       return <ContentItem content={data.full_content_list[0]} />;
     }

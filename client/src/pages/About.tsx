@@ -1,9 +1,9 @@
-import styled from "styled-components";
-import CurrentlyReading from "../components/ContentShow/CurrentlyReading";
-import PageTitle from "../components/Shared/PageTitle";
-import ReadingList from "../components/AboutMe/ReadingList";
-import MetaData from "../components/Shared/MetaData";
 import jsonConfig from "@config/config.json";
+import styled from "styled-components";
+import ReadingList from "../components/AboutMe/ReadingList";
+import CurrentlyReading from "../components/ContentShow/CurrentlyReading";
+import MetaData from "../components/Shared/MetaData";
+import PageTitle from "../components/Shared/PageTitle";
 
 /* -------------------------------------------------------------------------- */
 
@@ -44,11 +44,11 @@ const BookListDiv = styled.div`
 const About = () => {
   // Lists of books to be displayed
   const FinishedReading = jsonConfig.pages.about.finishedReading.map((v) => {
-    return v.name + ", " + v.author;
+    return `${v.name}, ${v.author}`;
   });
 
   const ToRead = jsonConfig.pages.about.futureReads.map((v) => {
-    return v.name + ", " + v.author;
+    return `${v.name}, ${v.author}`;
   });
 
   return (

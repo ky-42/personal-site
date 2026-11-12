@@ -76,13 +76,13 @@ Note: If you change the server port or ip, make sure to update the URL in `clien
 
 - Rust
 - libpq-dev/postgresql-libs
-- Yarn or npm
+- pnpm
 
 ### Building Client
 
 1. Update the `config/config.json` file with the production URLs of your frontend and backend servers, and optionally add your Umami Analytics information.
 2. Navigate to the `client` directory.
-3. Build the client with `yarn build`.
+3. Build the client with `pnpm build`.
 
 ### Building Server
 

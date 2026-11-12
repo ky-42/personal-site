@@ -1,18 +1,18 @@
+import jsonConfig from "@config/config.json";
 import { useState } from "react";
-import styled, { keyframes, css } from "styled-components";
 import {
-  AiFillGithub,
-  AiFillTwitterCircle,
-  AiFillLinkedin,
-  AiFillInstagram,
-  AiFillYoutube,
-  AiFillGitlab,
   AiFillCodepenCircle,
+  AiFillGithub,
+  AiFillGitlab,
+  AiFillInstagram,
+  AiFillLinkedin,
+  AiFillTwitterCircle,
+  AiFillYoutube,
 } from "react-icons/ai";
-import PageTitle from "../components/Shared/PageTitle";
+import styled, { css, keyframes } from "styled-components";
 import ExternalLink from "../components/Connect/ExternalLink";
 import MetaData from "../components/Shared/MetaData";
-import jsonConfig from "@config/config.json";
+import PageTitle from "../components/Shared/PageTitle";
 
 /* -------------------------------------------------------------------------- */
 

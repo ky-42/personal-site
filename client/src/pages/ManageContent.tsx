@@ -1,24 +1,14 @@
 import { useContext, useReducer, useRef, useState } from "react";
-import styled from "styled-components";
 import { AiOutlineRight } from "react-icons/ai";
-import PageTitle from "../components/Shared/PageTitle";
+import styled from "styled-components";
 import {
-  ActionTypes,
-  ReducerAction,
-  SetReducer,
-  UpdateReducer,
-} from "../types/ManageContent";
-import {
-  Blog,
-  Content,
-  ContentType,
-  Devblog,
-  FullContent,
-  NewDevblog,
-  NewFullContent,
-  Project,
-  ProjectStatus,
-} from "../types/Content";
+  ContentOperations,
+  DevblogOperations,
+  TagOperations,
+} from "../adapters/content";
+import BaseContentManagement from "../components/ContentManagement/BaseContentManagement";
+import BlogManagement from "../components/ContentManagement/BlogManagement";
+import DevblogManagement from "../components/ContentManagement/DevblogManagement";
 import InputArea from "../components/ContentManagement/InputArea";
 import {
   ClickButton,
@@ -33,32 +23,42 @@ import {
   StateButton,
   StyledButton,
 } from "../components/ContentManagement/InputElements";
-import ProjectManagement from "../components/ContentManagement/ProjectManagement";
-import BaseContentManagement from "../components/ContentManagement/BaseContentManagement";
-import BlogManagement from "../components/ContentManagement/BlogManagement";
-import {
-  ContentOperations,
-  DevblogOperations,
-  TagOperations,
-} from "../adapters/content";
-import {
-  blogToNew,
-  contentToNew,
-  devblogToNew,
-  projectToNew,
-} from "../types/HelperFuncs";
-import { RequestStatus } from "../types/RequestContent";
 import {
   validateBlog,
   validateContent,
   validateDevblog,
   validateProject,
 } from "../components/ContentManagement/InputValidation";
-import DevblogManagement from "../components/ContentManagement/DevblogManagement";
+import ProjectManagement from "../components/ContentManagement/ProjectManagement";
+import PageTitle from "../components/Shared/PageTitle";
 import {
   NotificationContext,
   NotificationType,
 } from "../contexts/Notification";
+import {
+  type Blog,
+  type Content,
+  ContentType,
+  type Devblog,
+  type FullContent,
+  type NewDevblog,
+  type NewFullContent,
+  type Project,
+  ProjectStatus,
+} from "../types/Content";
+import {
+  blogToNew,
+  contentToNew,
+  devblogToNew,
+  projectToNew,
+} from "../types/HelperFuncs";
+import {
+  ActionTypes,
+  ReducerAction,
+  type SetReducer,
+  type UpdateReducer,
+} from "../types/ManageContent";
+import { RequestStatus } from "../types/RequestContent";
 
 /* -------------------------------------------------------------------------- */
 
@@ -238,14 +238,14 @@ const ManageContent = () => {
           case ContentType.Blog:
             extraNewData = { blog: blogToNew(blogData) };
             validateBlog(extraNewData.blog, newValidationErrors);
-            extraData = { blog: { ...blogData, ...extraNewData["blog"] } };
+            extraData = { blog: { ...blogData, ...extraNewData.blog } };
             break;
 
           case ContentType.Project:
             extraNewData = { project: projectToNew(projectData) };
             validateProject(extraNewData.project, newValidationErrors);
             extraData = {
-              project: { ...projectData, ...extraNewData["project"] },
+              project: { ...projectData, ...extraNewData.project },
             };
             break;
         }
@@ -591,7 +591,7 @@ const ManageContent = () => {
                 setBlogData({
                   action: ReducerAction.Set,
                   newState:
-                    base_content_request.requestedData.extra_content["blog"],
+                    base_content_request.requestedData.extra_content.blog,
                 });
 
                 // Gets the tags for the blog because they are not in the blog data
@@ -630,7 +630,7 @@ const ManageContent = () => {
                 setProjectData({
                   action: ReducerAction.Set,
                   newState:
-                    base_content_request.requestedData.extra_content["project"],
+                    base_content_request.requestedData.extra_content.project,
                 });
 
                 notifications.addNotification({
@@ -790,7 +790,7 @@ const ManageContent = () => {
     </InputSection>
   );
 
-  let CurrentForm;
+  let CurrentForm = null;
 
   if (
     currentAction === ActionTypes.Create ||
@@ -916,7 +916,7 @@ const ManageContent = () => {
         <SectionTitle>Submit</SectionTitle>
 
         <InputArea
-          labelText={currentAction + " Above content"}
+          labelText={`${currentAction} Above content`}
           InputElement={<StyledButton onClick={onSubmit}>Submit</StyledButton>}
         />
       </InputSection>

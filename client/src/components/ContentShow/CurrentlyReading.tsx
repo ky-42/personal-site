@@ -1,5 +1,5 @@
-import styled from "styled-components";
 import jsonConfig from "@config/config.json";
+import styled from "styled-components";
 
 /* -------------------------------------------------------------------------- */
 

@@ -1,5 +1,5 @@
-import styled from "styled-components";
 import { NavLink, useLocation } from "react-router-dom";
+import styled from "styled-components";
 
 const LinkDiv = styled(NavLink)`
   background-color: ${(props) => props.theme.backgroundColour};

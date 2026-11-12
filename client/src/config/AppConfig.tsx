@@ -1,12 +1,12 @@
-import { ThemeProvider, createGlobalStyle } from "styled-components";
-import { BrowserRouter } from "react-router-dom";
-import MobileContext from "../contexts/Mobile";
-import Routing from "../Routing";
-import { HelmetProvider } from "react-helmet-async";
-import useWindowSize from "../hooks/useWindowSize";
 import jsonConfig from "@config/config.json";
-import { NotificationProvider } from "../contexts/Notification";
+import { HelmetProvider } from "react-helmet-async";
+import { BrowserRouter } from "react-router-dom";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 import NotificationList from "../components/Notifications/NotificationList";
+import MobileContext from "../contexts/Mobile";
+import { NotificationProvider } from "../contexts/Notification";
+import useWindowSize from "../hooks/useWindowSize";
+import Routing from "../Routing";
 
 // Size in px at which site starts using mobile features
 const MobileWidth = 700;
@@ -33,7 +33,7 @@ const GlobalCSS = createGlobalStyle`
     font-size: 1.6rem;
     overflow: hidden;
   }
-  
+
   p {
     font-size: clamp(1.6rem, 4vw, 2.0rem);
   }
@@ -41,19 +41,19 @@ const GlobalCSS = createGlobalStyle`
   button {
     font-family: 'JetBrainsMono';
   }
-  
+
   h1 {
     text-decoration: underline ${StyleTheme.highlight};
     text-underline-offset: clamp(0.3rem, 2vw, 1.5rem);
     line-height: 150%;
   }
-  
+
   h2 {
     text-decoration: underline ${StyleTheme.highlightDark};
     text-underline-offset: 0.64rem;
     line-height: 155%;
   }
-  
+
   h3 {
     text-decoration: underline ${StyleTheme.highlightDark};
     text-underline-offset: 0.64rem;
@@ -63,7 +63,7 @@ const GlobalCSS = createGlobalStyle`
   h4, h5, h6 {
     text-decoration: underline ${StyleTheme.textColour}
   }
-  
+
   a {
     text-decoration: none;
   }
@@ -103,5 +103,7 @@ const AppConfig = () => {
     </MobileContext.Provider>
   );
 };
+
+export type Theme = typeof StyleTheme;
 
 export default AppConfig;

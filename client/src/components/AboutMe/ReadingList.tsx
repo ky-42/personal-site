@@ -34,8 +34,8 @@ interface ReadingListProps {
 
 const ReadingList = ({ ReadingTitle, BookList }: ReadingListProps) => {
   // Creates a list of book elements from a list of titles
-  const BookListElements = BookList.map((BookTitle, index) => (
-    <Book key={index}>{BookTitle}</Book>
+  const BookListElements = BookList.map((BookTitle, _) => (
+    <Book key={BookTitle}>{BookTitle}</Book>
   ));
 
   // Adds list separators between all list elements
@@ -43,7 +43,7 @@ const ReadingList = ({ ReadingTitle, BookList }: ReadingListProps) => {
     BookListElements.splice(
       index * 2 + 1,
       0,
-      <ListSeparator key={10000 - index} />,
+      <ListSeparator key={BookListElements[index].key} />,
     );
   });
 

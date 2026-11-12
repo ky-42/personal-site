@@ -1,25 +1,25 @@
-import backendFetch from ".";
-import { Devblog, FullContent } from "../types/Content";
+import type { Devblog, FullContent } from "../types/Content";
 import {
-  ContentAddParams,
-  RequestState,
+  type BlogSlug,
+  type BlogSlugPassword,
+  type ContentAddParams,
+  type ContentListInfo,
+  type ContentPassword,
+  type ContentSlug,
+  type ContentUpdateInfo,
+  type DevblogAddInfo,
+  type DevblogPassword,
+  type DevblogTitle,
+  type DevblogUpdateInfo,
+  type FullContentList,
+  type Id,
+  type RequestState,
   RequestStatus,
-  FullContentList,
-  ContentSlug,
-  ContentListInfo,
-  ContentUpdateInfo,
-  ContentPassword,
-  BlogSlug,
-  TagAddInfo,
-  BlogSlugPassword,
-  DevblogTitle,
-  SurroundingData,
-  SurroundingBlogs,
-  DevblogAddInfo,
-  DevblogUpdateInfo,
-  DevblogPassword,
-  Id,
+  type SurroundingBlogs,
+  type SurroundingData,
+  type TagAddInfo,
 } from "../types/RequestContent";
+import backendFetch from ".";
 
 /* ---------- General operation adapter for all backend operations ---------- */
 
@@ -46,7 +46,7 @@ const GeneralOperation = async <FetchType>(
 
     return { requestStatus: RequestStatus.Success, requestedData: response };
   } catch (err) {
-    return HandleError(err);
+    return HandleError<FetchType>(err);
   }
 };
 
@@ -270,16 +270,15 @@ export const DevblogOperations = {
 
 /* -------------------------------------------------------------------------- */
 
-const HandleError = (err: any): RequestState<any> => {
-  if (err.response?.status && err.response?.statusText) {
+const HandleError = <FetchType>(err: unknown): RequestState<FetchType> => {
+  if (err instanceof Error) {
     return {
       requestStatus: RequestStatus.Error,
-      requestError: `${err.response?.status}: ${err.response?.statusText}`,
-    };
-  } else {
-    return {
-      requestStatus: RequestStatus.Error,
-      requestError: "It worked on my machine... mostly",
+      requestError: err.message,
     };
   }
+  return {
+    requestStatus: RequestStatus.Error,
+    requestError: "It worked on my machine... mostly",
+  };
 };

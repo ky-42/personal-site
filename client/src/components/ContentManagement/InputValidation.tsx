@@ -1,8 +1,8 @@
-import {
-  NewContent,
+import type {
   NewBlog,
-  NewProject,
+  NewContent,
   NewDevblog,
+  NewProject,
 } from "../../types/Content";
 
 // Ensures that data in a content object is valid
@@ -70,8 +70,8 @@ export const validateDevblog = (
 };
 
 // Converts empty values to undefined
-const emptyToUndefined = (value: any): true | undefined => {
-  if (value === undefined) {
+const emptyToUndefined = (value: unknown): true | undefined => {
+  if (value === undefined || value === null) {
     return undefined;
   } else if (
     (Array.isArray(value) || typeof value === "string") &&

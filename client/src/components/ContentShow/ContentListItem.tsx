@@ -1,6 +1,7 @@
-import styled from "styled-components";
-import { ContentType, FullContent } from "../../types/Content";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+import type { FullContent } from "../../types/Content";
+import { ContentType } from "../../types/Content";
 
 /* -------------------------------------------------------------------------- */
 

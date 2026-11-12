@@ -1,27 +1,27 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import styled, { css } from "styled-components";
+import jsonConfig from "@config/config.json";
+import { useContext, useEffect, useEffectEvent, useRef, useState } from "react";
 import { AiFillCaretLeft } from "react-icons/ai";
+import { NavigationType, useNavigationType } from "react-router-dom";
+import styled, { css } from "styled-components";
 import { ContentOperations } from "../adapters/content";
-import {
-  FullContentList,
-  listOrder,
-  RequestState,
-  RequestStatus,
-} from "../types/RequestContent";
-import { ContentType, ProjectStatus } from "../types/Content";
-import PageTitle from "../components/Shared/PageTitle";
+import { jsonParser } from "../adapters/helpers";
 import ContentListItem, {
   getColumnStart,
 } from "../components/ContentShow/ContentListItem";
 import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
 import MetaData from "../components/Shared/MetaData";
-import { NavigationType, useNavigationType } from "react-router-dom";
-import { jsonParser } from "../adapters/helpers";
-import jsonConfig from "@config/config.json";
+import PageTitle from "../components/Shared/PageTitle";
 import {
   NotificationContext,
   NotificationType,
 } from "../contexts/Notification";
+import { ContentType, ProjectStatus } from "../types/Content";
+import {
+  type FullContentList,
+  listOrder,
+  type RequestState,
+  RequestStatus,
+} from "../types/RequestContent";
 
 /* -------------------------------------------------------------------------- */
 
@@ -122,7 +122,7 @@ const ProjectList = () => {
   const [page, setPage] = useState(
     sessionStorage.getItem("projectListPage") &&
       navigationType === NavigationType.Pop
-      ? parseInt(sessionStorage.getItem("projectListPage") ?? "0")
+      ? parseInt(sessionStorage.getItem("projectListPage") ?? "0", 10)
       : 0,
   );
   const [maxPage, setMaxPage] = useState(0);
@@ -139,10 +139,6 @@ const ProjectList = () => {
         )
       : { requestStatus: RequestStatus.Loading },
   );
-  // Needed cause no dependencies for under dev useEffect and
-  // no clear thing to add there so this will reload the page
-  // for under dev
-  const [underDevReload, setUnderDevReload] = useState(false);
 
   // Uses sessionStorage to keep state when user navigates back
   const [pageFinishedProjects, setPageFinishedProjects] = useState<
@@ -179,6 +175,24 @@ const ProjectList = () => {
     }
   };
 
+  /* ----------------------------- Fetch functions ---------------------------- */
+
+  const fetchUnderDev = () => {
+    ContentOperations.get_content_list({
+      page_info: {
+        content_per_page: 12,
+        page: 0,
+        ordering: listOrder.ProjectStartNewest,
+      },
+      content_filters: {
+        content_type: ContentType.Project,
+        project_status: ProjectStatus.UnderDevelopment,
+      },
+    }).then((value) => {
+      setUnderDevProjects(value);
+    });
+  };
+
   /* ----------------------------- Unmount effects ---------------------------- */
 
   useEffect(() => {
@@ -202,23 +216,15 @@ const ProjectList = () => {
   /* ------------------- useEffect functions to request data ------------------ */
 
   // Gets under dev projects if not already fetched
-  useEffect(() => {
+  const underDevEvent = useEffectEvent(() => {
     if (underDevProjects.requestStatus !== RequestStatus.Success) {
-      ContentOperations.get_content_list({
-        page_info: {
-          content_per_page: 12,
-          page: 0,
-          ordering: listOrder.ProjectStartNewest,
-        },
-        content_filters: {
-          content_type: ContentType.Project,
-          project_status: ProjectStatus.UnderDevelopment,
-        },
-      }).then((value) => {
-        setUnderDevProjects(value);
-      });
+      fetchUnderDev();
     }
-  }, [underDevReload]);
+  });
+
+  useEffect(() => {
+    underDevEvent();
+  }, []);
 
   // Gets the current pages finished projects
   useEffect(() => {
@@ -306,7 +312,7 @@ const ProjectList = () => {
     });
 
     setUnderDevProjects({ requestStatus: RequestStatus.Loading });
-    setUnderDevReload(!underDevReload);
+    fetchUnderDev();
   };
 
   /* -------------------------------------------------------------------------- */

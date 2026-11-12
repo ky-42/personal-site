@@ -1,25 +1,25 @@
 import { useContext, useState } from "react";
+import { AiOutlineRight } from "react-icons/ai";
 import styled from "styled-components";
-import { Blog } from "../../types/Content";
+import { ContentOperations, DevblogOperations } from "../../adapters/content";
+import {
+  NotificationContext,
+  NotificationType,
+} from "../../contexts/Notification";
+import type { Blog } from "../../types/Content";
+import {
+  ReducerAction,
+  type SetReducer,
+  type UpdateReducer,
+} from "../../types/ManageContent";
+import { RequestStatus } from "../../types/RequestContent";
+import { ManageTag } from "../Shared/Buttons";
+import InputArea from "./InputArea";
 import {
   EnterButton,
   InputButtonHolder,
   ShortTextInput,
 } from "./InputElements";
-import {
-  ReducerAction,
-  SetReducer,
-  UpdateReducer,
-} from "../../types/ManageContent";
-import InputArea from "./InputArea";
-import { AiOutlineRight } from "react-icons/ai";
-import { ManageTag } from "../Shared/Buttons";
-import { ContentOperations, DevblogOperations } from "../../adapters/content";
-import { RequestStatus } from "../../types/RequestContent";
-import {
-  NotificationContext,
-  NotificationType,
-} from "../../contexts/Notification";
 
 /* ---------------------------- Styled Components --------------------------- */
 
@@ -175,7 +175,7 @@ const BlogManagement = ({
 
       <InputArea
         labelText={"Slug of Related Project"}
-        error={validationErrors["related_project_id"]}
+        error={validationErrors.related_project_id}
         InputElement={
           <div>
             <InputButtonHolder>
@@ -213,7 +213,7 @@ const BlogManagement = ({
 
       <InputArea
         labelText={"Title of Devblog"}
-        error={validationErrors["devblog_id"]}
+        error={validationErrors.devblog_id}
         InputElement={
           <div>
             <InputButtonHolder>

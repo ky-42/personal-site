@@ -1,24 +1,24 @@
-import {
+import type {
   Blog,
   Content,
-  NewContent,
+  ContentType,
+  Devblog,
   FullContent,
   NewBlog,
+  NewContent,
+  NewDevblog,
   NewFullContent,
   NewProject,
   Project,
-  Devblog,
-  NewDevblog,
-  ContentType,
 } from "./Content";
-import { ContentFilter } from "./RequestContent";
+import type { ContentFilter } from "./RequestContent";
 
 // Converts a full content object to a new full content object
 // Basically it will remove all data thats added by the backend
 export const FullToNewFull = (conversionData: FullContent): NewFullContent => {
   const baseRemoved = contentToNew(conversionData.base_content);
 
-  let unpackedExtra;
+  let unpackedExtra: NewFullContent["new_extra_content"];
   if ("project" in conversionData.extra_content) {
     unpackedExtra = {
       project: projectToNew(conversionData.extra_content.project),
@@ -80,6 +80,7 @@ export const searchParamsToContentFilter = (
   if (searchParams.has("project_id")) {
     contentFilter.project_id = parseInt(
       searchParams.get("project_id") as string,
+      10,
     );
   }
   if (searchParams.has("blog_tag")) {
@@ -90,6 +91,7 @@ export const searchParamsToContentFilter = (
   if (searchParams.has("devblog_id")) {
     contentFilter.devblog_id = parseInt(
       searchParams.get("devblog_id") as string,
+      10,
     );
   }
   if (searchParams.has("search")) {

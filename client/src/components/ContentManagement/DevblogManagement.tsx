@@ -1,13 +1,13 @@
+import type { Dispatch } from "react";
 import styled from "styled-components";
-import { Devblog } from "../../types/Content";
+import type { Devblog } from "../../types/Content";
 import {
   ReducerAction,
-  SetReducer,
-  UpdateReducer,
+  type SetReducer,
+  type UpdateReducer,
 } from "../../types/ManageContent";
 import InputArea from "./InputArea";
 import { ShortTextInput } from "./InputElements";
-import { Dispatch } from "react";
 
 /* -------------------------------------------------------------------------- */
 
@@ -34,7 +34,7 @@ const DevblogManagement = ({
     <DevblogManagementArea>
       <InputArea
         labelText={"Devblog Title"}
-        error={validationErrors["title"]}
+        error={validationErrors.title}
         InputElement={
           <ShortTextInput
             type="text"

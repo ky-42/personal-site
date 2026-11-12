@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import { AiOutlineMinus } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -91,7 +92,7 @@ const ShowLinkHolder = styled(ButtonHolder)`
 `;
 
 interface ShowLinkProps {
-  button_text: string | JSX.Element;
+  button_text: string | ReactElement;
   url: string;
 }
 

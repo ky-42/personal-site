@@ -1,4 +1,4 @@
-import { NewBlog, NewContent, NewProject } from "./Content";
+import type { NewBlog, NewContent, NewProject } from "./Content";
 
 /* -------------------------------------------------------------------------- */
 /*                          Types for the manage page                         */
