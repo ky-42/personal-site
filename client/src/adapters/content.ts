@@ -1,26 +1,25 @@
-import axios from 'axios';
-import backend_axios from '.';
-import { Devblog, FullContent } from '../types/Content';
+import type { Devblog, FullContent } from "../types/Content";
 import {
-  ContentAddParams,
-  RequestState,
+  type BlogSlug,
+  type BlogSlugPassword,
+  type ContentAddParams,
+  type ContentListInfo,
+  type ContentPassword,
+  type ContentSlug,
+  type ContentUpdateInfo,
+  type DevblogAddInfo,
+  type DevblogPassword,
+  type DevblogTitle,
+  type DevblogUpdateInfo,
+  type FullContentList,
+  type Id,
+  type RequestState,
   RequestStatus,
-  FullContentList,
-  ContentSlug,
-  ContentListInfo,
-  ContentUpdateInfo,
-  ContentPassword,
-  BlogSlug,
-  TagAddInfo,
-  BlogSlugPassword,
-  DevblogTitle,
-  SurroundingData,
-  SurroundingBlogs,
-  DevblogAddInfo,
-  DevblogUpdateInfo,
-  DevblogPassword,
-  Id,
-} from '../types/RequestContent';
+  type SurroundingBlogs,
+  type SurroundingData,
+  type TagAddInfo,
+} from "../types/RequestContent";
+import backendFetch from ".";
 
 /* ---------- General operation adapter for all backend operations ---------- */
 
@@ -37,85 +36,100 @@ const GeneralOperation = async <FetchType>(
   params: OperationOptions,
 ): Promise<RequestState<FetchType>> => {
   try {
-    const response = await backend_axios.request<FetchType>({
-      url: params.url,
+    const response = await backendFetch<FetchType>(params.url, params.params, {
       method: params.method,
-      data: params.data,
+      body: params.data
+        ? JSON.stringify(params.data, (_, v) => (v === undefined ? null : v))
+        : undefined,
       headers: params.headers,
-      params: params.params,
     });
 
-    return { requestStatus: RequestStatus.Success, requestedData: response.data };
+    return { requestStatus: RequestStatus.Success, requestedData: response };
   } catch (err) {
-    return HandleAxiosError(err);
+    return HandleError<FetchType>(err);
   }
 };
 
 /* -------------------------- CRUD content adapters ------------------------- */
 
 export const ContentOperations = {
-  get_content: async (params: ContentSlug): Promise<RequestState<FullContent>> => {
+  get_content: async (
+    params: ContentSlug,
+  ): Promise<RequestState<FullContent>> => {
     return await GeneralOperation<FullContent>({
       url: `/content/${params.slug}`,
-      method: 'GET',
+      method: "GET",
       headers: {},
     });
   },
 
-  get_content_from_id: async (params: Id): Promise<RequestState<FullContent>> => {
+  get_content_from_id: async (
+    params: Id,
+  ): Promise<RequestState<FullContent>> => {
     return await GeneralOperation<FullContent>({
       url: `/content/view-from-id/${params.id}`,
-      method: 'GET',
+      method: "GET",
       headers: {},
     });
   },
 
-  get_content_list: async (params: ContentListInfo): Promise<RequestState<FullContentList>> => {
+  get_content_list: async (
+    params: ContentListInfo,
+  ): Promise<RequestState<FullContentList>> => {
     return await GeneralOperation<FullContentList>({
       url: `/content/list`,
-      method: 'GET',
+      method: "GET",
       headers: {},
       params: { ...params.page_info, ...params.content_filters },
     });
   },
 
-  add_content: async (params: ContentAddParams): Promise<RequestState<boolean>> => {
+  add_content: async (
+    params: ContentAddParams,
+  ): Promise<RequestState<boolean>> => {
     const response = await GeneralOperation<boolean>({
       url: `/content/add`,
-      method: 'POST',
+      method: "POST",
       headers: {
         authorization: params.password,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      data: JSON.stringify(params.addContent, (_, v) => (v === undefined ? null : v)),
+      data: params.addContent,
     });
-    if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
+    if (response.requestStatus === RequestStatus.Success)
+      response.requestedData = true;
     return response;
   },
 
-  update_content: async (params: ContentUpdateInfo): Promise<RequestState<boolean>> => {
+  update_content: async (
+    params: ContentUpdateInfo,
+  ): Promise<RequestState<boolean>> => {
     const response = await GeneralOperation<boolean>({
       url: `/content/${params.slug}`,
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         authorization: params.password,
       },
-      data: JSON.stringify(params.updated_content, (_, v) => (v === undefined ? null : v)),
+      data: params.updated_content,
     });
-    if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
+    if (response.requestStatus === RequestStatus.Success)
+      response.requestedData = true;
     return response;
   },
 
-  delete_content: async (params: ContentPassword): Promise<RequestState<boolean>> => {
+  delete_content: async (
+    params: ContentPassword,
+  ): Promise<RequestState<boolean>> => {
     const response = await GeneralOperation<boolean>({
       url: `/content/${params.slug}`,
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
         authorization: params.password,
       },
     });
-    if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
+    if (response.requestStatus === RequestStatus.Success)
+      response.requestedData = true;
     return response;
   },
 };
@@ -123,11 +137,13 @@ export const ContentOperations = {
 /* ------------------------- Tag operation adapters ------------------------- */
 
 export const TagOperations = {
-  get_blog_tags: async (params: BlogSlug): Promise<RequestState<Set<string>>> => {
+  get_blog_tags: async (
+    params: BlogSlug,
+  ): Promise<RequestState<Set<string>>> => {
     // This actually returns an array of strings, but we want it to have the set type
     const response = await GeneralOperation<Set<string>>({
       url: `/tag/${params.blog_slug}`,
-      method: 'GET',
+      method: "GET",
       headers: {},
     });
 
@@ -142,26 +158,30 @@ export const TagOperations = {
   add_tags: async (params: TagAddInfo): Promise<RequestState<boolean>> => {
     const response = await GeneralOperation<boolean>({
       url: `/tag/${params.blog_slug}`,
-      method: 'POST',
+      method: "POST",
       headers: {
         authorization: params.password,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       data: Array.from(params.tags),
     });
-    if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
+    if (response.requestStatus === RequestStatus.Success)
+      response.requestedData = true;
     return response;
   },
 
-  delete_tags: async (params: BlogSlugPassword): Promise<RequestState<boolean>> => {
+  delete_tags: async (
+    params: BlogSlugPassword,
+  ): Promise<RequestState<boolean>> => {
     const response = await GeneralOperation<boolean>({
       url: `/tag/${params.blog_slug}`,
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
         authorization: params.password,
       },
     });
-    if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
+    if (response.requestStatus === RequestStatus.Success)
+      response.requestedData = true;
     return response;
   },
 };
@@ -169,10 +189,12 @@ export const TagOperations = {
 /* ----------------------- Devblog Operation Adapters ----------------------- */
 
 export const DevblogOperations = {
-  get_devblog_object: async (params: DevblogTitle): Promise<RequestState<Devblog>> => {
+  get_devblog_object: async (
+    params: DevblogTitle,
+  ): Promise<RequestState<Devblog>> => {
     return await GeneralOperation<Devblog>({
       url: `/devblog/${params.title}`,
-      method: 'GET',
+      method: "GET",
       headers: {},
     });
   },
@@ -180,7 +202,7 @@ export const DevblogOperations = {
   get_devlog_object_from_id: async (params: Id) => {
     return await GeneralOperation<Devblog>({
       url: `/devblog/view-from-id/${params.id}`,
-      method: 'GET',
+      method: "GET",
       headers: {},
     });
   },
@@ -189,69 +211,74 @@ export const DevblogOperations = {
     params: SurroundingData,
   ): Promise<RequestState<SurroundingBlogs>> => {
     return await GeneralOperation<SurroundingBlogs>({
-      url: '/devblog/get-next-prev-blog',
-      method: 'GET',
+      url: "/devblog/get-next-prev-blog",
+      method: "GET",
       headers: {},
       params: params,
     });
   },
 
-  add_devblog: async (params: DevblogAddInfo): Promise<RequestState<boolean>> => {
+  add_devblog: async (
+    params: DevblogAddInfo,
+  ): Promise<RequestState<boolean>> => {
     const response = await GeneralOperation<boolean>({
-      url: '/devblog/add',
-      method: 'POST',
+      url: "/devblog/add",
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         authorization: params.password,
       },
       data: params.newDevblogInfo,
     });
-    if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
+    if (response.requestStatus === RequestStatus.Success)
+      response.requestedData = true;
     return response;
   },
 
-  update_devblog: async (params: DevblogUpdateInfo): Promise<RequestState<boolean>> => {
+  update_devblog: async (
+    params: DevblogUpdateInfo,
+  ): Promise<RequestState<boolean>> => {
     const response = await GeneralOperation<boolean>({
       url: `/devblog/${params.title}`,
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         authorization: params.password,
       },
       data: params.updatedDevblogInfo,
     });
-    if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
+    if (response.requestStatus === RequestStatus.Success)
+      response.requestedData = true;
     return response;
   },
 
-  delete_devblog: async (params: DevblogPassword): Promise<RequestState<boolean>> => {
+  delete_devblog: async (
+    params: DevblogPassword,
+  ): Promise<RequestState<boolean>> => {
     const response = await GeneralOperation<boolean>({
       url: `/devblog/${params.title}`,
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
         authorization: params.password,
       },
     });
-    if (response.requestStatus === RequestStatus.Success) response.requestedData = true;
+    if (response.requestStatus === RequestStatus.Success)
+      response.requestedData = true;
     return response;
   },
 };
 
 /* -------------------------------------------------------------------------- */
 
-const HandleAxiosError = (err: any): RequestState<any> => {
-  if (axios.isAxiosError(err)) {
-    if (err.response?.status && err.response?.statusText) {
-      return {
-        requestStatus: RequestStatus.Error,
-        requestError: `${err.response?.status}: ${err.response?.statusText}`,
-      };
-    } else {
-      return {
-        requestStatus: RequestStatus.Error,
-        requestError: 'It worked on my machine... mostly',
-      };
-    }
+const HandleError = <FetchType>(err: unknown): RequestState<FetchType> => {
+  if (err instanceof Error) {
+    return {
+      requestStatus: RequestStatus.Error,
+      requestError: err.message,
+    };
   }
-  return { requestStatus: RequestStatus.Error, requestError: 'It worked on my machine...' };
+  return {
+    requestStatus: RequestStatus.Error,
+    requestError: "It worked on my machine... mostly",
+  };
 };

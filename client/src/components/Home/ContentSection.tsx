@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 /* -------------------------------------------------------------------------- */
 
@@ -22,7 +22,10 @@ interface ContentContainerProps {
   housedElement: React.ReactNode;
 }
 
-const ContentContainer = ({ containerTitle, housedElement }: ContentContainerProps) => {
+const ContentContainer = ({
+  containerTitle,
+  housedElement,
+}: ContentContainerProps) => {
   // Creates a container that will house another element with a title added above element
   // used for showing info about a piece of content and linking to it
   return (

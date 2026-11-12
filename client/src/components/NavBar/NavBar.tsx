@@ -1,6 +1,6 @@
-import DesktopNavBar from './DesktopNavBar';
-import MobileNavBar from './MobileNavBar';
-import MobileContext from '../../contexts/Mobile';
+import MobileContext from "../../contexts/Mobile";
+import DesktopNavBar from "./DesktopNavBar";
+import MobileNavBar from "./MobileNavBar";
 
 const NavBar = () => {
   return (

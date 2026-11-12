@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 /* -------------------------------------------------------------------------- */
 
@@ -37,7 +37,9 @@ const ErrorDisplay = ({ errorString, retryFunc }: ErrorDisplayProps) => {
   return (
     <ErrorDiv>
       <ErrorText>{errorString}</ErrorText>
-      {retryFunc !== undefined && <RetryButton onClick={retryFunc}>Retry</RetryButton>}
+      {retryFunc !== undefined && (
+        <RetryButton onClick={retryFunc}>Retry</RetryButton>
+      )}
     </ErrorDiv>
   );
 };

@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { IoIosArrowUp, IoMdClose } from 'react-icons/io';
-import { useLocation } from 'react-router-dom';
-import LinkNavBar from './LinkMobileNavBar';
+import { useState } from "react";
+import { IoIosArrowUp, IoMdClose } from "react-icons/io";
+import { useLocation } from "react-router-dom";
+import styled from "styled-components";
+import LinkNavBar from "./LinkMobileNavBar";
 
 const NavBarDiv = styled.div``;
 
@@ -45,20 +45,25 @@ const MobileNavBar = () => {
 
   const BottomIcon = expanded ? <CloseIcon /> : <UpArrow />;
 
-  useEffect(() => {
+  const [prevLocation, setPrevLocation] = useState(location);
+
+  if (location !== prevLocation) {
+    setPrevLocation(location);
     setExpanded(false);
-  }, [location]);
+  }
 
   return (
     <NavBarDiv>
-      <ExpandButtonDiv onClick={() => setExpanded(!expanded)}>{BottomIcon}</ExpandButtonDiv>
+      <ExpandButtonDiv onClick={() => setExpanded(!expanded)}>
+        {BottomIcon}
+      </ExpandButtonDiv>
       {expanded && (
         <LinksDiv>
-          <LinkNavBar to='/' title='Kyle Denief' />
-          <LinkNavBar to='/about' title='About Me' />
-          <LinkNavBar to='/connect' title='Connect' />
-          <LinkNavBar to='/projects' title='Projects' />
-          <LinkNavBar to='/blogs' title='Blogs' />
+          <LinkNavBar to="/" title="Kyle Denief" />
+          <LinkNavBar to="/about" title="About Me" />
+          <LinkNavBar to="/connect" title="Connect" />
+          <LinkNavBar to="/projects" title="Projects" />
+          <LinkNavBar to="/blogs" title="Blogs" />
         </LinksDiv>
       )}
     </NavBarDiv>

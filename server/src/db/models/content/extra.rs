@@ -189,12 +189,12 @@ pub mod tests {
 
     use super::*;
     use chrono::TimeZone;
-    use rand::Rng;
+    use rand::RngExt;
 
     pub fn random_extra() -> (NewExtraContent, ContentType) {
         // project = 0, blog = 1
-        let mut rng = rand::thread_rng();
-        let extra_type = rng.gen_range(0..2);
+        let mut rng = rand::rng();
+        let extra_type = rng.random_range(0..2);
         // Picks a random type of extra content and creates an instance of its
         // new model with random data
         match extra_type {
@@ -209,11 +209,11 @@ pub mod tests {
     impl NewProject {
         // Generates an instance of NewProject with random values
         pub fn random() -> NewProject {
-            let mut rng = rand::thread_rng();
+            let mut rng = rand::rng();
 
             let current_status = {
                 // 1/16 chance of project being finished
-                if rng.gen_range(0..16) > 0 {
+                if rng.random_range(0..16) > 0 {
                     CurrentStatus::Finished
                 } else {
                     CurrentStatus::UnderDevelopment
@@ -222,7 +222,7 @@ pub mod tests {
 
             let github_link = {
                 // 1/2 chance of having github link
-                if rng.gen_range(0..1) > 0 {
+                if rng.random_range(0..1) > 0 {
                     Some(String::from("https://github.com/ky-42/personal-site"))
                 } else {
                     None
@@ -231,7 +231,7 @@ pub mod tests {
 
             let url = {
                 // 1/2 chance of having a url
-                if rng.gen_range(0..1) > 0 {
+                if rng.random_range(0..1) > 0 {
                     Some(String::from("https://kyledenief.me/"))
                 } else {
                     None
@@ -240,7 +240,7 @@ pub mod tests {
 
             let start_date = {
                 // 1/2 chance of having a start date
-                if rng.gen_range(0..1) > 0 {
+                if rng.random_range(0..1) > 0 {
                     Some(Utc.with_ymd_and_hms(2023, 3, 14, 14, 40, 20).unwrap())
                 } else {
                     None

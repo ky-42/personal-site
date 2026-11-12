@@ -13,17 +13,17 @@ use validator::ValidationErrors;
 #[derive(Display, Debug)]
 pub enum AppError {
     ContentNotFound,
-    #[display(fmt = "Database Error")]
+    #[display("Database Error")]
     DbError,
-    #[display(fmt = "Pool Error")]
+    #[display("Pool Error")]
     PoolError,
-    #[display(fmt = "Error with web blocking")]
+    #[display("Error with web blocking")]
     WebBlockError,
-    #[display(fmt = "You are not the site admin")]
+    #[display("You are not the site admin")]
     NotAdmin,
-    #[display(fmt = "No admin password is set")]
+    #[display("No admin password is set")]
     NoAdmin,
-    #[display(fmt = "Content did not pass validation. Some values in your data are not valid")]
+    #[display("Content did not pass validation. Some values in your data are not valid")]
     ContentValidationError,
 }
 

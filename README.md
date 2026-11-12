@@ -49,14 +49,14 @@ The manage page can be found at /manage on the client. For more information chec
 - Rust
 - libpq-dev/postgresql-libs
 - Diesel CLI
-- Yarn (can use npm as well)
+- pnpm
 - A PostgreSQL server
 
 ### Running Client
 
 1. Navigate to the `client` directory.
-2. Install dependencies using `yarn install`.
-3. Start the client server using `yarn start`.
+2. Install dependencies using `pnpm install`.
+3. Start the client server using `pnpm start`.
 
 Note: If you change the client server port, make sure to update the URL in the `.env` file in the `server` directory.
 
@@ -76,13 +76,13 @@ Note: If you change the server port or ip, make sure to update the URL in `clien
 
 - Rust
 - libpq-dev/postgresql-libs
-- Yarn or npm
+- pnpm
 
 ### Building Client
 
 1. Update the `config/config.json` file with the production URLs of your frontend and backend servers, and optionally add your Umami Analytics information.
 2. Navigate to the `client` directory.
-3. Build the client with `yarn build`.
+3. Build the client with `pnpm build`.
 
 ### Building Server
 

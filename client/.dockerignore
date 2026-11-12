@@ -7,7 +7,3 @@ build
 .git
 .gitignore
 tsconfig.json
-.eslintrc.json
-.prettierrc
-.eslintignore
-.prettierignore

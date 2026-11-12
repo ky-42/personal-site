@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 /* -------------------------- General CSS elements -------------------------- */
 
@@ -34,11 +34,17 @@ interface ReadingListProps {
 
 const ReadingList = ({ ReadingTitle, BookList }: ReadingListProps) => {
   // Creates a list of book elements from a list of titles
-  const BookListElements = BookList.map((BookTitle, index) => <Book key={index}>{BookTitle}</Book>);
+  const BookListElements = BookList.map((BookTitle, _) => (
+    <Book key={BookTitle}>{BookTitle}</Book>
+  ));
 
   // Adds list separators between all list elements
   BookListElements.forEach((_, index) => {
-    BookListElements.splice(index * 2 + 1, 0, <ListSeparator key={10000 - index} />);
+    BookListElements.splice(
+      index * 2 + 1,
+      0,
+      <ListSeparator key={BookListElements[index].key} />,
+    );
   });
 
   // Removes the extra list separator at the end of the list of elements

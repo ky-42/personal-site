@@ -65,22 +65,22 @@ pub mod tests {
 
     use super::*;
     use lipsum::{lipsum, lipsum_title, lipsum_words};
-    use rand::Rng;
+    use rand::RngExt;
 
     impl NewContent {
         // Generates an instance of NewContent with random values
         pub fn random(content_type: ContentType) -> Self {
-            let mut rng = rand::thread_rng();
+            let mut rng = rand::rng();
 
             let title = lipsum_title();
             let slug = String::from(str::replace(&title, " ", "-")).to_lowercase();
             // 1/5 chance of of not having a description
-            let content_desc: Option<String> = if rng.gen_range(0..5) > 0 {
-                Some(lipsum_words(rng.gen_range(7..15)))
+            let content_desc: Option<String> = if rng.random_range(0..5) > 0 {
+                Some(lipsum_words(rng.random_range(7..15)))
             } else {
                 None
             };
-            let body = lipsum(rng.gen_range(100..500));
+            let body = lipsum(rng.random_range(100..500));
 
             Self {
                 content_type,

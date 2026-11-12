@@ -1,7 +1,12 @@
-import { useEffect, useRef } from 'react';
-import styled from 'styled-components';
-import NavBar from '../components/NavBar/NavBar';
-import { NavigationType, Outlet, useLocation, useNavigationType } from 'react-router-dom';
+import { useEffect, useEffectEvent, useRef } from "react";
+import {
+  NavigationType,
+  Outlet,
+  useLocation,
+  useNavigationType,
+} from "react-router-dom";
+import styled from "styled-components";
+import NavBar from "../components/NavBar/NavBar";
 
 // Where all content will be displayed does not include nav bar
 const BodyDiv = styled.div`
@@ -41,24 +46,33 @@ const PageConfig = () => {
   does not reset.
   */
   const BodyDivRef = useRef<null | HTMLDivElement>(null);
+  const handleScroll = useEffectEvent(
+    (newLocation: ReturnType<typeof useLocation>) => {
+      // Sets scroll position when page changes
+      // If the user navigates backwards then the scroll position is set to the last scroll position
+      const pathName = newLocation.pathname.replace(/\/$/, "");
+      if (BodyDivRef.current !== null) {
+        BodyDivRef.current.scrollTop =
+          sessionStorage.getItem(`scrollPosition_${pathName}`) !== null &&
+          navigationType === NavigationType.Pop
+            ? parseInt(
+                sessionStorage.getItem(`scrollPosition_${pathName}`) as string,
+                10,
+              )
+            : 0;
+      }
+    },
+  );
+
   useEffect(() => {
-    // Sets scroll position when page changes
-    // If the user navigates backwards then the scroll position is set to the last scroll position
-    const pathName = location.pathname.replace(/\/$/, '');
-    if (BodyDivRef.current !== null) {
-      BodyDivRef.current.scrollTop =
-        sessionStorage.getItem(`scrollPosition_${pathName}`) !== null &&
-        navigationType === NavigationType.Pop
-          ? parseInt(sessionStorage.getItem(`scrollPosition_${pathName}`) as string)
-          : 0;
-    }
+    handleScroll(location);
   }, [location]);
 
   // Save the scroll position of the current page
-  BodyDivRef.current?.addEventListener('scroll', () => {
+  BodyDivRef.current?.addEventListener("scroll", () => {
     if (BodyDivRef.current !== null) {
       sessionStorage.setItem(
-        `scrollPosition_${locationRef.current.pathname.replace(/\/$/, '')}`,
+        `scrollPosition_${locationRef.current.pathname.replace(/\/$/, "")}`,
         BodyDivRef.current.scrollTop.toString(),
       );
     }

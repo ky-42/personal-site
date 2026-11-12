@@ -36,19 +36,9 @@ pub struct ContentSlug {
     pub slug: String,
 }
 
-#[derive(Serialize, Debug)]
-pub struct CountReturn {
-    count: i64,
-}
-
 #[derive(Deserialize, Debug)]
 pub struct IdStruct {
     pub id: i32,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct TagsToAdd {
-    pub tags: Vec<String>,
 }
 
 #[derive(Deserialize, Debug)]

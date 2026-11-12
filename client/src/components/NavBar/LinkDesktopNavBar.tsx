@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from "react-router-dom";
+import styled from "styled-components";
 
 const LinkDiv = styled(NavLink)`
   background-color: ${(props) => props.theme.backgroundColour};
@@ -17,7 +17,9 @@ const HoverDiv = styled.div<{ active: boolean }>`
   align-items: center;
   color: ${(props) => (props.active ? props.theme.textColour : props.theme.lightTone)};
   outline: ${(props) =>
-    props.active ? `${props.theme.borderSize} solid ${props.theme.highlight}` : 'none'};
+    props.active
+      ? `${props.theme.borderSize} solid ${props.theme.highlight}`
+      : "none"};
   &:hover {
     color: ${(props) => props.theme.textColour};
     text-decoration: underline;

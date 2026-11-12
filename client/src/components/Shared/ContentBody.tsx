@@ -1,7 +1,19 @@
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import styled from 'styled-components';
+import Markdown from "react-markdown";
+import styled from "styled-components";
 
-const ContentBody = styled(ReactMarkdown)`
+const MarkdownBody = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: string;
+}) => (
+  <div className={className}>
+    <Markdown>{children}</Markdown>
+  </div>
+);
+
+const ContentBody = styled(MarkdownBody)`
   font-size: clamp(1.68rem, 4vw, 2rem);
 
   > h1 {

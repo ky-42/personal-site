@@ -1,6 +1,7 @@
-import { AiOutlineMinus } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import type { ReactElement } from "react";
+import { AiOutlineMinus } from "react-icons/ai";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 /* ------------------------ General Styled Components ----------------------- */
 
@@ -91,7 +92,7 @@ const ShowLinkHolder = styled(ButtonHolder)`
 `;
 
 interface ShowLinkProps {
-  button_text: string | JSX.Element;
+  button_text: string | ReactElement;
   url: string;
 }
 
@@ -131,11 +132,15 @@ interface DevblogLinkProps extends ShowLinkProps {
   isPrevious: boolean;
 }
 
-export const DevblogLink = ({ button_text, url, isPrevious }: DevblogLinkProps) => {
+export const DevblogLink = ({
+  button_text,
+  url,
+  isPrevious,
+}: DevblogLinkProps) => {
   return (
     <ButtonLink to={url}>
       <DevblogLinkHolder>
-        <TagText>{isPrevious ? 'Previous Blog:' : 'Next Blog:'}</TagText>
+        <TagText>{isPrevious ? "Previous Blog:" : "Next Blog:"}</TagText>
         <DevblogLinkText>{button_text}</DevblogLinkText>
       </DevblogLinkHolder>
     </ButtonLink>

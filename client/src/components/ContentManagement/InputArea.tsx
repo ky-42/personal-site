@@ -1,5 +1,6 @@
-import styled from 'styled-components';
-import { ErrorTextStyling } from './InputElements';
+import type { ReactElement } from "react";
+import styled from "styled-components";
+import { ErrorTextStyling } from "./InputElements";
 
 /* -------------------------------------------------------------------------- */
 
@@ -30,11 +31,11 @@ const ErrorText = styled.label`
 interface InputAreaProps {
   labelText: string;
   error?: string;
-  InputElement: JSX.Element;
+  InputElement: ReactElement;
 }
 
 // Component that holds and input giving it a header and structure
-const InputArea = ({ labelText: labelText, error, InputElement }: InputAreaProps) => {
+const InputArea = ({ labelText, error, InputElement }: InputAreaProps) => {
   return (
     <Input>
       <InputLabel error={error !== undefined}>{labelText}</InputLabel>

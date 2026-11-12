@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 // Hook to keep track of window size changes
 const useWindowSize = () => {
@@ -15,10 +15,10 @@ const useWindowSize = () => {
       });
     };
 
-    window.addEventListener('resize', resizeHandle);
+    window.addEventListener("resize", resizeHandle);
 
     return () => {
-      window.removeEventListener('resize', resizeHandle);
+      window.removeEventListener("resize", resizeHandle);
     };
   });
 

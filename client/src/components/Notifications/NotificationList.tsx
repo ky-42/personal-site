@@ -1,7 +1,7 @@
-import { useContext } from 'react';
-import styled from 'styled-components';
-import { NotificationContext } from '../../contexts/Notification';
-import NotificationBox from './NotificationBox';
+import { useContext } from "react";
+import styled from "styled-components";
+import { NotificationContext } from "../../contexts/Notification";
+import NotificationBox from "./NotificationBox";
 
 /* -------------------------------------------------------------------------- */
 
@@ -30,12 +30,12 @@ const NotificationList = () => {
         Object.keys(notifications).map((notificationId) => {
           return (
             <NotificationBox
-              key={parseInt(notificationId)}
-              id={parseInt(notificationId)}
-              notification={notifications[parseInt(notificationId)]}
+              key={parseInt(notificationId, 10)}
+              id={parseInt(notificationId, 10)}
+              notification={notifications[parseInt(notificationId, 10)]}
               deleteNotification={deleteNotification}
-              onMouseEnter={() => stopTimer(parseInt(notificationId))}
-              onMouseLeave={() => startTimer(parseInt(notificationId))}
+              onMouseEnter={() => stopTimer(parseInt(notificationId, 10))}
+              onMouseLeave={() => startTimer(parseInt(notificationId, 10))}
             />
           );
         })

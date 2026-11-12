@@ -1,11 +1,11 @@
-import {
+import type {
   ContentType,
   Devblog,
   FullContent,
   NewDevblog,
   NewFullContent,
   ProjectStatus,
-} from './Content';
+} from "./Content";
 
 /* -------------------------------------------------------------------------- */
 /*                                   General                                  */
@@ -42,10 +42,10 @@ export interface ContentListInfo {
 }
 
 export enum listOrder {
-  Newest = 'newest',
-  Oldest = 'oldest',
-  ProjectStartNewest = 'project_start_newest',
-  ProjectStartOldest = 'project_start_oldest',
+  Newest = "newest",
+  Oldest = "oldest",
+  ProjectStartNewest = "project_start_newest",
+  ProjectStartOldest = "project_start_oldest",
 }
 
 // Used for requests that require specifying a page

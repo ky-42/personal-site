@@ -1,25 +1,37 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
-import styled, { css, keyframes } from 'styled-components';
-import { ContentOperations } from '../adapters/content';
-import { ContentType } from '../types/Content';
+import jsonConfig from "@config/config.json";
 import {
-  FullContentList,
-  listOrder as showOrder,
-  PageInfo,
-  RequestState,
+  useContext,
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useState,
+} from "react";
+import { NavigationType, useNavigationType } from "react-router-dom";
+import styled, { css, keyframes } from "styled-components";
+import { ContentOperations } from "../adapters/content";
+import { jsonParser } from "../adapters/helpers";
+import ContentListItem, {
+  getColumnStart,
+} from "../components/ContentShow/ContentListItem";
+import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
+import { ShowLink } from "../components/Shared/Buttons";
+import MetaData from "../components/Shared/MetaData";
+import PageTitle from "../components/Shared/PageTitle";
+import {
+  NotificationContext,
+  NotificationType,
+} from "../contexts/Notification";
+import useQuery from "../hooks/useQueryParams";
+import { ContentType } from "../types/Content";
+import { searchParamsToContentFilter } from "../types/HelperFuncs";
+import {
+  type ContentFilter,
+  type FullContentList,
+  type PageInfo,
+  type RequestState,
   RequestStatus,
-} from '../types/RequestContent';
-import PageTitle from '../components/Shared/PageTitle';
-import ContentListItem, { getColumnStart } from '../components/ContentShow/ContentListItem';
-import MetaData from '../components/Shared/MetaData';
-import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
-import { ShowLink } from '../components/Shared/Buttons';
-import jsonConfig from '@config/config.json';
-import { searchParamsToContentFilter } from '../types/HelperFuncs';
-import useQuery from '../hooks/useQueryParams';
-import { NavigationType, useLocation, useNavigationType } from 'react-router-dom';
-import { jsonParser } from '../adapters/helpers';
-import { NotificationContext, NotificationType } from '../contexts/Notification';
+  listOrder as showOrder,
+} from "../types/RequestContent";
 
 /* -------------------------------------------------------------------------- */
 
@@ -64,7 +76,7 @@ const LoadBar = styled.div<{ reload: boolean | null }>`
   padding: 0 0.4rem;
   background-color: ${(props) => props.theme.highlight};
   z-index: 100;
-  ${(props) => (props.reload === null ? '' : loadAnimation)}
+  ${(props) => (props.reload === null ? "" : loadAnimation)}
 `;
 
 const SearchBar = styled.input`
@@ -163,15 +175,11 @@ const BlogList = () => {
 
   // location.search used as dependency for useEffect as
   // url is used to set the search bar and re-request with filters
-  const location = useLocation();
 
   const notifications = useContext(NotificationContext);
 
   // Used to determine if user navigated backwards
   const navigationType = useNavigationType();
-
-  // State to trigger a re-request for the current page of blogs
-  const [retryLoad, setRetryLoad] = useState(false);
 
   // Gets query params from url
   const [searchParams, _, setSearchParams] = useQuery();
@@ -179,44 +187,73 @@ const BlogList = () => {
     () => searchParamsToContentFilter(ContentType.Blog, searchParams),
     [searchParams],
   );
+  const currentOrdering = useMemo(
+    () => (searchParams.get("ordering") as showOrder) || showOrder.Newest,
+    [searchParams],
+  );
+
+  const [loadedQuery, setLoadedQuery] = useState([
+    currentContentFilter,
+    currentOrdering,
+  ]);
+
+  const restoreState =
+    navigationType === NavigationType.Pop &&
+    sessionStorage.getItem("blogListQuery") === searchParams.toString();
 
   // Info about pages of blogs
   // Uses sessionStorage to keep state when user navigates back
   const [page, setPage] = useState(
-    sessionStorage.getItem('blogListPage') !== null && navigationType === NavigationType.Pop
-      ? JSON.parse(sessionStorage.getItem('blogListPage') as string)
+    sessionStorage.getItem("blogListPage") !== null &&
+      navigationType === NavigationType.Pop &&
+      restoreState
+      ? JSON.parse(sessionStorage.getItem("blogListPage") as string)
       : 0,
   );
   const [maxPage, setMaxPage] = useState(1);
 
   // State for all the blogs the site has retrieved
   // Uses sessionStorage to keep state when user navigates back
-  const [receivedBlogs, setReceivedBlogs] = useState<Record<number, FullContentList>>(
-    sessionStorage.getItem('blogListReceivedBlogs') !== null &&
-      navigationType === NavigationType.Pop
-      ? JSON.parse(sessionStorage.getItem('blogListReceivedBlogs') as string, jsonParser)
+  const [receivedBlogs, setReceivedBlogs] = useState<
+    Record<number, FullContentList>
+  >(
+    sessionStorage.getItem("blogListReceivedBlogs") !== null &&
+      navigationType === NavigationType.Pop &&
+      restoreState
+      ? JSON.parse(
+          sessionStorage.getItem("blogListReceivedBlogs") as string,
+          jsonParser,
+        )
       : {},
   );
 
   // The latest set of blogs the site has retrieved
   // Need separate state for latest received for error handling reason
   // Uses sessionStorage to keep state when user navigates back
-  const [latestReceivedBlogs, setLatestReceivedBlogs] = useState<RequestState<FullContentList>>(
-    sessionStorage.getItem('blogListLatestReceivedBlogs') !== null &&
-      navigationType === NavigationType.Pop
-      ? JSON.parse(sessionStorage.getItem('blogListLatestReceivedBlogs') as string, jsonParser)
+  const [latestReceivedBlogs, setLatestReceivedBlogs] = useState<
+    RequestState<FullContentList>
+  >(
+    sessionStorage.getItem("blogListLatestReceivedBlogs") !== null &&
+      navigationType === NavigationType.Pop &&
+      restoreState
+      ? JSON.parse(
+          sessionStorage.getItem("blogListLatestReceivedBlogs") as string,
+          jsonParser,
+        )
       : { requestStatus: RequestStatus.Loading },
   );
 
   // State for when to re-request blogs
-  const [reloadSearchAnimation, setReloadSearchAnimation] = useState<boolean | null>(null);
+  const [reloadSearchAnimation, setReloadSearchAnimation] = useState<
+    boolean | null
+  >(null);
 
   // Used to store search timeout. If the timeout finished the search will
   // be run
   const [searchTimeout, setSearchTimeout] = useState<null | number>(null);
 
   // State for search bar
-  const [currentSearch, setCurrentSearch] = useState<string>('');
+  const [currentSearch, setCurrentSearch] = useState<string>("");
 
   /* ----------------------------- Unmount effects ---------------------------- */
 
@@ -226,62 +263,55 @@ const BlogList = () => {
         clearTimeout(searchTimeout);
       }
 
-      sessionStorage.setItem('blogListPage', page.toString());
-      sessionStorage.setItem('blogListReceivedBlogs', JSON.stringify(receivedBlogs));
-      sessionStorage.setItem('blogListLatestReceivedBlogs', JSON.stringify(latestReceivedBlogs));
+      sessionStorage.setItem("blogListPage", page.toString());
+      sessionStorage.setItem(
+        "blogListReceivedBlogs",
+        JSON.stringify(receivedBlogs),
+      );
+      sessionStorage.setItem(
+        "blogListLatestReceivedBlogs",
+        JSON.stringify(latestReceivedBlogs),
+      );
+      sessionStorage.setItem("blogListQuery", searchParams.toString());
     };
   });
 
   /* -------------------------- Next page requesting -------------------------- */
 
-  const [firstLoad, setFirstLoad] = useState(true);
-
-  // Used to trigger a re-request for the current page of blogs when search filters change
+  // When the search bar changes, update the current state in the on page search bar
   useEffect(() => {
-    if (firstLoad) {
-      setFirstLoad(false);
-    } else {
-      clearPages();
-    }
-  }, [location.search]);
+    setCurrentSearch(
+      currentContentFilter.search ? currentContentFilter.search : "",
+    );
+  }, [currentContentFilter.search]);
 
-  // Requests blogs and sets search bar
+  const clearPagesEvent = useEffectEvent(() => {
+    clearPages();
+  });
+
+  const getCurrentPageEvent = useEffectEvent(
+    (
+      page: number,
+      currentContentFilter: ContentFilter,
+      currentOrdering: showOrder,
+    ) => {
+      getCurrentPage(page, currentContentFilter, currentOrdering);
+    },
+  );
+
   useEffect(() => {
-    // Checks if the url has changed and sets the current search to the
-    // search query in the url. This is so that if the user changes the
-    // url by manual input or the back button the search bar will update
-    if (currentContentFilter.search !== currentSearch && currentContentFilter.search) {
-      setCurrentSearch(currentContentFilter.search);
-    } else if (!currentContentFilter.search && currentSearch !== '') {
-      setCurrentSearch('');
-    }
-
-    // Object passed to request for proper paging of projects
-    const pageInfo: PageInfo = {
-      content_per_page: contentPerPage,
-      page,
-      ordering: (searchParams.get('ordering') as showOrder)
-        ? (searchParams.get('ordering') as showOrder)
-        : showOrder.Newest,
-    };
-
-    // Requests only new pages and the page check is need cause if
-    // initial request fails the page gets set to negative one
+    // Check if the query has changed, if it has clear the pages and request the first page
     if (
-      receivedBlogs[page] === undefined &&
-      page >= 0 &&
-      latestReceivedBlogs.requestStatus !== RequestStatus.Success
+      loadedQuery[0] !== currentContentFilter ||
+      loadedQuery[1] !== currentOrdering
     ) {
-      ContentOperations.get_content_list({
-        page_info: pageInfo,
-        content_filters: currentContentFilter,
-      }).then((value) => {
-        setLatestReceivedBlogs(value);
-      });
+      clearPagesEvent();
+      setLoadedQuery([currentContentFilter, currentOrdering]);
+      return;
     }
-  }, [page, retryLoad, receivedBlogs]);
+    getCurrentPageEvent(page, currentContentFilter, currentOrdering);
+  }, [page, currentContentFilter, currentOrdering, loadedQuery]);
 
-  // Requests more content
   const loadMore = () => {
     // note that if last requested page was the last page the "load more" button wont work
     if (page < maxPage) {
@@ -295,9 +325,9 @@ const BlogList = () => {
       } else {
         notifications.addNotification({
           type: NotificationType.Info,
-          message: 'Retrying...',
+          message: "Retrying...",
         });
-        setRetryLoad(!retryLoad);
+        getCurrentPage(page, currentContentFilter, currentOrdering);
       }
 
       setLatestReceivedBlogs({ requestStatus: RequestStatus.Loading });
@@ -338,14 +368,6 @@ const BlogList = () => {
 
   /* ---------------------------- Helper functions ---------------------------- */
 
-  // Gets a search param from the url
-  // if it doesn't exist returns empty string
-  const getSearchParam = (param: string): string => {
-    const paramReturn = searchParams.get(param);
-    if (paramReturn !== null) return paramReturn;
-    return '';
-  };
-
   // Clears all the pages of blogs
   const clearPages = () => {
     setPage(0);
@@ -354,13 +376,37 @@ const BlogList = () => {
     setLatestReceivedBlogs({ requestStatus: RequestStatus.Loading });
   };
 
+  const getCurrentPage = (
+    page: number,
+    currentContentFilter: ContentFilter,
+    currentOrdering: showOrder,
+  ) => {
+    // Object passed to request for proper paging of projects
+    const pageInfo: PageInfo = {
+      content_per_page: contentPerPage,
+      page,
+      ordering: currentOrdering,
+    };
+
+    if (
+      receivedBlogs[page] === undefined &&
+      latestReceivedBlogs.requestStatus !== RequestStatus.Success
+    ) {
+      ContentOperations.get_content_list({
+        page_info: pageInfo,
+        content_filters: currentContentFilter,
+      }).then((value) => {
+        setLatestReceivedBlogs(value);
+      });
+    }
+  };
+
   /* ------------------------- Filter change functions ------------------------ */
 
   // What happens when the show order of blogs changes
   const orderChange = (direction: showOrder) => {
-    searchParams.set('ordering', direction);
+    searchParams.set("ordering", direction);
     setSearchParams(searchParams);
-    clearPages();
   };
 
   // Function for changing the search bar and the resulting effects
@@ -377,17 +423,15 @@ const BlogList = () => {
     // Run the search in the search bar after 1.25 seconds
     setSearchTimeout(
       setTimeout(() => {
-        clearPages();
-
         const newParams = new URLSearchParams({
           ...Object.fromEntries(searchParams.entries()),
           search: search,
         });
 
-        if (search === '') {
-          newParams.delete('search');
+        if (search === "") {
+          newParams.delete("search");
         } else {
-          newParams.set('search', search);
+          newParams.set("search", search);
         }
 
         setSearchParams(newParams);
@@ -400,9 +444,9 @@ const BlogList = () => {
   return (
     <BlogListBody>
       <MetaData
-        title='Blogs | Kyle Denief'
+        title="Blogs | Kyle Denief"
         description={jsonConfig.pages.blogList.description}
-        type='website'
+        type="website"
       />
 
       <PageTitle>Blogs</PageTitle>
@@ -410,7 +454,7 @@ const BlogList = () => {
       <ShowOptions>
         <SearchBarWrapper>
           <SearchBar
-            placeholder='Search'
+            placeholder="Search"
             value={currentSearch}
             onChange={(e) => newSearch(e.target.value)}
           />
@@ -421,7 +465,7 @@ const BlogList = () => {
           />
         </SearchBarWrapper>
         <DropDown
-          value={getSearchParam('ordering') ? getSearchParam('ordering') : showOrder.Newest}
+          value={currentOrdering}
           onChange={(e) => orderChange(e.target.value as showOrder)}
         >
           <option value={showOrder.Newest}>Newest</option>
@@ -432,24 +476,23 @@ const BlogList = () => {
           ((Object.values(currentContentFilter).length > 1 &&
             currentContentFilter.search === undefined) ||
             Object.values(currentContentFilter).length > 2) && (
-            <ShowLink button_text={'Clear Filters'} url={'/blogs'} />
+            <ShowLink button_text={"Clear Filters"} url={"/blogs"} />
           )
         }
       </ShowOptions>
 
       {/* Renders previous pages of successful blogs fetched */}
       <ContentList>
-        <>
-          {Array.from(Array(Object.keys(receivedBlogs).length).keys()).map((value) => {
+        {Array.from(Array(Object.keys(receivedBlogs).length).keys()).map(
+          (value) => {
             return (
               <RenderBlogList
                 data={receivedBlogs[value]}
                 key={receivedBlogs[value].full_content_list[0].base_content.id}
               />
             );
-          })}
-        </>
-
+          },
+        )}
         {/* Renders lates blog page requested and handles errors if it fails */}
         <LoadErrorHandle
           requestInfo={latestReceivedBlogs}

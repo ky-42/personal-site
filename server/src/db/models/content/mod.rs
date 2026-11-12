@@ -22,17 +22,17 @@ pub mod ops;
 
 #[derive(Serialize, Deserialize, Validate, Debug)]
 pub struct FullContent {
-    #[validate]
+    #[validate(nested)]
     pub base_content: base::Content,
-    #[validate]
+    #[validate(nested)]
     pub extra_content: extra::ExtraContent,
 }
 
 #[derive(Serialize, Deserialize, Validate, Debug)]
 pub struct NewFullContent {
-    #[validate]
+    #[validate(nested)]
     pub new_base_content: base::NewContent,
-    #[validate]
+    #[validate(nested)]
     pub new_extra_content: extra::NewExtraContent,
 }
 

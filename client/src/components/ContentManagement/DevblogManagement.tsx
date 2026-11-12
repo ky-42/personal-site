@@ -1,9 +1,13 @@
-import styled from 'styled-components';
-import { Devblog } from '../../types/Content';
-import { ReducerAction, SetReducer, UpdateReducer } from '../../types/ManageContent';
-import InputArea from './InputArea';
-import { ShortTextInput } from './InputElements';
-import { Dispatch } from 'react';
+import type { Dispatch } from "react";
+import styled from "styled-components";
+import type { Devblog } from "../../types/Content";
+import {
+  ReducerAction,
+  type SetReducer,
+  type UpdateReducer,
+} from "../../types/ManageContent";
+import InputArea from "./InputArea";
+import { ShortTextInput } from "./InputElements";
 
 /* -------------------------------------------------------------------------- */
 
@@ -13,7 +17,9 @@ const DevblogManagementArea = styled.div``;
 
 interface DevblogManagementProps {
   devblogData: Devblog;
-  setDevblogData: Dispatch<SetReducer<Devblog> | UpdateReducer<Devblog, keyof Devblog>>;
+  setDevblogData: Dispatch<
+    SetReducer<Devblog> | UpdateReducer<Devblog, keyof Devblog>
+  >;
   // Possible errors in an input with key being field and value being error message
   validationErrors: Record<string, string>;
 }
@@ -27,16 +33,16 @@ const DevblogManagement = ({
   return (
     <DevblogManagementArea>
       <InputArea
-        labelText={'Devblog Title'}
-        error={validationErrors['title']}
+        labelText={"Devblog Title"}
+        error={validationErrors.title}
         InputElement={
           <ShortTextInput
-            type='text'
+            type="text"
             value={devblogData.title}
             onChange={(e) =>
               setDevblogData({
                 action: ReducerAction.Update,
-                field: 'title',
+                field: "title",
                 value: e.target.value,
               })
             }

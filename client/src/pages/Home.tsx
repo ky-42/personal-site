@@ -1,22 +1,23 @@
-import { useEffect, useState } from 'react';
-import { BrowserView } from 'react-device-detect';
-import styled from 'styled-components';
-import ContentContainer from '../components/Home/ContentSection';
-import { ContentOperations } from '../adapters/content';
-import { ContentType } from '../types/Content';
-import ContentItem from '../components/Home/ContentItem';
+import jsonConfig from "@config/config.json";
+import type { ReactElement } from "react";
+import { useContext, useEffect, useState } from "react";
+import styled from "styled-components";
+import { ContentOperations } from "../adapters/content";
+import CurrentlyReading from "../components/ContentShow/CurrentlyReading";
+import ContentItem from "../components/Home/ContentItem";
+import ContentContainer from "../components/Home/ContentSection";
+import LoadErrorHandle from "../components/RequestHandling/LoadingErrorHandler";
+import MetaData from "../components/Shared/MetaData";
+import MobileContext from "../contexts/Mobile";
+import { ContentType } from "../types/Content";
 import {
-  RequestState,
+  type ContentFilter,
+  type FullContentList,
   listOrder,
+  type PageInfo,
+  type RequestState,
   RequestStatus,
-  PageInfo,
-  ContentFilter,
-  FullContentList,
-} from '../types/RequestContent';
-import CurrentlyReading from '../components/ContentShow/CurrentlyReading';
-import LoadErrorHandle from '../components/RequestHandling/LoadingErrorHandler';
-import MetaData from '../components/Shared/MetaData';
-import jsonConfig from '@config/config.json';
+} from "../types/RequestContent";
 
 /* -------------------------------------------------------------------------- */
 
@@ -54,17 +55,15 @@ const IntroText = styled.p`
   line-height: 1.5;
 `;
 
-// Wrapper for asteroid button (below)
-const BrowserOnly = styled(BrowserView)`
-  margin-left: 7.2rem;
-  @media (max-width: 1250px) {
-    margin-left: 0;
-    align-self: center;
-  }
+const CenterButton = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 // Currently does nothing cause game is not implemented
 const AsteroidsButton = styled.button`
+  max-width: 36rem;
+  margin-right: 4rem;
   background-color: ${(props) => props.theme.backgroundColour};
   font-size: 1.6rem;
   padding: 1.5rem 7.5rem;
@@ -112,12 +111,18 @@ const blogFilter: ContentFilter = {
 
 const Home = () => {
   // Data for latest content links
-  const [latestProjectList, setLatestProjectList] = useState<RequestState<FullContentList>>({
+  const [latestProjectList, setLatestProjectList] = useState<
+    RequestState<FullContentList>
+  >({
     requestStatus: RequestStatus.Loading,
   });
-  const [latestBlogList, setLatestBlogList] = useState<RequestState<FullContentList>>({
+  const [latestBlogList, setLatestBlogList] = useState<
+    RequestState<FullContentList>
+  >({
     requestStatus: RequestStatus.Loading,
   });
+
+  const isMobile = useContext(MobileContext);
 
   useEffect(() => {
     // Gets latest project
@@ -138,7 +143,11 @@ const Home = () => {
   }, []);
 
   // Element to display when latest blog or project is successfully fetched
-  const contentFetchSuccess = ({ data }: { data: FullContentList }): JSX.Element => {
+  const contentFetchSuccess = ({
+    data,
+  }: {
+    data: FullContentList;
+  }): ReactElement => {
     if (data.page_count > 0) {
       return <ContentItem content={data.full_content_list[0]} />;
     }
@@ -150,7 +159,7 @@ const Home = () => {
       <MetaData
         title={jsonConfig.name}
         description={jsonConfig.pages.home.description}
-        type='website'
+        type="website"
       />
 
       <LeftPageColumn>
@@ -162,25 +171,36 @@ const Home = () => {
         <IntroText>{jsonConfig.pages.home.mainParagraph}</IntroText>
 
         {/* Button to start asteroids game (only works on desktop) */}
-        <BrowserOnly>
-          <AsteroidsButton>(Coming Soon)</AsteroidsButton>
-        </BrowserOnly>
+        {!isMobile && (
+          <CenterButton>
+            <AsteroidsButton>(Coming Soon)</AsteroidsButton>
+          </CenterButton>
+        )}
       </LeftPageColumn>
 
       <HomeRight>
         <ContentContainer
-          containerTitle='Latest Project'
+          containerTitle="Latest Project"
           housedElement={
-            <LoadErrorHandle requestInfo={latestProjectList} successElement={contentFetchSuccess} />
+            <LoadErrorHandle
+              requestInfo={latestProjectList}
+              successElement={contentFetchSuccess}
+            />
           }
         />
         <ContentContainer
-          containerTitle='Latest Blog'
+          containerTitle="Latest Blog"
           housedElement={
-            <LoadErrorHandle requestInfo={latestBlogList} successElement={contentFetchSuccess} />
+            <LoadErrorHandle
+              requestInfo={latestBlogList}
+              successElement={contentFetchSuccess}
+            />
           }
         />
-        <ContentContainer containerTitle='Currently Reading' housedElement={<CurrentlyReading />} />
+        <ContentContainer
+          containerTitle="Currently Reading"
+          housedElement={<CurrentlyReading />}
+        />
       </HomeRight>
     </HomeBody>
   );
